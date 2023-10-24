@@ -1,6 +1,5 @@
-import { Column, DataType, ForeignKey, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
 import { BaseModel } from "./BaseModel";
-import { Author } from "./Author";
 import { Article } from "./Article";
 import { Customer } from "./Customer";
 
@@ -12,10 +11,16 @@ export class ArticlePermission extends BaseModel {
     @ForeignKey(() => Article)
     @Column({type: DataType.INTEGER})
     article_id: number;
+    
+    @BelongsTo(() => Article)
+    article: Article
 
     @ForeignKey(() => Customer)
     @Column({type: DataType.INTEGER})
     customer_id: number;
+
+    @BelongsTo(() => Customer)
+    customer: Customer
 
     @Column({type: DataType.INTEGER})
     type_of_permission: number;

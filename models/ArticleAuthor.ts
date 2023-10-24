@@ -1,4 +1,4 @@
-import { Column, DataType, ForeignKey, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
 import { BaseModel } from "./BaseModel";
 import { Author } from "./Author";
 import { Article } from "./Article";
@@ -12,8 +12,14 @@ export class ArticleAuthor extends BaseModel {
     @Column({type: DataType.INTEGER})
     author_id: number;
 
+    @BelongsTo(() => Author)
+    author: Author
+
     @ForeignKey(() => Article)
     @Column({type: DataType.INTEGER})
     article_id: number;
+
+    @BelongsTo(() => Article)
+    article: Article
 
 }

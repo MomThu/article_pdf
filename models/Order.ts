@@ -11,6 +11,9 @@ export class Order extends BaseModel {
     @Column({type: DataType.INTEGER})
     customer_id: number;
 
+    @BelongsTo(() => Customer)
+    customer: Customer
+
     @Column({type: DataType.DATE})
     date: Date;
 

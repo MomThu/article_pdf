@@ -1,4 +1,4 @@
-import { Column, DataType, ForeignKey, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
 import { BaseModel } from "./BaseModel";
 import { Author } from "./Author";
 import { Article } from "./Article";
@@ -13,7 +13,13 @@ export class Reference extends BaseModel {
     @Column({type: DataType.INTEGER})
     article_id: number;
 
+    @BelongsTo(() => Article)
+    article: Article
+
     @ForeignKey(() => Article)
     @Column({type: DataType.INTEGER})
     cite_id: number;
+
+    @BelongsTo(() => Article)
+    article2: Article
 }

@@ -38,7 +38,7 @@ export { Customer, Order };
 
 export const initDB = async () => {
   await sequelize.authenticate();
-  await sequelize.sync({ alter: true });
+  await sequelize.sync({ force: true });
 
   //   await User.findOrCreate({
   //     where: { email: "admin@example.com" },
