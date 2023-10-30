@@ -1,11 +1,11 @@
-import { Column, DataType, Table } from "sequelize-typescript";
+import { Column, DataType, Model, Table } from "sequelize-typescript";
 import { BaseModel } from "./BaseModel";
 
 @Table({
     timestamps: true,
     tableName: "customers",
 })
-export class Customer extends BaseModel {
+class Customer extends Model {
     @Column({type: DataType.STRING})
     email: string;
 
@@ -15,3 +15,5 @@ export class Customer extends BaseModel {
     @Column({type: DataType.STRING})
     phone: string;
 }
+
+export default Customer

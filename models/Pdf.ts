@@ -1,8 +1,6 @@
 import { BelongsTo, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
 import { BaseModel } from "./BaseModel";
-import { Author } from "./Author";
 import { Article } from "./Article";
-import { Customer } from "./Customer";
 
 @Table({
     timestamps: true,

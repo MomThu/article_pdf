@@ -1,7 +1,8 @@
 import { Article } from "./models/Article";
 import { Sequelize } from "sequelize-typescript";
 import config from "./config/envConfig";
-import { Customer } from "./models/Customer";
+// import { Customer } from "./models/Customer";
+import Customer from "./models/Customer";
 import { Order } from "./models/Order";
 import { ArticleAuthor } from "./models/ArticleAuthor";
 import { ArticlePermission } from "./models/ArticlePermission";
@@ -17,6 +18,7 @@ const sequelize = new Sequelize({
   dialect: "mysql",
   username: config.DATABASE_USER,
   password: config.DATABASE_PASSWORD,
+  // models: [Customer]
 });
 
 sequelize.addModels([
@@ -31,8 +33,6 @@ sequelize.addModels([
   Pdf,
   Reference,
 ]);
-
-// export { User, Post, Tag, PostTagAssociation, Category };
 
 export { Customer, Order };
 
