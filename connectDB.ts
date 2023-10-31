@@ -18,7 +18,6 @@ const sequelize = new Sequelize({
   dialect: "mysql",
   username: config.DATABASE_USER,
   password: config.DATABASE_PASSWORD,
-  // models: [Customer]
 });
 
 sequelize.addModels([
@@ -34,14 +33,20 @@ sequelize.addModels([
   Reference,
 ]);
 
-export { Customer, Order };
+export {
+  Customer,
+  Order,
+  Article,
+  ArticleAuthor,
+  ArticlePermission,
+  Author,
+  Cart,
+  OrderDetail,
+  Pdf,
+  Reference,
+};
 
 export const initDB = async () => {
   await sequelize.authenticate();
   await sequelize.sync({ force: true });
-
-  //   await User.findOrCreate({
-  //     where: { email: "admin@example.com" },
-  //     defaults: { name: "admin", email: "admin@example.com" },
-  //   });
 };

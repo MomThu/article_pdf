@@ -1,28 +1,32 @@
 import { FindOptions } from "sequelize";
-// import { Customer } from "./../models/Customer";
-import Customer from "../models/Customer";
+import {Customer} from "../connectDB";
 export class CustomerRepository extends Customer {
-  public static async findAllRaw(options?: FindOptions) {
+  public static findAllRaw = async (options?: FindOptions) => {
     const datas = await Customer.findAll(options);
-    const rawData = datas.map((data) => ({
-      ...data.toJSON(),
-      createdAt: data.createdAt.toString(),
-      updatedAt: data.updatedAt.toString(),
-    }));
-    return rawData;
+    return datas;
   }
 
-  public static async findOneRaw(options?: FindOptions) {
-    const data = await Customer.findOne(options);
-    if (!data) {
-      throw Error("Not found data!!!");
+  public static addCustomer: any = async (data: any) => {
+    const checkCusExist = await Customer.findOne({where: {email: data?.email}})
+    if (checkCusExist) {
+      return {
+        error: true,
+        message: "Email already exist!"
+      }
     }
+    const customer = await Customer.create(data);
+    return customer;
+  }
 
-    const rawData = {
-      ...data.toJSON(),
-      createdAt: data.createdAt.toString(),
-      updatedAt: data.updatedAt.toString(),
-    };
-    return rawData;
+  public static updateInfo: any = async (data: any) => {
+    const checkCusExist = await Customer.findOne({where: {email: data?.email}})
+    if (checkCusExist) {
+      return {
+        error: true,
+        message: "Email already exist!"
+      }
+    }
+    const customer = await Customer.create(data);
+    return customer;
   }
 }

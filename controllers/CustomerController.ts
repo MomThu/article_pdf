@@ -1,39 +1,77 @@
-import { FindOptions } from 'sequelize';
 import React from "react";
 import { NextApiRequest, NextApiResponse } from "next";
-import catchAsyncError from "../middleware/catchAsyncError";
-import Customer from "../models/Customer";
-import { CustomerRepository } from '../services';
+import { CustomerRepository } from "../services";
+import { toNumber } from "lodash";
 
-const getAllCustomers = catchAsyncError(
-  async (req: NextApiRequest, res: NextApiResponse) => {
-    // const addCus = await Customer.create({email: "thumommm10@gmail.com", full_name: "Mom Thu", phone: "113"})
-    // console.log(addCus, "add cus res here")
-    // console.log(result, "query res here");
-    try {
-      // const customerr = new Customer({
-      //   email: "thumommm10@gmail.com",
-      //   full_name: "Mom Thu",
-      //   phone: "113",
-      // });
-      // customerr.save();
-      let result = await CustomerRepository.findAllRaw();
-      return result
-    } catch (err) {
-      console.log(err, "err here!!");
-    }
-
+const getAllCustomers = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    let result = await CustomerRepository.findAll();
     res.status(200).json({
-      status: "ok",
-      // data: JSON.stringify(result),
-      data: "no data",
+      error: false,
+      data: result,
     });
+  } catch (err) {
+    throw err;
   }
-  // res.status(200).json({
-  //   status: "ok",
-  //   data: "hh",
-  // });
-  // }
-);
+};
 
-export { getAllCustomers };
+const getCustomerById = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const cusId = req.query.id;
+    let data = await CustomerRepository.findByPk(toNumber(cusId));    
+    res.status(200).json({
+      error: false,
+      data: data,
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+const register = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const data = req.body;
+    const customer = await CustomerRepository.addCustomer({
+      email: data?.email,
+      full_name: data?.full_name,
+      phone: data?.phone,
+    });
+    if (customer?.error) {
+      res.status(404).json({
+        error: true,
+        message: customer?.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      data: customer,
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+const updateInfo = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const data = req.body;
+    const customer = await CustomerRepository.addCustomer({
+      email: data?.email,
+      full_name: data?.full_name,
+      phone: data?.phone,
+    });
+    if (customer?.error) {
+      res.status(404).json({
+        error: true,
+        message: customer?.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      data: customer,
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+export { getAllCustomers, getCustomerById, register, updateInfo };

@@ -6,9 +6,11 @@
     "start": "cross-env NODE_ENV=production node dist/server.js"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.200",
     "axios": "^1.5.1",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
+    "lodash": "^4.17.21",
     "mysql2": "^3.6.2",
     "next": "latest",
     "next-absolute-url": "^1.2.2",
