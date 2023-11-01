@@ -2,6 +2,7 @@ import React from "react";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ArticleRepository } from "../services";
 import { toNumber } from "lodash";
+import crypto from "crypto";
 
 const getAllArticles = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -62,9 +63,11 @@ const getPermissionArticle = async (
   res: NextApiResponse
 ) => {
   try {
+    const privateKey = "123456";
+    const iv_value = crypto.randomBytes(16).toString("hex");
     let { article } = req.query;
     let cusId = 5;
-    let data = await ArticleRepository.getPermissionArticle(cusId, article);
+    let data = await ArticleRepository.getPermissionArticle(cusId, article, privateKey, iv_value);
     res.status(200).json({
       error: false,
       data: data,
@@ -81,7 +84,10 @@ const getArticleByPermission = async (
   try {
     let { permission } = req.query;
     let cusId = 5;
-    let data = await ArticleRepository.getArticleByPermission(cusId, permission);
+    let data = await ArticleRepository.getArticleByPermission(
+      cusId,
+      permission
+    );
     res.status(200).json({
       error: false,
       data: data,
@@ -96,5 +102,5 @@ export {
   searchArticle,
   getArticleByAuthor,
   getPermissionArticle,
-  getArticleByPermission
+  getArticleByPermission,
 };
