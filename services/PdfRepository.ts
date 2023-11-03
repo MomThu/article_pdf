@@ -1,26 +1,40 @@
-import { size, toNumber } from 'lodash';
+import { get, size, toNumber } from "lodash";
 import { QueryTypes } from "sequelize";
 import { Pdf } from "../connectDB";
-
+import crypto from "crypto";
 export class PdfRepository extends Pdf {
-  public static getPdfByArticle = async (articleId: string | string[], cusId: number, privateKey: string, iv_value: string) => {
+  public static getPdfByArticle = async (
+    articleId: string | string[],
+    cusId: number,
+    privateKey: string,
+    iv_value: string
+  ) => {
+    const encrypt = (text, key, iv) => {
+      let cipher = crypto.createCipheriv(
+        "aes-256-cbc",
+        Buffer.from(key),
+        Buffer.from(iv, "hex")
+      );
+      let encrypted = cipher.update(text, "utf8", "hex");
+      encrypted += cipher.final("hex");
+      return encrypted;
+    };
     const permissions = await this.sequelize.query(
-      `SELECT * FROM article_permission WHERE article_permission.article_id = ${articleId} AND article_permission.customer_id = ${cusId}`,
+      `SELECT type_of_permission FROM article_permission WHERE article_permission.article_id = ${articleId} AND article_permission.customer_id = ${cusId}`,
       { type: QueryTypes.SELECT }
     );
-    if (size(permissions) === 0) {
-
-    } else if (size(permissions) === 1) {
-
-    } else if (size(permissions) === 2) {
-      
-    }
     const pdf = await Pdf.findOne({
       where: {
-        article_id: toNumber(articleId)
-      }
+        article_id: toNumber(articleId),
+      },
     });
-    return pdf;
+    const realPassword = pdf.password;
+    const encryptedPassword = encrypt(realPassword, privateKey, iv_value);
+    const permission = get(permissions[0], 'type_of_permission', 0);
+    return {
+      encryptedPassword: encryptedPassword,
+      permission: permission,
+    };
   };
 }
 

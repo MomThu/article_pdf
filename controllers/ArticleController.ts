@@ -1,8 +1,6 @@
-import React from "react";
+import { toNumber } from "lodash";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ArticleRepository } from "../services";
-import { toNumber } from "lodash";
-import crypto from "crypto";
 
 const getAllArticles = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -63,11 +61,9 @@ const getPermissionArticle = async (
   res: NextApiResponse
 ) => {
   try {
-    const privateKey = "123456";
-    const iv_value = crypto.randomBytes(16).toString("hex");
     let { article } = req.query;
     let cusId = 5;
-    let data = await ArticleRepository.getPermissionArticle(cusId, article, privateKey, iv_value);
+    let data = await ArticleRepository.getPermissionArticle(cusId, article);
     res.status(200).json({
       error: false,
       data: data,
@@ -97,10 +93,6 @@ const getArticleByPermission = async (
   }
 };
 export {
-  getAllArticles,
-  getArticleById,
-  searchArticle,
-  getArticleByAuthor,
-  getPermissionArticle,
-  getArticleByPermission,
+  getAllArticles, getArticleByAuthor, getArticleById, getArticleByPermission, getPermissionArticle, searchArticle
 };
+

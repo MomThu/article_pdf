@@ -1,12 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { createRouter } from "next-connect";
-import {
-  getAllArticles
-} from "../../../controllers/ArticleController";
+import { getPdfByArticle } from "../../../controllers/PdfController";
 import onError from "../../../middleware/errors";
 
 const router = createRouter<NextApiRequest, NextApiResponse>();
-router.get(getAllArticles);
+router.get(getPdfByArticle);
 
 const handler = router.handler({
   onError: onError,
