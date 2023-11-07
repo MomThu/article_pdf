@@ -39,36 +39,22 @@ const Article = ({ pdf }) => {
         key,
         get(pdf, "iv_value", "")
       );
-      console.log(realPassword);
-      // var loadingTask = pdfjs.getDocument("pdfviewer.pdf");
-      // loadingTask.onPassword = function (updatePassword, reason) {
-      //   if (reason === 1) {
-      //     // var new_password = prompt("Please enter a password:");
-      //     updatePassword(realPassword);
-      //   } else {
-      //     var new_password = prompt("Please enter a password:");
-      //     updatePassword(new_password);
-      //   }
-      // };
-      // loadingTask.promise.then((pdf) => {
-      //   pdf.getPage(1).then((page) => {
-      //     const canvas = canvasRef.current;
-      //     const context = canvas.getContext("2d");
-      //     const viewport = page.getViewport({ scale: 1 });
-      //     canvas.height = viewport.height;
-      //     canvas.width = viewport.width;
-      //     const renderContext = {
-      //       canvasContext: context,
-      //       viewport: viewport,
-      //     };
-      //     page.render(renderContext);
-      //   });
-      // });
+      return realPassword;
     } catch (err) {}
   };
 
   const handleAskPassword = (e: DocumentAskPasswordEvent) => {
-    e.verifyPassword("password");
+    try {
+      const key = "12345612345612345612345612345612";
+      const realPassword = decrypt(
+        get(pdf, "encryptedPassword", ""),
+        key,
+        get(pdf, "iv_value", "")
+      );
+      e.verifyPassword(realPassword);
+    } catch (err) {
+      
+    }
   };
 
   useEffect(() => {
