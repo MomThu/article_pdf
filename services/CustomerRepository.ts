@@ -29,4 +29,16 @@ export class CustomerRepository extends Customer {
     const customer = await Customer.create(data);
     return customer;
   }
+
+  public static login: any = async (data: any) => {
+    const checkCusExist = await Customer.findOne({where: {email: data?.email}})
+    if (checkCusExist) {
+      return {
+        error: true,
+        message: "Email already exist!"
+      }
+    }
+    const customer = await Customer.create(data);
+    return customer;
+  }
 }

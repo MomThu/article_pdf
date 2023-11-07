@@ -10,6 +10,9 @@ class Customer extends Model {
     email: string;
 
     @Column({type: DataType.STRING})
+    password: string;
+
+    @Column({type: DataType.STRING})
     full_name: string;
 
     @Column({type: DataType.STRING})
