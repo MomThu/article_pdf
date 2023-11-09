@@ -1,11 +1,12 @@
 import { GetServerSideProps } from "next";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import absoluteUrl from "next-absolute-url";
-import { Button } from "antd";
-import { DownOutlined } from "@ant-design/icons";
+import { useSession } from "next-auth/react";
 
 export default function Home({ results }) {
+  const session = useSession();
+
+  console.log(session, "sessionnnn")
   const [dataFetch, setDataFetch] = useState();
 
   React.useEffect(() => console.log(results), [results]);
@@ -25,11 +26,22 @@ export default function Home({ results }) {
   useEffect(() => {
     fetchData(1);
   }, []);
-  return (
-    <div>
-      home
-    </div>
-  );
+
+
+  if (session) {
+    return (
+      <div>
+        home
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        chua login
+      </div>
+    );
+  }
+
   // will make the initial call to populate the results
 }
 // export const getServerSideProps: GetServerSideProps = async ({ req }) => {

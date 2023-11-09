@@ -8,23 +8,24 @@ import { SessionProvider, useSession } from "next-auth/react";
 function MyApp({ Component, pageProps }: AppProps) {  
   return (
     <SessionProvider>
-      <ConfigProvider
-        theme={{
-          token: {
-            // Seed Token
-            colorPrimary: "#31C1F3",
-            borderRadius: 2,
 
-            // Alias Token
-            colorBgContainer: "#f6ffed",
-          },
-        }}
-      >
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </ConfigProvider>
-    </SessionProvider>
+           <ConfigProvider
+           theme={{
+             token: {
+               // Seed Token
+               colorPrimary: "#31C1F3",
+               borderRadius: 2,
+   
+               // Alias Token
+               colorBgContainer: "#f6ffed",
+             },
+           }}
+         >
+           <Layout>
+             <Component {...pageProps} />
+           </Layout>
+         </ConfigProvider>
+          </SessionProvider>
   );
 }
 

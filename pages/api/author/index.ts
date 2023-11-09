@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { createRouter } from "next-connect";
-import { getAllAuthors, getAuthorsByArticle, searchAuthor } from "../../../controllers/AuthorController";
+import { getAllAuthors } from "../../../controllers/AuthorController";
 import onError from "../../../middleware/errors";
 
 const router = createRouter<NextApiRequest, NextApiResponse>();

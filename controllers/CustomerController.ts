@@ -52,7 +52,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const login = async (req: NextApiRequest, res: NextApiResponse) => {
+const login = async (req: NextApiRequest, res: NextApiResponse) => {  
   try {
     const data = req.body;
     const customer = await CustomerRepository.login({
