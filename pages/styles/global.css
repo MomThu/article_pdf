@@ -16,6 +16,20 @@ body {
   box-sizing: border-box;
 }
 
+:root {
+  --color-primary: #1890ff;
+
+  --color-white: #ffffff;
+
+  --color-gray-40: #535f78;
+  --color-gray-90: #e1e4ea;
+  --color-gray-95: #f0f1f5;
+
+  --color-green-20: #0a5c1f;
+  --color-green-80: #a3f5b8;
+  --color-green-90: #d1fadb;
+}
+
 a {
   color: #0070f3;
   text-decoration: none;
@@ -29,3 +43,5 @@ img {
   max-width: 100%;
   display: block;
 }
+
+
