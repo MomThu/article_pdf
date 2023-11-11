@@ -3,29 +3,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
+import HomeComponent from "./component/HomeComponent";
 
 export default function Home(props) {
-  const [dataFetch, setDataFetch] = useState();
-
-  React.useEffect(() => console.log(dataFetch), [dataFetch]);
-
-  const apiURL = `/api/author/article`;
-
-  const fetchData = async (id: number) => {
-    try {
-      const { data } = await axios.get(`${apiURL}?article=${id}`);
-      setDataFetch(data);
-    } catch (err) {
-      console.log(err, "errhereree");
-    }
-  };
-
-  useEffect(() => {
-    fetchData(1);
-  }, []);
-
   if (props?.sessionId) {
-    return <div>home</div>;
+    return (
+      <HomeComponent />
+    )
   } else {
     return <div>chua login</div>;
   }

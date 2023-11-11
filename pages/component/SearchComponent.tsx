@@ -1,16 +1,49 @@
-import { Typography } from "antd";
-import React from "react";
+import { AudioOutlined } from "@ant-design/icons";
+import { Col, Row, Typography, Image, Input, notification } from "antd";
+import axios from "axios";
+import { get, size } from "lodash";
+import React, { useEffect, useState } from "react";
 
-const SearchComponent = ({ item }) => {
-  console.log(item, "item")
-  const { Text, Title } = Typography;
+const SearchComponent = ({ setArticle }) => {
+  const apiURL = `/api/article`;
+
+  const fetchData = async (keyword) => {
+    try {
+      if (size(keyword)) {
+        const { data } = await axios.get(`${apiURL}/search?keyword=${keyword}`);
+        setArticle(get(data, "data", []));
+      } else {
+        const { data } = await axios.get(`${apiURL}`);
+        setArticle(get(data, "data", []));
+      }
+    } catch (err) {
+      notification.error({ message: err ? err : "Error!" });
+    }
+  };
+
+  const handleSearch = (value) => {
+    fetchData(value);
+  };
+
   return (
     <div>
-      <div>
-        <Title>{item?.title}</Title>
-      </div>
-      <div>
-        <Text>{item?.abstract}</Text>
+      <div style={{ textAlign: "center" }}>
+        <Row justify="center" className="justify-center">
+          <Col span={20}>
+            <img src="/article.png" alt="banner image" />
+          </Col>
+        </Row>
+
+        <Row justify="center" className="mt-5 flex">
+          <Col span={12}>
+            <Input.Search
+              placeholder="Search articles by title, abstract..."
+              size="large"
+              onSearch={handleSearch}
+              allowClear
+            />
+          </Col>
+        </Row>
       </div>
     </div>
   );

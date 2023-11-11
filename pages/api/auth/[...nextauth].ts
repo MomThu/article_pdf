@@ -25,6 +25,7 @@ export const authOptions = {
             email: credentials?.email,
             password: credentials?.password,
           });
+          console.log(customer, "cvustpmer")
           if (customer?.error) {
           } else {
           }

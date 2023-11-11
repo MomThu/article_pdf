@@ -1,24 +1,70 @@
+import { Button, Card, Typography, notification } from "antd";
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
-import crypto from "crypto";
+import { get, isEmpty } from "lodash";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import Pdf from "../pdf";
 import { GetServerSideProps } from "next";
-import { get } from "lodash";
-
+import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
+import crypto from "crypto";
 import {
   DocumentAskPasswordEvent,
   PdfJs,
   Viewer,
   Worker,
 } from "@react-pdf-viewer/core";
-
-import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+const { Text, Title } = Typography;
 
-const Article = ({ pdf }) => {
-  const canvasRef = useRef(null);
+const Article = (props) => {
+  const router = useRouter();
+
+  const [article, setArticle] = useState({});
+  const [showPdf, setShowPdf] = useState(false);
+  const [pdf, setPdf] = useState({});
+
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const apiURL = `/api/article`;
+      const id = router?.query.article;
+      const { data } = await axios.get(`${apiURL}/${id}`);
+      setArticle(get(data, "data", {}));
+    } catch (err) {
+      notification.error({ message: err ? err : "Error!" });
+    }
+  };
+
+  const handleAccess = () => {
+    setShowPdf(true);
+    fetchPdf();
+  };
+
+  const fetchPdf = async () => {
+    try {
+      const id = router?.query.article;
+      const apiURL = `/api/pdf`;
+      const { data } = await axios.get(`${apiURL}?article=${id}`);
+      setPdf(get(data, "data", {}));
+      return {
+        props: {
+          pdf: data.data,
+        },
+      };
+    } catch (err) {
+      notification.error({ message: err ? err : "Error!" });
+    }
+  };
 
   const decrypt = (encryptedText, key, iv) => {
     const decipher = crypto.createDecipheriv(
@@ -31,18 +77,6 @@ const Article = ({ pdf }) => {
     return decrypted;
   };
 
-  const getPdf = async () => {
-    try {
-      const key = "12345612345612345612345612345612";
-      const realPassword = decrypt(
-        get(pdf, "encryptedPassword", ""),
-        key,
-        get(pdf, "iv_value", "")
-      );
-      return realPassword;
-    } catch (err) {}
-  };
-
   const handleAskPassword = (e: DocumentAskPasswordEvent) => {
     try {
       const key = "12345612345612345612345612345612";
@@ -51,68 +85,75 @@ const Article = ({ pdf }) => {
         key,
         get(pdf, "iv_value", "")
       );
+      console.log(realPassword, "realpassword");
       e.verifyPassword(realPassword);
-    } catch (err) {
-      
-    }
+    } catch (err) {}
   };
 
-  useEffect(() => {
-    getPdf();
-  }, []);
   return (
-    <div>
-      <div>Abstract: {get(pdf, "article.abstract", "")}</div>
-      {get(pdf, "permission", 0) === 1 ? (
-        <div>Read</div>
-      ) : get(pdf, "permission", 0) === 2 ? (
-        <div>Print</div>
-      ) : get(pdf, "permission", 0) === 3 ? (
-        <div>Download</div>
-      ) : (
-        <div>None</div>
-      )}
-      {/* <canvas ref={canvasRef}></canvas> */}
-      {/* <div>
-        <Document
-          file={"pdfviewer.pdf"}
-          onLoadSuccess={onDocumentLoadSuccess}
-        >
-          <Page pageNumber={pageNumber} />
-        </Document>
-        <p>Page {pageNumber} of {numPages}</p>
-      </div> */}
-      <Worker workerUrl="//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js">
-        <div
-          style={{
-            height: "100%",
-          }}
-        >
-          <Viewer
-            fileUrl="pdfviewer.pdf"
-            plugins={[defaultLayoutPluginInstance]}
-            onDocumentAskPassword={handleAskPassword}
-            transformGetDocumentParams={(options: PdfJs.GetDocumentParams) => {
-              return Object.assign({}, options, {
-                disableRange: false,
-                disableStream: true,
-              });
-            }}
-          />
+    <>
+      <div key={get(article, "id", 0)}>
+        <div>
+          <Title>{get(article, "title", "")}</Title>
         </div>
-      </Worker>
-    </div>
+        <div>
+          <Text>{get(article, "abstract", "")}</Text>
+        </div>
+      </div>
+      {!showPdf && !isEmpty(pdf) ? (
+        <Button onClick={handleAccess}>Read all article</Button>
+      ) : !isEmpty(pdf) ? (
+        <div>
+          <div>Abstract: {get(pdf, "article.abstract", "")}</div>
+          {get(pdf, "permission") === 1 ? (
+            <div>Read</div>
+          ) : get(pdf, "permission") === 2 ? (
+            <div>Print</div>
+          ) : get(pdf, "permission") === 3 ? (
+            <div>Download</div>
+          ) : (
+            <div>None</div>
+          )}
+          <Worker workerUrl="//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js">
+            <div
+              style={{
+                height: "100%",
+              }}
+            >
+              <Viewer
+                fileUrl="pdfviewer.pdf"
+                plugins={[defaultLayoutPluginInstance]}
+                onDocumentAskPassword={handleAskPassword}
+                transformGetDocumentParams={(
+                  options: PdfJs.GetDocumentParams
+                ) => {
+                  return Object.assign({}, options, {
+                    disableRange: false,
+                    disableStream: true,
+                  });
+                }}
+              />
+            </div>
+          </Worker>
+        </div>
+      ) : (
+        <div>Article is not exist!</div>
+      )}
+    </>
   );
 };
 
 export default Article;
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const apiURL = `http://localhost:3000/api/pdf`;
-  const { data } = await axios.get(`${apiURL}?article=1`);
+export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (session)
+    return {
+      props: {
+        sessionId: session.id,
+      },
+    };
   return {
-    props: {
-      pdf: data.data,
-    },
+    props: {},
   };
-};
+}

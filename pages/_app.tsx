@@ -11,11 +11,11 @@ function MyApp({ Component, pageProps, router }: AppProps) {
       theme={{
         token: {
           // Seed Token
-          colorPrimary: "#31C1F3",
+          // colorPrimary: "#31C1F3",
           borderRadius: 2,
 
           // Alias Token
-          colorBgContainer: "#f6ffed",
+          // colorBgContainer: "#f6ffed",
         },
       }}
     > 
@@ -28,11 +28,11 @@ function MyApp({ Component, pageProps, router }: AppProps) {
       theme={{
         token: {
           // Seed Token
-          colorPrimary: "#31C1F3",
+          // colorPrimary: "#31C1F3",
           borderRadius: 2,
 
           // Alias Token
-          colorBgContainer: "#f6ffed",
+          // colorBgContainer: "#f6ffed",
         },
       }}
     > 
