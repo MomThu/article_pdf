@@ -1,15 +1,12 @@
 import { GetServerSideProps } from "next";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]";
 
-export default function Home({ results }) {
-  const session = useSession();
-
-  console.log(session, "sessionnnn")
+export default function Home(props) {
   const [dataFetch, setDataFetch] = useState();
 
-  React.useEffect(() => console.log(results), [results]);
   React.useEffect(() => console.log(dataFetch), [dataFetch]);
 
   const apiURL = `/api/author/article`;
@@ -27,31 +24,23 @@ export default function Home({ results }) {
     fetchData(1);
   }, []);
 
-
-  if (session) {
-    return (
-      <div>
-        home
-      </div>
-    );
+  if (props?.sessionId) {
+    return <div>home</div>;
   } else {
-    return (
-      <div>
-        chua login
-      </div>
-    );
+    return <div>chua login</div>;
   }
 
   // will make the initial call to populate the results
 }
-// export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-//   const { origin } = absoluteUrl(req);
-
-//   const apiURL = `${origin}/api/customer`;
-//   const { data } = await axios.get(apiURL);
-//   return {
-//     props: {
-//       results: data.data,
-//     },
-//   };
-// };
+export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (session)
+    return {
+      props: {
+        sessionId: session.id,
+      },
+    };
+  return {
+    props: {},
+  };
+}
