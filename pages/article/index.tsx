@@ -128,7 +128,7 @@ const Article = (props) => {
   const decrypt = (encryptedText, key, iv) => {
     const decipher = crypto.createDecipheriv(
       "aes-256-cbc",
-      Buffer.from(key),
+      Buffer.from(key, "hex"),
       Buffer.from(iv, "hex")
     );
     let decrypted = decipher.update(encryptedText, "hex", "utf8");
@@ -138,7 +138,7 @@ const Article = (props) => {
 
   const handleAskPassword = (e: DocumentAskPasswordEvent) => {
     try {
-      const key = "12345612345612345612345612345612";
+      const key = props?.sessionId;
       const realPassword = decrypt(
         get(pdf, "encryptedPassword", ""),
         key,

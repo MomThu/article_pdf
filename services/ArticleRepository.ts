@@ -21,7 +21,6 @@ export class ArticleRepository extends Article {
   };
 
   public static searchArticle = async (keyword?: string | string[]) => {
-    console.log(keyword);
     if (!keyword || !size(keyword)) {
       const datas = await Article.findAll();
       return datas;
@@ -31,7 +30,6 @@ export class ArticleRepository extends Article {
         title: { [Op.like]: `%${keyword}%` },
       },
     });
-    console.log(dataByTitle, "data by title");
     const dataByAbstract = await Article.findAll({
       where: {
         abstract: { [Op.like]: `%${keyword}%` },

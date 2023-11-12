@@ -7,7 +7,6 @@ const { Text, Title } = Typography;
 const { Meta } = Card;
 
 const ArticleComponent = ({ item }) => {
-  console.log(item);
   const onAddToCart = () => {};
   return (
     <div>

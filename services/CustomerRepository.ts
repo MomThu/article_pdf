@@ -45,10 +45,16 @@ export class CustomerRepository extends Customer {
     });
     if (
       customer &&
-      (await bcrypt.compare(data?.password, customer?.password))
+      customer?.password === data?.password
+      // (await bcrypt.compare(data?.password, customer?.password))
     ) {
       return {
         error: false,
+        user: {
+          id: customer?.id,
+          email: customer?.email,
+          full_name: customer?.full_name
+        },
         message: "Login successful!",
       };
     } else {

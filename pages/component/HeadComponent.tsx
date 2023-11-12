@@ -6,7 +6,6 @@ import { authOptions } from "../api/auth/[...nextauth]";
 
 const { Title } = Typography;
 const Header = (props) => {
-  console.log(props, "session id");
   const router = useRouter();
 
   const gotoLogin = () => {
@@ -43,7 +42,6 @@ export default Header;
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  console.log(session, "session");
   if (session)
     return {
       props: {

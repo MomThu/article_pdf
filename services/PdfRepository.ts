@@ -12,7 +12,7 @@ export class PdfRepository extends Pdf {
     const encrypt = (text, key, iv) => {
       let cipher = crypto.createCipheriv(
         "aes-256-cbc",
-        Buffer.from(key),
+        Buffer.from(key, "hex"),
         Buffer.from(iv, "hex")
       );
       let encrypted = cipher.update(text, "utf8", "hex");
