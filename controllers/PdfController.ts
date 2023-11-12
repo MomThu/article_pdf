@@ -9,7 +9,7 @@ const getPdfByArticle = async (req: NextApiRequest, res: NextApiResponse) => {
     const privateKey = "12345612345612345612345612345612";
     const iv_value = crypto.randomBytes(16).toString("hex");
     const articleId = req.query.article;
-    const cusId = 5;
+    const cusId = 1;
     let result = await PdfRepository.getPdfByArticle(articleId, cusId, privateKey, iv_value);
     let articleInfo = await ArticleRepository.findByPk(toNumber(articleId));
     result['iv_value'] = iv_value;

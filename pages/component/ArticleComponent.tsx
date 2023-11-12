@@ -7,19 +7,11 @@ const { Text, Title } = Typography;
 const { Meta } = Card;
 
 const ArticleComponent = ({ item }) => {
+  console.log(item);
   const onAddToCart = () => {};
   return (
-    <div className="h-100%">
+    <div>
       <Card
-        cover={
-          <Link href={{ pathname: "/article", query: { article: item?.id } }}>
-            <img
-              // className="w-10"
-              alt={"article image"}
-              src={"/article.png"}
-            />
-          </Link>
-        }
         actions={[
           <Button
             type="primary"
@@ -36,7 +28,19 @@ const ArticleComponent = ({ item }) => {
               <Title level={4}>{item?.title}</Title>
             </Link>
           }
-          description={<Text type="secondary">{item?.abstract}</Text>}
+          description={
+            <div>
+              <div>
+                <Text type="secondary">{item?.abstract}</Text>
+              </div>
+              <div>
+                <Text>Author</Text>
+              </div>
+              <div>
+                <Text>publish_date</Text>
+              </div>
+            </div>
+          }
         />
       </Card>
     </div>

@@ -1,4 +1,4 @@
-import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
+import { ShoppingCartOutlined, ShoppingFilled, UserOutlined } from "@ant-design/icons";
 import { Button, Col, Menu, Row, Space, Typography } from "antd";
 import { getServerSession } from "next-auth";
 import { useRouter } from "next/router";
@@ -18,26 +18,24 @@ const Header = (props) => {
   };
 
   return (
-    <>
-      <div className="flex flex-row justify-between bg-[#001524] items-center">
+    <div className="flex flex-row justify-between bg-[#001524] items-center">
+      <div>
+        <Title style={{ color: "#fff" }}>Logo</Title>
+      </div>
+      <div className="flex flex-row justify-between gap-10 items-center">
         <div>
-          <Title style={{color: "#fff"}}>Logo</Title>
+          <ShoppingCartOutlined className="text-white" />
         </div>
-        <div className="flex flex-row justify-between gap-10 items-center">
-          <div>
-            <ShoppingCartOutlined className="text-white" />
-          </div>
-          <div className="flex flex-row justify-between gap-2 mr-5">
-            <Button type="default" onClick={gotoRegister}>
-              Register
-            </Button>
-            <Button type="default" onClick={gotoLogin}>
-              Sign in
-            </Button>
-          </div>
+        <div className="flex flex-row justify-between gap-2 mr-5">
+          <Button type="default" onClick={gotoRegister}>
+            Register
+          </Button>
+          <Button type="default" onClick={gotoLogin}>
+            Sign in
+          </Button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

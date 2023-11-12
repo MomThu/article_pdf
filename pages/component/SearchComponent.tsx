@@ -29,13 +29,13 @@ const SearchComponent = ({ setArticle }) => {
     <div>
       <div style={{ textAlign: "center" }}>
         <Row justify="center" className="justify-center">
-          <Col span={20}>
+          <Col md={20}>
             <img src="/article.png" alt="banner image" />
           </Col>
         </Row>
 
         <Row justify="center" className="mt-5 flex">
-          <Col span={12}>
+          <Col md={12} xs={20}>
             <Input.Search
               placeholder="Search articles by title, abstract..."
               size="large"

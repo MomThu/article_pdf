@@ -23,31 +23,39 @@ const HomeComponent = () => {
     fetchData();
   }, []);
 
+  const fake = [
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+    articles[0],
+  ];
   return (
     <div>
       <SearchComponent setArticle={(data) => setArticles(data)} />
       <div>
         {size(articles) &&
-          articles.map((article) => {
-            return (
-              <div className="mt-5">
-                <Row key={article?.id} gutter={16}>
-                  <Col span={4}>
-                    <div>aaa</div>
-                  </Col>
-                  <Col span={4}>
-                    <ArticleComponent item={article} />
-                  </Col>
-                  <Col span={4}>
-                    <ArticleComponent item={article} />
-                  </Col>
-                  <Col span={4}>
-                    <ArticleComponent item={article} />
-                  </Col>
-                </Row>
-              </div>
-            );
-          })}
+          fake.map((item, index) => (
+            <Row style={{ padding: "10px" }} className="justify-center" key={item?.id}>
+              <Col md={18}>
+                <ArticleComponent item={item} />
+              </Col>
+            </Row>
+          ))}
       </div>
     </div>
   );

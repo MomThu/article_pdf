@@ -5,7 +5,7 @@ import { toNumber } from "lodash";
 
 const getAllOrders = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    let cusId = 5;
+    let cusId = 1;
     let result = await OrderRepository.getOrdersByCusId(cusId);
     res.status(200).json({
       error: false,

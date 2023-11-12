@@ -62,7 +62,7 @@ const getPermissionArticle = async (
 ) => {
   try {
     let { article } = req.query;
-    let cusId = 5;
+    let cusId = 1;
     let data = await ArticleRepository.getPermissionArticle(cusId, article);
     res.status(200).json({
       error: false,
@@ -79,7 +79,7 @@ const getArticleByPermission = async (
 ) => {
   try {
     let { permission } = req.query;
-    let cusId = 5;
+    let cusId = 1;
     let data = await ArticleRepository.getArticleByPermission(
       cusId,
       permission

@@ -1,4 +1,4 @@
-import { Button, Card, Typography, notification } from "antd";
+import { Button, Card, Col, Row, Typography, notification } from "antd";
 import axios from "axios";
 import { get, isEmpty } from "lodash";
 import Link from "next/link";
@@ -11,15 +11,24 @@ import crypto from "crypto";
 import {
   DocumentAskPasswordEvent,
   PdfJs,
+  RenderPageProps,
   Viewer,
   Worker,
 } from "@react-pdf-viewer/core";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
+import type {
+  ToolbarProps,
+  ToolbarSlot,
+  TransformToolbarSlot,
+} from "@react-pdf-viewer/toolbar";
 
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 const { Text, Title } = Typography;
+interface RemovePartsDefaultToolbarDefaultLayoutExampleProps {
+  fileUrl: string;
+}
 
 const Article = (props) => {
   const router = useRouter();
@@ -28,10 +37,61 @@ const Article = (props) => {
   const [showPdf, setShowPdf] = useState(false);
   const [pdf, setPdf] = useState({});
 
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
+  const transform1: TransformToolbarSlot = (slot: ToolbarSlot) => ({
+    ...slot,
+    Download: () => <></>,
+    DownloadMenuItem: () => <></>,
+    Open: () => <></>,
+    Print: () => <></>,
+  });
+
+  const transform2: TransformToolbarSlot = (slot: ToolbarSlot) => ({
+    ...slot,
+    Download: () => <></>,
+    DownloadMenuItem: () => <></>,
+    Open: () => <></>,
+  });
+
+  const transform3: TransformToolbarSlot = (slot: ToolbarSlot) => ({
+    ...slot,
+    Open: () => <></>,
+  });
+
+  const renderToolbar = (
+    Toolbar: (props: ToolbarProps) => React.ReactElement
+  ) => (
+    <Toolbar>
+      {renderDefaultToolbar(
+        get(pdf, "permission") === 1
+          ? transform1
+          : get(pdf, "permission") === 2
+          ? transform2
+          : get(pdf, "permission") === 3
+          ? transform3
+          : null
+      )}
+    </Toolbar>
+  );
+
+  const defaultLayoutPluginInstance = defaultLayoutPlugin({
+    renderToolbar,
+  });
+  const { renderDefaultToolbar } =
+    defaultLayoutPluginInstance.toolbarPluginInstance;
+
+  const renderPage = (props: RenderPageProps) => {
+    return (
+      <>
+        {props.canvasLayer.children}
+        <div style={{ userSelect: get(pdf, "permission") !== 3 ? "none" : "auto" }}>{props.textLayer.children}</div>
+        {props.annotationLayer.children}
+      </>
+    );
+  };
 
   useEffect(() => {
     fetchData();
+    fetchPdf();
   }, []);
 
   const fetchData = async () => {
@@ -43,11 +103,6 @@ const Article = (props) => {
     } catch (err) {
       notification.error({ message: err ? err : "Error!" });
     }
-  };
-
-  const handleAccess = () => {
-    setShowPdf(true);
-    fetchPdf();
   };
 
   const fetchPdf = async () => {
@@ -64,6 +119,10 @@ const Article = (props) => {
     } catch (err) {
       notification.error({ message: err ? err : "Error!" });
     }
+  };
+
+  const handleAccess = () => {
+    setShowPdf(true);
   };
 
   const decrypt = (encryptedText, key, iv) => {
@@ -91,55 +150,65 @@ const Article = (props) => {
   };
 
   return (
-    <>
-      <div key={get(article, "id", 0)}>
-        <div>
-          <Title>{get(article, "title", "")}</Title>
+    <Row className="justify-center mt-10">
+      <Col md={18}>
+        <div key={get(article, "id", 0)}>
+          <div>
+            <Title className="text-center" level={3}>
+              {get(article, "title", "")}
+            </Title>
+          </div>
+          <div>
+            <Title level={5}>Abstract</Title>
+            <Text>{get(article, "abstract", "")}</Text>
+          </div>
         </div>
-        <div>
-          <Text>{get(article, "abstract", "")}</Text>
-        </div>
-      </div>
-      {!showPdf && !isEmpty(pdf) ? (
-        <Button onClick={handleAccess}>Read all article</Button>
-      ) : !isEmpty(pdf) ? (
-        <div>
-          <div>Abstract: {get(pdf, "article.abstract", "")}</div>
-          {get(pdf, "permission") === 1 ? (
-            <div>Read</div>
-          ) : get(pdf, "permission") === 2 ? (
-            <div>Print</div>
-          ) : get(pdf, "permission") === 3 ? (
-            <div>Download</div>
-          ) : (
-            <div>None</div>
-          )}
-          <Worker workerUrl="//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js">
-            <div
-              style={{
-                height: "100%",
-              }}
-            >
-              <Viewer
-                fileUrl="pdfviewer.pdf"
-                plugins={[defaultLayoutPluginInstance]}
-                onDocumentAskPassword={handleAskPassword}
-                transformGetDocumentParams={(
-                  options: PdfJs.GetDocumentParams
-                ) => {
-                  return Object.assign({}, options, {
-                    disableRange: false,
-                    disableStream: true,
-                  });
-                }}
-              />
-            </div>
-          </Worker>
-        </div>
-      ) : (
-        <div>Article is not exist!</div>
-      )}
-    </>
+        {!showPdf && !isEmpty(pdf) ? (
+          <Button onClick={handleAccess}>Read PDF</Button>
+        ) : !isEmpty(pdf) ? (
+          <div>
+            {get(pdf, "permission") === 1 ? (
+              <div>Read</div>
+            ) : get(pdf, "permission") === 2 ? (
+              <div>Print</div>
+            ) : get(pdf, "permission") === 3 ? (
+              <div>Download</div>
+            ) : (
+              <div>
+                You do not have permission to read this article. Please pay to
+                read it!
+              </div>
+            )}
+            {get(pdf, "permission", 0) !== 0 && (
+              <Worker workerUrl="//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js">
+                <div
+                  style={{
+                    height: "100%",
+                  }}
+                >
+                  <Viewer
+                    fileUrl="pdfviewer.pdf"
+                    plugins={[defaultLayoutPluginInstance]}
+                    onDocumentAskPassword={handleAskPassword}
+                    renderPage={renderPage}
+                    transformGetDocumentParams={(
+                      options: PdfJs.GetDocumentParams
+                    ) => {
+                      return Object.assign({}, options, {
+                        disableRange: false,
+                        disableStream: true,
+                      });
+                    }}
+                  />
+                </div>
+              </Worker>
+            )}
+          </div>
+        ) : (
+          <div>Article is not exist!</div>
+        )}
+      </Col>
+    </Row>
   );
 };
 

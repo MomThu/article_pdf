@@ -4,11 +4,11 @@ import Header from "./component/HeadComponent";
 const Layout = ({children}) => {
   return (
     <div>
-      <header>
+      <header className="sticky top-0 z-50">
         <Header />
       </header>
 
-      <main>
+      <main className="relative">
         {children}
       </main>
       
