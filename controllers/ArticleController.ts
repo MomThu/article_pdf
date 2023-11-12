@@ -1,6 +1,8 @@
 import { toNumber } from "lodash";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ArticleRepository } from "../services";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../pages/api/auth/[...nextauth]";
 
 const getAllArticles = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -62,7 +64,8 @@ const getPermissionArticle = async (
 ) => {
   try {
     let { article } = req.query;
-    let cusId = 1;
+    const session = await getServerSession(req, res, authOptions);
+    const cusId = session?.user.id;
     let data = await ArticleRepository.getPermissionArticle(cusId, article);
     res.status(200).json({
       error: false,
@@ -79,7 +82,8 @@ const getArticleByPermission = async (
 ) => {
   try {
     let { permission } = req.query;
-    let cusId = 1;
+    const session = await getServerSession(req, res, authOptions);
+    const cusId = session?.user.id;
     let data = await ArticleRepository.getArticleByPermission(
       cusId,
       permission

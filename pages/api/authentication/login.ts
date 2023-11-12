@@ -1,14 +1,12 @@
-import { createRouter, expressWrapper } from "next-connect";
-import onError from "../../../middleware/errors";
-import {
-  login,
-  register,
-} from "../../../controllers/CustomerController";
 import { NextApiRequest, NextApiResponse } from "next";
+import { createRouter } from "next-connect";
+import {
+  login
+} from "../../../controllers/CustomerController";
+import onError from "../../../middleware/errors";
 
 const router = createRouter<NextApiRequest, NextApiResponse>();
 router.post(login);
-router.post(register);
 
 const handler = router.handler({
   onError: onError,

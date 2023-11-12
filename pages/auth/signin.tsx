@@ -1,10 +1,10 @@
-import { Button, Form, Input, Typography, notification } from "antd";
+import { Button, Form, Input, Typography, message, notification } from "antd";
 import axios from "axios";
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from "next";
-import { getCsrfToken } from "next-auth/react";
+import { getCsrfToken, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 const { Title } = Typography;
@@ -21,24 +21,26 @@ export default function SignIn({
 
   const [form] = Form.useForm<FormLogin>();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
     try {
-      const data = await form.validateFields();
-      handleLogin(data);
-    } catch (error) {
-      // console.log(error);
-    }
-  };
-
-  const handleLogin = async (data: FormLogin) => {
-    try {
-      await axios.post("/api/auth/callback/credentials", {
-        data,
+      e.preventDefault();
+      const data = {
+        email: e.target.email.value,
+        password: e.target.password.value,
+        csrfToken: e.target.csrfToken.value,
+      };
+      const response = await signIn("credentials", {
+        ...data,
+        redirect: false,
       });
-      form.setFieldsValue(data);
-      // router.push("/");
+      console.log(response, "res here");
+      if (response?.error) {
+        notification.error({ message: response?.error });
+      } else {
+        router.push("/")
+      }
     } catch (error) {
-      notification.error({ message: "Username or password incorrect!" });
+      notification.error({ message: "Error!" });
     }
   };
 
@@ -47,18 +49,92 @@ export default function SignIn({
   };
 
   return (
-    <form method="post" action="/api/auth/callback/credentials">
-      <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-      <label>
-        Email
-        <input name="email" type="text" />
-      </label>
-      <label>
-        Password
-        <input name="password" type="password" />
-      </label>
-      <button type="submit">Sign in</button>
-    </form>
+    // <form method="post" action="/api/auth/callback/credentials">
+    //   <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+    //   <label>
+    //     Email
+    //     <input name="email" type="text" />
+    //   </label>
+    //   <label>
+    //     Password
+    //     <input name="password" type="password" />
+    //   </label>
+    //   <button type="submit">Sign in</button>
+    // </form>
+
+    // method="post" action="/api/auth/callback/credentials"
+    <div className="h-[100vh] flex flex-col justify-center bg-[#001524]">
+      <div className="flex justify-center">
+        <div className="bg-white flex flex-col py-8 px-20 rounded-xl shadow-xl max-w-[528px]">
+          <Title className="text-center text-[40px] leading-[48px] font-bold mb-8">
+            Login
+          </Title>
+          <form onSubmit={handleSubmit}>
+            <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+
+            <div style={{ marginBottom: "5%" }}>
+              <label
+                htmlFor="email"
+                style={{ display: "block", marginBottom: "3%" }}
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="text"
+                style={{
+                  width: "100%",
+                  // padding: "3%",
+                  boxSizing: "border-box",
+                  border: "1px solid #ccc",
+                  borderRadius: "0.5em",
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: "5%" }}>
+              <label
+                htmlFor="password"
+                style={{ display: "block", marginBottom: "3%" }}
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                style={{
+                  width: "100%",
+                  // padding: "3%",
+                  boxSizing: "border-box",
+                  border: "1px solid #ccc",
+                  borderRadius: "0.5em",
+                }}
+              />
+            </div>
+            <div className="text-center">
+              <button
+                type="submit"
+                style={{
+                  backgroundColor: "#1890ff",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  padding: "5px",
+                  paddingLeft: "10px",
+                  paddingRight: "10px",
+                  
+                }}
+              >
+                Sign in
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 }
 

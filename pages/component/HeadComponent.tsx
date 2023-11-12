@@ -1,8 +1,24 @@
-import { ShoppingCartOutlined, ShoppingFilled, UserOutlined } from "@ant-design/icons";
-import { Button, Col, Menu, Row, Space, Typography } from "antd";
+import {
+  ShoppingCartOutlined,
+  ShoppingFilled,
+  UserOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Col,
+  Menu,
+  Modal,
+  Row,
+  Space,
+  Typography,
+  notification,
+} from "antd";
 import { getServerSession } from "next-auth";
 import { useRouter } from "next/router";
 import { authOptions } from "../api/auth/[...nextauth]";
+import { useCallback } from "react";
+import axios from "axios";
+import { signOut } from "next-auth/react";
 
 const { Title } = Typography;
 const Header = (props) => {
@@ -15,6 +31,16 @@ const Header = (props) => {
   const gotoRegister = () => {
     router.push("/auth/register");
   };
+
+  const handleLogout = useCallback((): void => {
+    Modal.confirm({
+      title: "Xác nhận",
+      okText: "Đồng ý",
+      autoFocusButton: null,
+      content: "Bạn có chắc muốn đăng xuất ?",
+      onOk: () => signOut({callbackUrl: "/"}),
+    });
+  }, []);
 
   return (
     <div className="flex flex-row justify-between bg-[#001524] items-center">
@@ -31,6 +57,9 @@ const Header = (props) => {
           </Button>
           <Button type="default" onClick={gotoLogin}>
             Sign in
+          </Button>
+          <Button type="default" onClick={handleLogout}>
+            Logout
           </Button>
         </div>
       </div>

@@ -38,7 +38,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       password: data?.password
     });
     if (customer?.error) {
-      res.status(404).json({
+      res.status(400).json({
         error: true,
         message: customer?.message,
       });

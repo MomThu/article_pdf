@@ -45,8 +45,7 @@ export class CustomerRepository extends Customer {
     });
     if (
       customer &&
-      customer?.password === data?.password
-      // (await bcrypt.compare(data?.password, customer?.password))
+      (await bcrypt.compare(data?.password, customer?.password))
     ) {
       return {
         error: false,
@@ -60,7 +59,7 @@ export class CustomerRepository extends Customer {
     } else {
       return {
         error: true,
-        message: "You are not authorized!",
+        message: "Email or password is incorrect!",
       };
     }
   };

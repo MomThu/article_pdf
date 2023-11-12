@@ -9,6 +9,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { login } from "../../../controllers/CustomerController";
 import { CustomerRepository } from "../../../services";
 import crypto from "crypto";
+import { notification } from "antd";
+import { get } from "lodash";
 
 export const authOptions = {
   secret: process.env.SECRET,
@@ -20,21 +22,21 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        try {
+        try {          
           const customer = await CustomerRepository.login({
             email: credentials?.email,
             password: credentials?.password,
           });
+          console.log(customer, "customer");
           if (customer?.error) {
-            
-            return null
+            return customer;
           } else {
             const data = customer;
             data["id"] = crypto.randomBytes(32).toString("hex");
             return data
           }
         } catch (err) {
-          console.log(err, "error day");
+          // console.log(err, "error day");
         }
       },
     }),
@@ -53,6 +55,12 @@ export const authOptions = {
     signIn: "/auth/signin",
   },
   callbacks: {
+    async signIn({user}) {
+      if (user?.error) {
+        throw new Error(user?.message);
+      }
+      return true
+    },
     // Goi khi log in, token la payload cua token duoc tao, user la data return o tren
     async jwt({ token, user }) {
       if (user) {
@@ -68,6 +76,8 @@ export const authOptions = {
       session.user = token.user;
       return session;
     },
+    //
+    
   },
 };
 

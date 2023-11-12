@@ -6,16 +6,14 @@ import { authOptions } from "./api/auth/[...nextauth]";
 import HomeComponent from "./component/HomeComponent";
 
 export default function Home(props) {
-  if (props?.sessionId) {
-    return (
-      <HomeComponent />
-    )
-  } else {
-    return <div>chua login</div>;
-  }
+  // if (props?.sessionId) {
 
-  // will make the initial call to populate the results
+  // } else {
+  //   return <div>chua login</div>;
+  // }
+  return <HomeComponent />;
 }
+
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
   if (session)
