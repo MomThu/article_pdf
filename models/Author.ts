@@ -1,4 +1,6 @@
-import { Column, DataType, Table } from "sequelize-typescript";
+import { BelongsToMany, Column, DataType, Table } from "sequelize-typescript";
+import { Article } from "./Article";
+import { ArticleAuthor } from "./ArticleAuthor";
 import { BaseModel } from "./BaseModel";
 
 @Table({
@@ -17,4 +19,9 @@ export class Author extends BaseModel {
 
     @Column({type: DataType.STRING})
     email: string;
+
+    @BelongsToMany(() => Article, {
+        through: () => ArticleAuthor
+    })
+    article: Article[]
 }

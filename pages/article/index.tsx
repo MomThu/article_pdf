@@ -25,6 +25,7 @@ import type {
 
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+import { ShoppingCartOutlined } from "@ant-design/icons";
 const { Text, Title } = Typography;
 interface RemovePartsDefaultToolbarDefaultLayoutExampleProps {
   fileUrl: string;
@@ -83,7 +84,11 @@ const Article = (props) => {
     return (
       <>
         {props.canvasLayer.children}
-        <div style={{ userSelect: get(pdf, "permission") !== 3 ? "none" : "auto" }}>{props.textLayer.children}</div>
+        <div
+          style={{ userSelect: get(pdf, "permission") !== 3 ? "none" : "auto" }}
+        >
+          {props.textLayer.children}
+        </div>
         {props.annotationLayer.children}
       </>
     );
@@ -149,6 +154,9 @@ const Article = (props) => {
     } catch (err) {}
   };
 
+  const onAddToCart = () => {};
+
+
   return (
     <Row className="justify-center mt-10">
       <Col md={18}>
@@ -175,8 +183,17 @@ const Article = (props) => {
               <div>Download</div>
             ) : (
               <div>
-                You do not have permission to read this article. Please pay to
-                read it!
+                <Text>
+                  You do not have permission to read this article. Please pay to
+                  read it!
+                </Text>
+                <Button
+                  type="primary"
+                  icon={<ShoppingCartOutlined />}
+                  onClick={() => onAddToCart()}
+                >
+                  <b>ADD TO CART</b>
+                </Button>
               </div>
             )}
             {get(pdf, "permission", 0) !== 0 && (

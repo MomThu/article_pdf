@@ -7,12 +7,19 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../pages/api/auth/[...nextauth]";
 
 const getPdfByArticle = async (req: NextApiRequest, res: NextApiResponse) => {
-    try {
-      const session = await getServerSession(req, res, authOptions);
-      const privateKey = session?.id;
-      const iv_value = crypto.randomBytes(16).toString("hex");
-      const articleId = req.query.article;
-      const cusId = session?.user.id;
+  try {
+    const session = await getServerSession(req, res, authOptions);
+    const privateKey = session?.id;
+    const iv_value = crypto.randomBytes(16).toString("hex");
+    const articleId = req.query.article;
+    const cusId = session?.user.id;
+    console.log(cusId, "cusId");
+    if (!cusId) {
+      res.status(200).json({
+        error: false,
+        data: { permission: 0 },
+      });
+    } else {
       let result = await PdfRepository.getPdfByArticle(
         articleId,
         cusId,
@@ -26,10 +33,11 @@ const getPdfByArticle = async (req: NextApiRequest, res: NextApiResponse) => {
         error: false,
         data: result,
       });
-    } catch (err) {
-      console.log(err);
-      throw err;
     }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 };
 
 export { getPdfByArticle };

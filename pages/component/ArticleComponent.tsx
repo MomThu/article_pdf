@@ -1,5 +1,7 @@
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Row, Typography } from "antd";
+import { size } from "lodash";
+import moment from "moment";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -7,20 +9,9 @@ const { Text, Title } = Typography;
 const { Meta } = Card;
 
 const ArticleComponent = ({ item }) => {
-  const onAddToCart = () => {};
   return (
     <div>
-      <Card
-        actions={[
-          <Button
-            type="primary"
-            icon={<ShoppingCartOutlined />}
-            onClick={() => onAddToCart()}
-          >
-            <b>ADD TO CART</b>
-          </Button>,
-        ]}
-      >
+      <Card>
         <Meta
           title={
             <Link href={{ pathname: "/article", query: { article: item?.id } }}>
@@ -32,11 +23,16 @@ const ArticleComponent = ({ item }) => {
               <div>
                 <Text type="secondary">{item?.abstract}</Text>
               </div>
-              <div>
-                <Text>Author</Text>
+              <div className="flex flex-row">
+                {size(item?.author) &&
+                  item?.author.map((author) => (
+                    <div className="mr-1">
+                      <Text>{author?.fullname}</Text>
+                    </div>
+                  ))}
               </div>
               <div>
-                <Text>publish_date</Text>
+                <Text>{moment(item?.publish_date).format("DD/MM/YYYY")}</Text>
               </div>
             </div>
           }

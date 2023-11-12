@@ -4,7 +4,15 @@ import { size } from "lodash";
 
 export class ArticleRepository extends Article {
   public static getAllArticle = async (options?: FindOptions) => {
-    const datas = await Article.findAll();
+    const datas = await Article.findAll({
+      include: [
+        {
+          model: Author,
+          through: { attributes: [] },
+          // attributes: [""]
+        },
+      ],
+    });
     return datas;
   };
 
