@@ -33,7 +33,6 @@ export default function SignIn({
         ...data,
         redirect: false,
       });
-      console.log(response, "res here");
       if (response?.error) {
         notification.error({ message: response?.error });
       } else {

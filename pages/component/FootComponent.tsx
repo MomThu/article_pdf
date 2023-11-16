@@ -32,10 +32,7 @@ const AppFooter = () => {
             <Text strong>Products</Text>
           </div>
           <Paragraph>
-            <a href="#">Book-IT</a>
-          </Paragraph>
-          <Paragraph>
-            <a href="#">Portfolio</a>
+            <a href="#">Articles</a>
           </Paragraph>
         </Col>
         <Col md={8} lg={8}>
@@ -48,11 +45,6 @@ const AppFooter = () => {
           <Paragraph>
             <PhoneOutlined /> +8412345678
           </Paragraph>
-        </Col>
-      </Row>
-      <Divider />
-      <Row justify="space-between" align="middle">
-        <Col md={8} lg={8}>
           <div style={{ textAlign: "right" }}>
             <ul style={{ listStyle: "none", padding: 0 }}>
               <li style={{ display: "inline-block", marginRight: "8px" }}>

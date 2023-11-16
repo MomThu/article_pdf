@@ -96,7 +96,42 @@ const getArticleByPermission = async (
     throw err;
   }
 };
+
+const updateArticlePermission = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  try {
+    let { permission, article } = req.body;
+    const session = await getServerSession(req, res, authOptions);
+    const cusId = session?.user.id;
+    if (!cusId) {
+      res.status(401).json({
+        error: true,
+        message: "You need to login for payment action!"
+      });
+    }
+    let data = await ArticleRepository.updateArticlePermission(
+      cusId,
+      article,
+      permission
+    );
+    res.status(200).json({
+      error: false,
+      message: "Buy successfully!"
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
 export {
-  getAllArticles, getArticleByAuthor, getArticleById, getArticleByPermission, getPermissionArticle, searchArticle
+  getAllArticles, 
+  getArticleByAuthor, 
+  getArticleById, 
+  getArticleByPermission, 
+  getPermissionArticle, 
+  searchArticle,
+  updateArticlePermission,
 };
 

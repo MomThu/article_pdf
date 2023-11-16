@@ -1,4 +1,13 @@
-import { Button, Card, Col, Row, Typography, notification } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Modal,
+  Row,
+  Typography,
+  message,
+  notification,
+} from "antd";
 import axios from "axios";
 import { get, isEmpty } from "lodash";
 import Link from "next/link";
@@ -37,6 +46,8 @@ const Article = (props) => {
   const [article, setArticle] = useState({});
   const [showPdf, setShowPdf] = useState(false);
   const [pdf, setPdf] = useState({});
+  const [openModal, setOpenModal] = useState(false);
+  const [type, setType] = useState(0);
 
   const transform1: TransformToolbarSlot = (slot: ToolbarSlot) => ({
     ...slot,
@@ -96,7 +107,6 @@ const Article = (props) => {
 
   useEffect(() => {
     fetchData();
-    fetchPdf();
   }, []);
 
   const fetchData = async () => {
@@ -105,6 +115,9 @@ const Article = (props) => {
       const id = router?.query.article;
       const { data } = await axios.get(`${apiURL}/${id}`);
       setArticle(get(data, "data", {}));
+      if (data?.data) {
+        await fetchPdf();
+      }
     } catch (err) {
       notification.error({ message: err ? err : "Error!" });
     }
@@ -149,83 +162,172 @@ const Article = (props) => {
         key,
         get(pdf, "iv_value", "")
       );
-      console.log(realPassword, "realpassword");
-      e.verifyPassword(realPassword);
+      if (realPassword) {
+        e.verifyPassword(realPassword);
+      }
     } catch (err) {}
   };
 
-  const onAddToCart = () => {};
+  const handleBuyArticle = (type: number) => {
+    setType(type);
+    setOpenModal(true);
+  };
 
+  const handleOk = async () => {
+    try {
+      const id = router?.query.article;
+      const apiURL = `/api/article/payment`;
+      try {
+        const { data } = await axios.patch(`${apiURL}`, {
+          article: Number(id),
+          permission: type,
+        });
+        if (!data?.error) {
+          await fetchPdf();
+          setOpenModal(false);
+          notification.success({ message: data?.message });
+        }
+      } catch (err) {
+        setOpenModal(false);
+        notification.error({
+          message: err ? get(err, "response.data.message", "") : "Error!",
+        });
+      }
+    } catch (err) {
+      setOpenModal(false);
+      notification.error({ message: err ? err.toString() : "Error!" });
+    }
+  };
+
+  const handleCancel = () => {
+    setOpenModal(false);
+  };
 
   return (
-    <Row className="justify-center mt-10">
-      <Col md={18}>
-        <div key={get(article, "id", 0)}>
-          <div>
-            <Title className="text-center" level={3}>
-              {get(article, "title", "")}
-            </Title>
+    <div>
+      <Row className="justify-center mt-10">
+        <Col md={18}>
+          <div key={get(article, "id", 0)}>
+            <div>
+              <Title className="text-center" level={3}>
+                {get(article, "title", "")}
+              </Title>
+            </div>
+            <div>
+              <Title level={5}>Abstract</Title>
+              <Text>{get(article, "abstract", "")}</Text>
+            </div>
           </div>
-          <div>
-            <Title level={5}>Abstract</Title>
-            <Text>{get(article, "abstract", "")}</Text>
-          </div>
-        </div>
-        {!showPdf && !isEmpty(pdf) ? (
-          <Button onClick={handleAccess}>Read PDF</Button>
-        ) : !isEmpty(pdf) ? (
-          <div>
-            {get(pdf, "permission") === 1 ? (
-              <div>Read</div>
-            ) : get(pdf, "permission") === 2 ? (
-              <div>Print</div>
-            ) : get(pdf, "permission") === 3 ? (
-              <div>Download</div>
-            ) : (
-              <div>
-                <Text>
-                  You do not have permission to read this article. Please pay to
-                  read it!
-                </Text>
+          {!showPdf && !isEmpty(pdf) ? (
+            <Button onClick={handleAccess}>Read PDF</Button>
+          ) : !isEmpty(pdf) ? (
+            <div>
+              {get(pdf, "permission") === 1 ? (
+                <div>
+                  <Button
+                    type="primary"
+                    icon={<ShoppingCartOutlined />}
+                    onClick={() => handleBuyArticle(2)}
+                  >
+                    Pay to read and print
+                  </Button>
+                  <Button
+                    type="primary"
+                    icon={<ShoppingCartOutlined />}
+                    onClick={() => handleBuyArticle(3)}
+                  >
+                    Pay to read, print and download
+                  </Button>
+                </div>
+              ) : get(pdf, "permission") === 2 ? (
                 <Button
+                  type="primary"
+                  icon={<ShoppingCartOutlined />}
+                  onClick={() => handleBuyArticle(3)}
+                >
+                  Pay to read, print and download
+                </Button>
+              ) : get(pdf, "permission") === 3 ? (
+                <div></div>
+              ) : (
+                <div>
+                  <Text>
+                    You do not have permission to read this article. Please pay
+                    to read it!
+                  </Text>
+                  <div className="flex flex-row gap-10">
+                    <Button
+                      type="primary"
+                      icon={<ShoppingCartOutlined />}
+                      onClick={() => handleBuyArticle(1)}
+                    >
+                      Pay to read
+                    </Button>
+                    <Button
+                      type="primary"
+                      icon={<ShoppingCartOutlined />}
+                      onClick={() => handleBuyArticle(2)}
+                    >
+                      Pay to read and print
+                    </Button>
+                    <Button
+                      type="primary"
+                      icon={<ShoppingCartOutlined />}
+                      onClick={() => handleBuyArticle(3)}
+                    >
+                      Pay to read, print and download
+                    </Button>
+                  </div>
+
+                  {/* <Button
                   type="primary"
                   icon={<ShoppingCartOutlined />}
                   onClick={() => onAddToCart()}
                 >
                   <b>ADD TO CART</b>
-                </Button>
-              </div>
-            )}
-            {get(pdf, "permission", 0) !== 0 && (
-              <Worker workerUrl="//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js">
-                <div
-                  style={{
-                    height: "100%",
-                  }}
-                >
-                  <Viewer
-                    fileUrl="pdfviewer.pdf"
-                    plugins={[defaultLayoutPluginInstance]}
-                    onDocumentAskPassword={handleAskPassword}
-                    renderPage={renderPage}
-                    transformGetDocumentParams={(
-                      options: PdfJs.GetDocumentParams
-                    ) => {
-                      return Object.assign({}, options, {
-                        disableRange: false,
-                        disableStream: true,
-                      });
-                    }}
-                  />
+                </Button> */}
                 </div>
-              </Worker>
-            )}
-          </div>
-        ) : (
-          <div>Article is not exist!</div>
-        )}
-      </Col>
-    </Row>
+              )}
+              {get(pdf, "permission", 0) && (
+                <Worker workerUrl="//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js">
+                  <div
+                    style={{
+                      height: "720px",
+                      marginBottom: "100px"
+                    }}
+                  >
+                    <Viewer
+                      fileUrl="pdfviewer.pdf"
+                      plugins={[defaultLayoutPluginInstance]}
+                      onDocumentAskPassword={handleAskPassword}
+                      renderPage={renderPage}
+                      transformGetDocumentParams={(
+                        options: PdfJs.GetDocumentParams
+                      ) => {
+                        return Object.assign({}, options, {
+                          disableRange: false,
+                          disableStream: true,
+                        });
+                      }}
+                    />
+                  </div>
+                </Worker>
+              )}
+            </div>
+          ) : (
+            <div>Article is not exist!</div>
+          )}
+        </Col>
+      </Row>
+      <Modal
+        title="Payment"
+        open={openModal}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        {}
+      </Modal>
+    </div>
   );
 };
 

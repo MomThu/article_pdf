@@ -27,7 +27,6 @@ export const authOptions = {
             email: credentials?.email,
             password: credentials?.password,
           });
-          console.log(customer, "customer");
           if (customer?.error) {
             return customer;
           } else {
@@ -64,7 +63,6 @@ export const authOptions = {
     // Goi khi log in, token la payload cua token duoc tao, user la data return o tren
     async jwt({ token, user }) {
       if (user) {
-        console.log(user, "user day nay");
         token.id = user.id;
         token.user = user.user;
       }

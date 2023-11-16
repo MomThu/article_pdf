@@ -1,5 +1,5 @@
 import { FindOptions, QueryTypes, Op } from "sequelize";
-import { Article, Author } from "../connectDB";
+import { Article, ArticlePermission, Author } from "../connectDB";
 import { size } from "lodash";
 
 export class ArticleRepository extends Article {
@@ -90,5 +90,36 @@ export class ArticleRepository extends Article {
       { type: QueryTypes.SELECT }
     );
     return permissions;
+  };
+
+  public static updateArticlePermission = async (
+    cusId: number,
+    articleId: number,
+    permission: string | string[]
+  ) => {
+    const articlePermission = await ArticlePermission.findOne({
+      where: {
+        customer_id: cusId,
+        article_id: articleId,
+      },
+    });
+    if (!articlePermission || !size(articlePermission)) {
+      const articlePermission = await ArticlePermission.create({
+        article_id: articleId,
+        customer_id: cusId,
+        type_of_permission: Number(permission),
+      });
+      return articlePermission;
+    }
+    const updatePermission = await ArticlePermission.update(
+      { type_of_permission: Number(permission) },
+      {
+        where: {
+          customer_id: cusId,
+          article_id: articleId,
+        },
+      }
+    );
+    return updatePermission;
   };
 }

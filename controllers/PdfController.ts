@@ -13,7 +13,6 @@ const getPdfByArticle = async (req: NextApiRequest, res: NextApiResponse) => {
     const iv_value = crypto.randomBytes(16).toString("hex");
     const articleId = req.query.article;
     const cusId = session?.user.id;
-    console.log(cusId, "cusId");
     if (!cusId) {
       res.status(200).json({
         error: false,

@@ -1,4 +1,4 @@
-import { get, size, toNumber } from "lodash";
+import { get, isEmpty, size, toNumber } from "lodash";
 import { QueryTypes } from "sequelize";
 import { Pdf } from "../connectDB";
 import crypto from "crypto";
@@ -28,13 +28,21 @@ export class PdfRepository extends Pdf {
         article_id: toNumber(articleId),
       },
     });
-    const realPassword = pdf.password;
-    const encryptedPassword = encrypt(realPassword, privateKey, iv_value);
-    const permission = get(permissions[0], 'type_of_permission', 0);
-    return {
-      encryptedPassword: encryptedPassword,
-      permission: permission,
-    };
+    if (pdf && !isEmpty(pdf)) {
+      const realPassword = pdf.password;
+      const encryptedPassword = encrypt(realPassword, privateKey, iv_value);
+      const permission = get(permissions[0], 'type_of_permission', 0);
+      return {
+        encryptedPassword: encryptedPassword,
+        permission: permission,
+      };
+    } else {
+      return {
+        error: true,
+        message: "Article is not exist!"
+      }
+    }
+
   };
 }
 
