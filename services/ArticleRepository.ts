@@ -92,6 +92,14 @@ export class ArticleRepository extends Article {
     return permissions;
   };
 
+  public static getArticleBought = async (cusId: number) => {
+    const permissions = await this.sequelize.query(
+      `SELECT * FROM article_permission JOIN articles ON article_permission.article_id = articles.id WHERE article_permission.type_of_permission > 0 AND article_permission.customer_id = ${cusId}`,
+      { type: QueryTypes.SELECT }
+    );
+    return permissions;
+  };
+
   public static updateArticlePermission = async (
     cusId: number,
     articleId: number,

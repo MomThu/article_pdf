@@ -29,20 +29,20 @@ export class PdfRepository extends Pdf {
       },
     });
     if (pdf && !isEmpty(pdf)) {
-      const realPassword = pdf.password;
+      const realPassword = pdf.password || "";
       const encryptedPassword = encrypt(realPassword, privateKey, iv_value);
-      const permission = get(permissions[0], 'type_of_permission', 0);
+      const permission = get(permissions[0], "type_of_permission", 0);
       return {
         encryptedPassword: encryptedPassword,
-        permission: permission,
+        permission: realPassword ? permission : 3,
+        url: pdf?.url,
       };
     } else {
       return {
         error: true,
-        message: "Article is not exist!"
-      }
+        message: "Article is not exist!",
+      };
     }
-
   };
 }
 

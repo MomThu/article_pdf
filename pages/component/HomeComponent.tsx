@@ -49,7 +49,7 @@ const HomeComponent = () => {
       <SearchComponent setArticle={(data) => setArticles(data)} />
       <div>
         {size(articles) &&
-          fake.map((item, index) => (
+          articles.map((item, index) => (
             <Row style={{ padding: "10px" }} className="justify-center" key={item?.id}>
               <Col md={18}>
                 <ArticleComponent item={item} />

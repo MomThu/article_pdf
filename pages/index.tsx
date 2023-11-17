@@ -6,11 +6,6 @@ import { authOptions } from "./api/auth/[...nextauth]";
 import HomeComponent from "./component/HomeComponent";
 
 export default function Home(props) {
-  // if (props?.sessionId) {
-
-  // } else {
-  //   return <div>chua login</div>;
-  // }
   return <HomeComponent />;
 }
 

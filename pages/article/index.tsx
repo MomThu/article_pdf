@@ -48,7 +48,7 @@ const Article = (props) => {
   const [pdf, setPdf] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [type, setType] = useState(0);
-
+  
   const transform1: TransformToolbarSlot = (slot: ToolbarSlot) => ({
     ...slot,
     Download: () => <></>,
@@ -106,28 +106,15 @@ const Article = (props) => {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchPdf();
   }, []);
-
-  const fetchData = async () => {
-    try {
-      const apiURL = `/api/article`;
-      const id = router?.query.article;
-      const { data } = await axios.get(`${apiURL}/${id}`);
-      setArticle(get(data, "data", {}));
-      if (data?.data) {
-        await fetchPdf();
-      }
-    } catch (err) {
-      notification.error({ message: err ? err : "Error!" });
-    }
-  };
 
   const fetchPdf = async () => {
     try {
       const id = router?.query.article;
       const apiURL = `/api/pdf`;
       const { data } = await axios.get(`${apiURL}?article=${id}`);
+      setArticle(get(data, "data.article", {}));
       setPdf(get(data, "data", {}));
       return {
         props: {
@@ -154,7 +141,7 @@ const Article = (props) => {
     return decrypted;
   };
 
-  const handleAskPassword = (e: DocumentAskPasswordEvent) => {
+  const handleAskPassword = (e: DocumentAskPasswordEvent) => {    
     try {
       const key = props?.sessionId;
       const realPassword = decrypt(
@@ -297,7 +284,7 @@ const Article = (props) => {
                     }}
                   >
                     <Viewer
-                      fileUrl="pdfviewer.pdf"
+                      fileUrl={get(pdf, "url", "")}
                       plugins={[defaultLayoutPluginInstance]}
                       onDocumentAskPassword={handleAskPassword}
                       renderPage={renderPage}
