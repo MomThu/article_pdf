@@ -7,6 +7,7 @@ const FileUpload = (props) => {
   const uploadToClient = (event) => {
     if (event.target.files && event.target.files[0]) {
       const i = event.target.files[0];
+      console.log(i, "abccc");
       setImage(i);
     }
   };
@@ -14,15 +15,8 @@ const FileUpload = (props) => {
   const uploadToServer = async (event) => {
     const body = new FormData();
     body.append("file", image);
-    // const response = await fetch("/api/upload", {
-    //   method: "POST",
-    //   headers: { 'Content-Type': 'multipart/form-data' },
-    //   body: body 
-    // });
-
-    const response = await axios.post("/api/upload", {
-      ...body
-    }, {
+  
+    const response = await axios.post("/api/upload", body, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
   };

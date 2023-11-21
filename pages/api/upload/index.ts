@@ -6,8 +6,14 @@ import { uploadFile } from "../../../controllers/UploadController";
 const router = createRouter<NextApiRequest, NextApiResponse>();
 router.post(uploadFile);
 
-const handler = router.handler({
-  onError: onError,
-});
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
+const handler = router.handler({
+  onError: onError, 
+});
+ 
 export default handler;

@@ -20,6 +20,7 @@ export class CustomerRepository extends Customer {
     const encryptData = {
       ...data,
       password: await bcrypt.hash(data?.password, 10),
+      role: 2,
     };
     const customer = await Customer.create(encryptData);
     return customer;
@@ -52,7 +53,8 @@ export class CustomerRepository extends Customer {
         user: {
           id: customer?.id,
           email: customer?.email,
-          full_name: customer?.full_name
+          full_name: customer?.full_name,
+          role: customer?.role,
         },
         message: "Login successful!",
       };

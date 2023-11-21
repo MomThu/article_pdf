@@ -89,7 +89,7 @@ const Pdf: any = ({ pdf }) => {
           }}
         >
           <Viewer
-            fileUrl="pdfviewer.pdf"
+            fileUrl="https://pdfarticlebucket.s3.ap-southeast-1.amazonaws.com/3441baacf45c543bdce486c13"
             plugins={[defaultLayoutPluginInstance]}
             onDocumentAskPassword={handleAskPassword}
             transformGetDocumentParams={(options: PdfJs.GetDocumentParams) => {
