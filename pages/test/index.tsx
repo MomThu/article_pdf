@@ -1,4 +1,4 @@
-import { FileUpload } from "../component/UploadPDF";
+import FileUpload from "../component/UploadPDF";
 
 export default function Home() {
   return (

@@ -4,3 +4,4 @@ export * from "./AuthorRepository";
 export * from "./OrderRepository";
 export * from "./PdfRepository";
 export * from "./CartRepository";
+export * from "./UploadService";
