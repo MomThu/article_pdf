@@ -8,7 +8,6 @@ import { ArticleAuthor } from "./models/ArticleAuthor";
 import { ArticlePermission } from "./models/ArticlePermission";
 import { Author } from "./models/Author";
 import { Cart } from "./models/Cart";
-import { OrderDetail } from "./models/OrderDetail";
 import { Pdf } from "./models/Pdf";
 import { Reference } from "./models/Reference";
 
@@ -28,7 +27,6 @@ sequelize.addModels([
   ArticlePermission,
   Author,
   Cart,
-  OrderDetail,
   Pdf,
   Reference,
 ]);
@@ -41,7 +39,6 @@ export {
   ArticlePermission,
   Author,
   Cart,
-  OrderDetail,
   Pdf,
   Reference,
 };

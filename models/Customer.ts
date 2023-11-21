@@ -17,6 +17,9 @@ class Customer extends Model {
 
     @Column({type: DataType.STRING})
     phone: string;
+
+    @Column({type: DataType.INTEGER})
+    role: number;
 }
 
 export default Customer
