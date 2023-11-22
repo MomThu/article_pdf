@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import SearchComponent from "./SearchComponent";
 import axios from "axios";
 import { get, size } from "lodash";
-import { Col, Row, notification } from "antd";
+import { Button, Col, Row, notification } from "antd";
 import ArticleComponent from "./ArticleComponent";
+import FileUpload from "./UploadPDF";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import router from "next/router";
 
-const HomeComponent = () => {
+const AdminComponent = () => {
   const [articles, setArticles] = useState([]);
 
   const apiURL = `/api/article`;
@@ -23,34 +26,25 @@ const HomeComponent = () => {
     fetchData();
   }, []);
 
-  const fake = [
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-  ];
+  const gotoAdd = () => {
+    router.push("/article/add");
+  }
+
   return (
     <div>
-      <SearchComponent setArticle={(data) => setArticles(data)} isAdmin={false} />
+      <SearchComponent
+        setArticle={(data) => setArticles(data)}
+        isAdmin={true}
+      />
+      <Button type="primary" icon={<PlusCircleOutlined />} className="ml-10 rounded-md" onClick={gotoAdd}>Thêm mới</Button>
       <div>
         {size(articles) &&
           articles.map((item, index) => (
-            <Row style={{ padding: "10px" }} className="justify-center" key={item?.id}>
+            <Row
+              style={{ padding: "10px" }}
+              className="justify-center"
+              key={item?.id}
+            >
               <Col md={18}>
                 <ArticleComponent item={item} />
               </Col>
@@ -61,4 +55,4 @@ const HomeComponent = () => {
   );
 };
 
-export default HomeComponent;
+export default AdminComponent;

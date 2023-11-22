@@ -4,9 +4,15 @@ import axios from "axios";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 import HomeComponent from "./component/HomeComponent";
+import AdminComponent from "./component/AdminComponent";
 
 export default function Home(props) {
-  return <HomeComponent />;
+  
+  return (
+    <div>
+      {props?.user.role === 1  ? <AdminComponent /> : <HomeComponent />}
+    </div>
+    )
 }
 
 export async function getServerSideProps(context) {
@@ -15,6 +21,7 @@ export async function getServerSideProps(context) {
     return {
       props: {
         sessionId: session.id,
+        user: session.user
       },
     };
   return {

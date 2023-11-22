@@ -4,7 +4,7 @@ import axios from "axios";
 import { get, size } from "lodash";
 import React, { useEffect, useState } from "react";
 
-const SearchComponent = ({ setArticle }) => {
+const SearchComponent = ({ setArticle, isAdmin }) => {
   const apiURL = `/api/article`;
 
   const fetchData = async (keyword) => {
@@ -28,11 +28,13 @@ const SearchComponent = ({ setArticle }) => {
   return (
     <div>
       <div style={{ textAlign: "center" }}>
-        <Row justify="center" className="justify-center">
-          <Col md={20}>
-            <img src="/article.png" alt="banner image" />
-          </Col>
-        </Row>
+        {!isAdmin && (
+          <Row justify="center" className="justify-center">
+            <Col md={20}>
+              <img src="/article.png" alt="banner image" />
+            </Col>
+          </Row>
+        )}
 
         <Row justify="center" className="mt-5 flex">
           <Col md={12} xs={20}>
