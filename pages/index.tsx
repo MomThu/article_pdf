@@ -5,12 +5,13 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 import HomeComponent from "./component/HomeComponent";
 import AdminComponent from "./component/AdminComponent";
+import { get } from "lodash";
 
 export default function Home(props) {
   
   return (
     <div>
-      {props?.user.role === 1  ? <AdminComponent /> : <HomeComponent />}
+      {get(props, "user.role", 0) === 1 ? <AdminComponent /> : <HomeComponent />}
     </div>
     )
 }
