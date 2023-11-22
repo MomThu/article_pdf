@@ -10,7 +10,6 @@ import {IncomingForm} from "formidable";
 
 const uploadFile = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-
     const data = await new Promise((resolve, reject) => {
       const form = new IncomingForm();
   
@@ -22,19 +21,29 @@ const uploadFile = async (req: NextApiRequest, res: NextApiResponse) => {
     const session = await getServerSession(req, res, authOptions);
     const {id, role} = session?.user;
     if (id && role === 1) {
-      let result = await UploadService(data.files.file[0], res);      
-      if (result?.error) {
-        res.status(401).json({ 
+      try {
+        let result = await UploadService(data.files.file[0]);
+        console.log("result");
+              
+        if (result?.error) {
+          res.status(401).json({ 
+            error: true,
+            message: get(result, "message", ""),
+          });
+        } else {
+          res.status(200).json({ 
+            error: false,
+            data: get(result, "data", ""),
+            message: get(result, "message", ""),
+          });
+        }
+      } catch (err) {
+        res.status(500).json({ 
           error: true,
-          message: get(result, "message", ""),
-        });
-      } else {
-        res.status(200).json({ 
-          error: false,
-          data: get(result, "data", ""),
-          message: get(result, "message", ""),
+          message: "Upload Failed!",
         });
       }
+      
       
     } else {
       res.status(401).json({

@@ -1,8 +1,9 @@
-import { Input } from "antd";
+import { Input, notification } from "antd";
 import axios from "axios";
+import { get } from "lodash";
 import { useState } from "react";
 
-const FileUpload = (props) => {
+const FileUpload = ({setUrl}) => {
   const [file, setFile] = useState(null);
 
   const uploadToClient = (event) => {
@@ -15,10 +16,20 @@ const FileUpload = (props) => {
   const uploadToServer = async (event) => {
     const body = new FormData();
     body.append("file", file);
-  
-    const response = await axios.post("/api/upload", body, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    })
+
+    try {
+      const response = await axios.post("/api/upload", body, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      if (response && get(response, "data.data", "")) {
+        setUrl(get(response, "data.data", ""))
+        notification.success({ message: "Upload successful!" });
+      }
+    } catch (err) {
+      console.log(err, "err here");
+
+      notification.error({ message: err?.message || "Upload Failed hihi" });
+    }
   };
 
   return (
@@ -36,6 +47,6 @@ const FileUpload = (props) => {
       </div>
     </div>
   );
-}
+};
 
-export default FileUpload
+export default FileUpload;

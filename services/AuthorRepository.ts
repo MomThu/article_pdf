@@ -23,4 +23,33 @@ export class AuthorRepository extends Author {
     );
     return authors;
   };
+
+  public static addAuthor = async (author: any) => {
+    const checkExist = await Author.findOne({
+      where: {
+        email: author?.email,
+      },
+    });
+    if (checkExist) {
+      return {
+        error: true,
+        message: "Author is already exist!",
+      };
+    } else {
+      try {
+        const authorCreated = Author.create({
+          ...author,
+        });
+        return {
+          error: true,
+          data: authorCreated,
+        }
+      } catch (err) {
+        return {
+          error: true,
+          message: "Create Failed!",
+        };
+      }
+    }
+  };
 }

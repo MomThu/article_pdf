@@ -57,4 +57,31 @@ const searchAuthor = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export { getAllAuthors, getAuthorById, searchAuthor, getAuthorsByArticle };
+const addAuthor = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const { author } = req.body;
+    let data = await AuthorRepository.addAuthor(author);
+    if (data?.error) {
+      res.status(401).json({
+        error: true,
+        message: data?.message,
+      });
+    } else {
+      res.status(200).json({
+        error: false,
+        data: data,
+        message: "Create successful!",
+      });
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+
+export {
+  getAllAuthors,
+  getAuthorById,
+  searchAuthor,
+  getAuthorsByArticle,
+  addAuthor,
+};

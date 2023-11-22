@@ -139,6 +139,37 @@ const updateArticlePermission = async (
   }
 };
 
+const addArticle = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    let { article } = req.body;
+    const session = await getServerSession(req, res, authOptions);
+    const cusId = session?.user.id;
+    const role = session?.user.role;
+    if (!cusId || role !== 1) {
+      res.status(401).json({
+        error: true,
+        message: "You are not authorized!",
+      });
+    } else {
+      let data = await ArticleRepository.addArticle(article);
+      if (data?.error) {
+        res.status(500).json({
+          error: false,
+          message: data?.message,
+        });
+      } else {
+        res.status(200).json({
+          error: false,
+          message: "Upload Successful!",
+        });
+      }
+      
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+
 export {
   getAllArticles,
   getArticleByAuthor,
@@ -147,5 +178,6 @@ export {
   getPermissionArticle,
   searchArticle,
   updateArticlePermission,
-  getArticleBought
+  getArticleBought,
+  addArticle,
 };

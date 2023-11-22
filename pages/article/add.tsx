@@ -1,13 +1,57 @@
-import React from "react";
+import React, { useState } from "react";
 import FileUpload from "../component/UploadPDF";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
-import { Button, Col, Form, Input, Row, Typography } from "antd";
+import { Button, Col, Form, Input, Row, Typography, notification } from "antd";
+import axios from "axios";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const AddArticle = ({ user }) => {
-  const onFinish = () => {};
+  const [form] = Form.useForm();
+
+  const [randomPass, setRandomPass] = useState("");
+  const [url, setUrl] = useState("");
+
+  const onFinish = async (formValue) => {
+    console.log(formValue, "form value");
+    
+    if (!url) {
+      notification.error({message: "Bạn cần upload file để tạo bài báo!"});
+    } else {
+      try {
+        const apiURL = `/api/article/add`;
+        const { data } = await axios.post(`${apiURL}`, {
+          ...formValue,
+          url: url
+        });
+        return {
+          props: {
+            pdf: data.data,
+          },
+        };
+      } catch (err) {
+        notification.error({ message: err ? err : "Error!" });
+      }
+    }
+  };
+
+  const generateCode = (length: number) => {
+    let result = "";
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    setRandomPass(result);
+    form.setFieldsValue({
+      password: result,
+      confirmPassword: result,
+    });
+  };
 
   return (
     <div>
@@ -20,7 +64,8 @@ const AddArticle = ({ user }) => {
               </Title>
               <div className="justify-center">
                 <Form
-                  name="registrationForm"
+                  form={form}
+                  name="addArticleForm"
                   onFinish={onFinish}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
@@ -32,7 +77,7 @@ const AddArticle = ({ user }) => {
                     rules={[
                       {
                         required: true,
-                        message: "Please enter your full name!",
+                        message: "Please enter the title!",
                       },
                     ]}
                   >
@@ -43,31 +88,39 @@ const AddArticle = ({ user }) => {
                     label="Tóm tắt"
                     name="abstract"
                     rules={[
-                      { required: true, message: "Please enter your email!" },
-                      {
-                        type: "email",
-                        message: "Please enter a valid email address!",
-                      },
+                      { required: true, message: "Please enter the abstract!" },
                     ]}
                   >
-                    <Input />
+                    <Input.TextArea rows={6} />
                   </Form.Item>
-
+                  {!randomPass ? (
+                    <Button onClick={() => generateCode(32)} type="primary">
+                      Auto Generate Password
+                    </Button>
+                  ) : (
+                    <div>
+                      <Text>Generated Password: {randomPass}</Text>
+                    </div>
+                  )}
                   <Form.Item
                     label="Password"
                     name="password"
                     rules={[
                       {
                         required: true,
-                        message: "Please enter your password!",
+                        message: "Please enter the password!",
                       },
                       {
-                        min: 6,
-                        message: "Password must be at least 6 characters long!",
+                        min: 32,
+                        max: 32,
+                        message: "Password must be 32 characters long!",
                       },
                     ]}
                   >
-                    <Input.Password />
+                    <Input.Password
+                      autoComplete="false"
+                      visibilityToggle={{ visible: true }}
+                    />
                   </Form.Item>
 
                   <Form.Item
@@ -77,7 +130,7 @@ const AddArticle = ({ user }) => {
                     rules={[
                       {
                         required: true,
-                        message: "Please confirm your password!",
+                        message: "Please confirm the password!",
                       },
                       ({ getFieldValue }) => ({
                         validator(_, value) {
@@ -91,10 +144,13 @@ const AddArticle = ({ user }) => {
                       }),
                     ]}
                   >
-                    <Input.Password />
+                    <Input.Password
+                      autoComplete="false"
+                      visibilityToggle={{ visible: true }}
+                    />
                   </Form.Item>
 
-                  <FileUpload />
+                  <FileUpload setUrl={(item) => setUrl(item)} />
 
                   <Form.Item
                     wrapperCol={{ span: 16 }}
