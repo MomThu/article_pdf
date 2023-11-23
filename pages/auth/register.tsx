@@ -2,8 +2,9 @@ import React from "react";
 import { Form, Input, Button, Col, Row, Typography, notification } from "antd";
 import axios from "axios";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const Register = () => {
   const router = useRouter();
@@ -16,7 +17,7 @@ const Register = () => {
       });
       if (!data?.error) {
         await notification.success({ message: "Register successful!" });
-        router.push("/auth/signin")
+        router.push("/auth/signin");
       }
     } catch (err) {
       notification.error({
@@ -31,8 +32,8 @@ const Register = () => {
 
   return (
     <div className="h-[100vh] flex flex-col justify-center bg-[#001524]">
-      <div className="flex justify-center">
-        <div className="bg-white flex flex-col py-8 px-20 rounded-xl shadow-xl">
+      <Row className="flex justify-center">
+        <Col className="bg-white py-8 px-20 rounded-xl shadow-xl">
           <Title className="text-center text-[40px] leading-[48px] font-bold mb-8">
             Register
           </Title>
@@ -42,6 +43,7 @@ const Register = () => {
               onFinish={onFinish}
               onFinishFailed={onFinishFailed}
               labelCol={{ span: 8 }}
+              labelWrap
               wrapperCol={{ span: 16 }}
               labelAlign="left"
             >
@@ -117,15 +119,26 @@ const Register = () => {
                 <Input />
               </Form.Item>
 
-              <Form.Item wrapperCol={{ span: 16 }} className="justify-center">
-                <Button type="primary" htmlType="submit">
+              <Form.Item>
+                <Button type="primary" htmlType="submit" className="justify-center">
                   Register
                 </Button>
               </Form.Item>
             </Form>
+            <div className="justify-center">
+              <Text>
+                Did you have an account?{" "}
+                <Link
+                  href={{ pathname: "/auth/signin" }} // Replace with your actual forgot password page
+                  style={{ color: "#1890ff", textDecoration: "underline" }}
+                >
+                  Signin
+                </Link>
+              </Text>
+            </div>
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   );
 };

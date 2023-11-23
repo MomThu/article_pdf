@@ -5,6 +5,7 @@ import type {
   InferGetServerSidePropsType,
 } from "next";
 import { getCsrfToken, signIn, useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 const { Title } = Typography;
@@ -36,7 +37,7 @@ export default function SignIn({
       if (response?.error) {
         notification.error({ message: response?.error });
       } else {
-        router.push("/")
+        router.push("/");
       }
     } catch (error) {
       notification.error({ message: "Error!" });
@@ -112,6 +113,27 @@ export default function SignIn({
                 }}
               />
             </div>
+
+            {/* Forgot Password link */}
+            <div style={{ marginBottom: "5%", textAlign: "right" }}>
+              <Link
+                href={{ pathname: "/auth/forgetpassword" }} // Replace with your actual forgot password page
+                style={{ color: "#1890ff", textDecoration: "underline" }}
+              >
+                Forgot Password?
+              </Link>
+            </div>
+
+            <div style={{ marginBottom: "5%", textAlign: "right" }}>
+              Do you not have an account?{" "}
+              <Link
+                href={{ pathname: "/auth/register" }} // Replace with your actual forgot password page
+                style={{ color: "#1890ff", textDecoration: "underline" }}
+              >
+                Register
+              </Link>
+            </div>
+
             <div className="text-center">
               <button
                 type="submit"
@@ -124,7 +146,6 @@ export default function SignIn({
                   padding: "5px",
                   paddingLeft: "10px",
                   paddingRight: "10px",
-                  
                 }}
               >
                 Sign in

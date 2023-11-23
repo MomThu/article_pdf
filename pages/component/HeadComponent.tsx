@@ -20,7 +20,7 @@ import { useCallback } from "react";
 import axios from "axios";
 import { signOut } from "next-auth/react";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const Header = (props) => {
   const router = useRouter();
 
@@ -38,14 +38,14 @@ const Header = (props) => {
       okText: "Đồng ý",
       autoFocusButton: null,
       content: "Bạn có chắc muốn đăng xuất ?",
-      onOk: () => signOut({callbackUrl: "/"}),
+      onOk: () => signOut({ callbackUrl: "/" }),
     });
   }, []);
 
   return (
-    <div className="flex flex-row justify-between bg-[#001524] items-center">
-      <div>
-        <Title style={{ color: "#fff" }}>Logo</Title>
+    <div className="flex flex-row justify-between bg-[#001524] items-center py-2">
+      <div className="flex justify-center gap-10 items-center">
+        <Title level={2} style={{ color: "#fff" }}>AM</Title>
       </div>
       <div className="flex flex-row justify-between gap-10 items-center">
         <div>

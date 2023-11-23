@@ -235,7 +235,7 @@ const Article = (props) => {
                   Pay to read, print and download
                 </Button>
               ) : get(pdf, "permission") === 3 ? (
-                <div></div>
+                <b>Password: {get(pdf, "realPassword", "")}</b>
               ) : (
                 <div>
                   <Text>
@@ -275,7 +275,7 @@ const Article = (props) => {
                 </Button> */}
                 </div>
               )}
-              {get(pdf, "permission", 0) && (
+              {get(pdf, "permission", 0) ? (
                 <Worker workerUrl="//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js">
                   <div
                     style={{
@@ -299,7 +299,7 @@ const Article = (props) => {
                     />
                   </div>
                 </Worker>
-              )}
+              ) : null}
             </div>
           ) : (
             <div>Article is not exist!</div>
