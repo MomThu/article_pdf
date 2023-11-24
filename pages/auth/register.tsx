@@ -49,7 +49,7 @@ const Register = () => {
             >
               <Form.Item
                 label="Full Name"
-                name="fullName"
+                name="full_name"
                 rules={[
                   { required: true, message: "Please enter your full name!" },
                 ]}
