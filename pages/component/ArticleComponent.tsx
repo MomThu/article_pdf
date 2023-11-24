@@ -36,7 +36,7 @@ const ArticleComponent = ({ item }) => {
                       <Link
                         href={{
                           pathname: "/author",
-                          query: { article: author?.id },
+                          query: { author: author?.id },
                         }}
                       >
                         {author?.fullname}

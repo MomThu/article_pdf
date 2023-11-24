@@ -1,6 +1,6 @@
 import React from "react";
 import { NextApiRequest, NextApiResponse } from "next";
-import { AuthorRepository } from "../services";
+import { ArticleRepository, AuthorRepository } from "../services";
 import { toNumber } from "lodash";
 
 const getAllAuthors = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -19,9 +19,16 @@ const getAuthorById = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     let authorId = req.query.id;
     let data = await AuthorRepository.findByPk(toNumber(authorId));
+    console.log(data, 'data');
+    
+    let articles = await ArticleRepository.getArticleByAuthor(authorId);
+    const result = {
+      ...data.dataValues,
+      articles: articles,
+    }
     res.status(200).json({
       error: false,
-      data: data,
+      data: result,
     });
   } catch (err) {
     throw err;

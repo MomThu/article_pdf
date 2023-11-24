@@ -64,7 +64,7 @@ export class ArticleRepository extends Article {
 
   public static getArticleByAuthor = async (authorId: string | string[]) => {
     const articles = await this.sequelize.query(
-      `SELECT * FROM article_author JOIN articles ON article_author.article_id = articles.id WHERE article_author.author_id = ${authorId}`,
+      `SELECT * FROM article_author JOIN articles JOIN authors ON article_author.article_id = articles.id WHERE article_author.author_id = ${authorId}`,
       { type: QueryTypes.SELECT }
     );
     return articles;
