@@ -27,15 +27,15 @@ const Author = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [router]);
 
   const fetchData = async () => {
     try {
-      const id = router?.query.author;
+      const id = router?.query.id;
       const apiURL = `/api/author/${id}`;
       const { data } = await axios.get(`${apiURL}`);
       setAuthor(get(data, "data", {}));
-      setArticle(get(data, "data.articles", {}))
+      setArticle(get(data, "data.article", []))
       return {
         props: {
           pdf: data.data,

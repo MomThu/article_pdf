@@ -1,10 +1,37 @@
 import { QueryTypes } from "sequelize";
-import { Author } from "../connectDB";
+import { Article, ArticleAuthor, Author } from "../connectDB";
 
 export class AuthorRepository extends Author {
   public static getAllAuthor = async () => {
     const datas = await Author.findAll();
     return datas;
+  };
+
+  public static findById = async (id: number) => {
+    try {
+      const datas = await Author.findOne({
+        include: [
+          {
+            model: Article,
+            through: { attributes: [] },
+            include: [
+              {
+                model: Author,
+                through: {attributes: []},
+              }
+            ]
+          },
+        ],
+        where: {
+          id: id,
+        },
+      });
+      return datas
+    } catch (err) {
+      console.log(err, "errrr")
+    }
+    
+    
   };
 
   public static searchAuthor = async (keyword?: string | string[]) => {

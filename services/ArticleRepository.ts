@@ -1,5 +1,10 @@
 import { FindOptions, QueryTypes, Op } from "sequelize";
-import { Article, ArticleAuthor, ArticlePermission, Author } from "../connectDB";
+import {
+  Article,
+  ArticleAuthor,
+  ArticlePermission,
+  Author,
+} from "../connectDB";
 import { size } from "lodash";
 
 export class ArticleRepository extends Article {
@@ -66,7 +71,7 @@ export class ArticleRepository extends Article {
     const articles = await this.sequelize.query(
       `SELECT * FROM article_author JOIN articles JOIN authors ON article_author.article_id = articles.id WHERE article_author.author_id = ${authorId}`,
       { type: QueryTypes.SELECT }
-    );
+    );    
     return articles;
   };
 
@@ -134,45 +139,49 @@ export class ArticleRepository extends Article {
   public static addArticle = async (article: any) => {
     const checkExist = Article.findOne({
       where: {
-        title: article?.title
-      }
-    })
+        title: article?.title,
+      },
+    });
     if (!checkExist) {
       const t = await this.sequelize.transaction();
       try {
-        const articleCreated = await Article.create({
-          title: article?.title,
-          abstract: article?.abstract,
-          publish_date: article?.publish_date,
-          journal_name: article?.journal_name,
-        }, {transaction: t})
-        console.log(articleCreated, "article created")
+        const articleCreated = await Article.create(
+          {
+            title: article?.title,
+            abstract: article?.abstract,
+            publish_date: article?.publish_date,
+            journal_name: article?.journal_name,
+          },
+          { transaction: t }
+        );
+        console.log(articleCreated, "article created");
         for (let i = 0; i < article?.authors.length; i++) {
-          const articleAuthor = await ArticleAuthor.create({
-            article_id: articleCreated?.id,
-            author_id: 1,
-          }, {transaction: t})
+          const articleAuthor = await ArticleAuthor.create(
+            {
+              article_id: articleCreated?.id,
+              author_id: 1,
+            },
+            { transaction: t }
+          );
         }
-        
+
         await t.commit();
         return {
           error: false,
-          message: "Created Successful!"
-        }
+          message: "Created Successful!",
+        };
       } catch (error) {
         await t.rollback();
         return {
           error: true,
-          message: "Create article failed!"
-        }
-      } 
+          message: "Create article failed!",
+        };
+      }
     } else {
       return {
         error: true,
-        message: "Article already exist!"
-      }
+        message: "Article already exist!",
+      };
     }
-    const t = await this.sequelize.transaction();
-
   };
 }

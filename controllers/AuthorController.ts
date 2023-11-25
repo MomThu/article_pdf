@@ -18,17 +18,10 @@ const getAllAuthors = async (req: NextApiRequest, res: NextApiResponse) => {
 const getAuthorById = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     let authorId = req.query.id;
-    let data = await AuthorRepository.findByPk(toNumber(authorId));
-    console.log(data, 'data');
-    
-    let articles = await ArticleRepository.getArticleByAuthor(authorId);
-    const result = {
-      ...data.dataValues,
-      articles: articles,
-    }
+    let data = await AuthorRepository.findById(toNumber(authorId));
     res.status(200).json({
       error: false,
-      data: result,
+      data: data,
     });
   } catch (err) {
     throw err;
