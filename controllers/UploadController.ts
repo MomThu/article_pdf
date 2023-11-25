@@ -4,8 +4,9 @@ import { get, toNumber } from "lodash";
 import crypto from "crypto";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../pages/api/auth/[...nextauth]";
-import UploadService from "../services/UploadService";
 import {IncomingForm} from "formidable";
+import axios from "axios";
+import FormData from "form-data";
 
 
 const uploadFile = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -18,13 +19,18 @@ const uploadFile = async (req: NextApiRequest, res: NextApiResponse) => {
         resolve({ err, fields, files })
       }) 
     })
+    const form = new FormData();
+    var fs = require("fs");
+    form.append('file', fs.createReadStream(data.files.file[0].filepath))
     const session = await getServerSession(req, res, authOptions);
     const {id, role} = session?.user;
     if (id && role === 1) {
       try {
-        let result = await UploadService(data.files.file[0]);
-        console.log("result");
-              
+        const result = await axios.post("http://localhost:8000/api/pdf", form, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        //Data ở đây bây giờ là Key, nó chính là file_name của PDF nhớ, ko dùng trường Location hay url nữa đâu.
         if (result?.error) {
           res.status(401).json({ 
             error: true,

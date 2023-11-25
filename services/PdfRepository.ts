@@ -32,18 +32,18 @@ export class PdfRepository extends Pdf {
       const realPassword = pdf.password || "";
       const encryptedPassword = encrypt(realPassword, privateKey, iv_value);
       const permission = get(permissions[0], "type_of_permission", 0);
-      if (permission === 3) {
+      if (permission === 0) {
         return {
-          encryptedPassword: encryptedPassword,
           permission: realPassword ? permission : 3,
           url: pdf?.url,
-          realPassword: realPassword
+          file_name: pdf?.file_name
         };
       }
       return {
         encryptedPassword: encryptedPassword,
         permission: realPassword ? permission : 3,
         url: pdf?.url,
+        file_name: pdf?.file_name
       };
     } else {
       return {

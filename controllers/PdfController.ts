@@ -5,6 +5,7 @@ import { toNumber } from "lodash";
 import crypto from "crypto";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../pages/api/auth/[...nextauth]";
+import axios from "axios";
 
 const getPdfByArticle = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

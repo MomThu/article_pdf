@@ -47,6 +47,7 @@ const Article = (props) => {
   const [article, setArticle] = useState({});
   const [showPdf, setShowPdf] = useState(false);
   const [pdf, setPdf] = useState({});
+  const [pdfUrl, setPdfUrl] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [type, setType] = useState(0);
 
@@ -117,11 +118,10 @@ const Article = (props) => {
       const { data } = await axios.get(`${apiURL}?article=${id}`);
       setArticle(get(data, "data.article", {}));
       setPdf(get(data, "data", {}));
-      return {
-        props: {
-          pdf: data.data,
-        },
-      };
+      if (data.data?.permission == 1 || data.data?.permission == 2 || data.data?.permission == 3) {
+        const content = await axios.get(`/api/pdf/content/?name=${data.data?.file_name}`);
+        setPdfUrl(content.data)
+      }
     } catch (err) {
       notification.error({ message: err ? err : "Error!" });
     }
@@ -289,7 +289,7 @@ const Article = (props) => {
                     }}
                   >
                     <Viewer
-                      fileUrl={get(pdf, "url", "")}
+                      fileUrl={pdfUrl}
                       plugins={[defaultLayoutPluginInstance]}
                       onDocumentAskPassword={handleAskPassword}
                       renderPage={renderPage}
