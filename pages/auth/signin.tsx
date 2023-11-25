@@ -7,6 +7,7 @@ import type {
 import { getCsrfToken, signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Header from "../component/HeadComponent";
 
 const { Title } = Typography;
 interface FormLogin {
@@ -49,109 +50,100 @@ export default function SignIn({
   };
 
   return (
-    // <form method="post" action="/api/auth/callback/credentials">
-    //   <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-    //   <label>
-    //     Email
-    //     <input name="email" type="text" />
-    //   </label>
-    //   <label>
-    //     Password
-    //     <input name="password" type="password" />
-    //   </label>
-    //   <button type="submit">Sign in</button>
-    // </form>
+    <div>
+      <header className="sticky top-0 z-50">
+        <Header signined={false} isAdmin={true} />
+      </header>
+      <div className="h-[100vh] flex flex-col justify-center bg-[#001524]">
+        <div className="flex justify-center">
+          <div className="bg-white flex flex-col py-8 px-20 rounded-xl shadow-xl max-w-[528px]">
+            <Title className="text-center text-[40px] leading-[48px] font-bold mb-8">
+              Login
+            </Title>
+            <form onSubmit={handleSubmit}>
+              <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
 
-    // method="post" action="/api/auth/callback/credentials"
-    <div className="h-[100vh] flex flex-col justify-center bg-[#001524]">
-      <div className="flex justify-center">
-        <div className="bg-white flex flex-col py-8 px-20 rounded-xl shadow-xl max-w-[528px]">
-          <Title className="text-center text-[40px] leading-[48px] font-bold mb-8">
-            Login
-          </Title>
-          <form onSubmit={handleSubmit}>
-            <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+              <div style={{ marginBottom: "5%" }}>
+                <label
+                  htmlFor="email"
+                  style={{ display: "block", marginBottom: "3%" }}
+                >
+                  Email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="text"
+                  style={{
+                    width: "100%",
+                    // padding: "3%",
+                    boxSizing: "border-box",
+                    border: "1px solid #ccc",
+                    borderRadius: "0.5em",
+                  }}
+                />
+              </div>
 
-            <div style={{ marginBottom: "5%" }}>
-              <label
-                htmlFor="email"
-                style={{ display: "block", marginBottom: "3%" }}
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="text"
-                style={{
-                  width: "100%",
-                  // padding: "3%",
-                  boxSizing: "border-box",
-                  border: "1px solid #ccc",
-                  borderRadius: "0.5em",
-                }}
-              />
-            </div>
+              <div style={{ marginBottom: "5%" }}>
+                <label
+                  htmlFor="password"
+                  style={{ display: "block", marginBottom: "3%" }}
+                >
+                  Password
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  style={{
+                    width: "100%",
+                    // padding: "3%",
+                    boxSizing: "border-box",
+                    border: "1px solid #ccc",
+                    borderRadius: "0.5em",
+                  }}
+                />
+              </div>
 
-            <div style={{ marginBottom: "5%" }}>
-              <label
-                htmlFor="password"
-                style={{ display: "block", marginBottom: "3%" }}
-              >
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                style={{
-                  width: "100%",
-                  // padding: "3%",
-                  boxSizing: "border-box",
-                  border: "1px solid #ccc",
-                  borderRadius: "0.5em",
-                }}
-              />
-            </div>
+              {/* Forgot Password link */}
+              <div style={{ marginBottom: "5%", textAlign: "right" }}>
+                <Link
+                  href={{ pathname: "/auth/forgetpassword" }} // Replace with your actual forgot password page
+                  style={{ color: "#1890ff", textDecoration: "underline" }}
+                >
+                  Forgot Password?
+                </Link>
+              </div>
 
-            {/* Forgot Password link */}
-            <div style={{ marginBottom: "5%", textAlign: "right" }}>
-              <Link
-                href={{ pathname: "/auth/forgetpassword" }} // Replace with your actual forgot password page
-                style={{ color: "#1890ff", textDecoration: "underline" }}
-              >
-                Forgot Password?
-              </Link>
-            </div>
+              <div style={{ marginBottom: "5%", textAlign: "right" }}>
+                Do you not have an account?{" "}
+                <Link
+                  href={{ pathname: "/auth/register" }} // Replace with your actual forgot password page
+                  style={{ color: "#1890ff", textDecoration: "underline" }}
+                >
+                  Register
+                </Link>
+              </div>
 
-            <div style={{ marginBottom: "5%", textAlign: "right" }}>
-              Do you not have an account?{" "}
-              <Link
-                href={{ pathname: "/auth/register" }} // Replace with your actual forgot password page
-                style={{ color: "#1890ff", textDecoration: "underline" }}
-              >
-                Register
-              </Link>
-            </div>
-
-            <div className="text-center">
-              <button
-                type="submit"
-                style={{
-                  backgroundColor: "#1890ff",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  padding: "5px",
-                  paddingLeft: "10px",
-                  paddingRight: "10px",
-                }}
-              >
-                Sign in
-              </button>
-            </div>
-          </form>
+              <div className="text-center">
+                <button
+                  type="submit"
+                  style={{
+                    backgroundColor: "#1890ff",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    padding: "5px",
+                    paddingLeft: "10px",
+                    paddingRight: "10px",
+                  }}
+                >
+                  Sign in
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

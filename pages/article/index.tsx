@@ -35,6 +35,7 @@ import type {
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import { ShoppingCartOutlined } from "@ant-design/icons";
+import Header from "../component/HeadComponent";
 const { Text, Title } = Typography;
 interface RemovePartsDefaultToolbarDefaultLayoutExampleProps {
   fileUrl: string;
@@ -48,7 +49,7 @@ const Article = (props) => {
   const [pdf, setPdf] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [type, setType] = useState(0);
-  
+
   const transform1: TransformToolbarSlot = (slot: ToolbarSlot) => ({
     ...slot,
     Download: () => <></>,
@@ -141,7 +142,7 @@ const Article = (props) => {
     return decrypted;
   };
 
-  const handleAskPassword = (e: DocumentAskPasswordEvent) => {    
+  const handleAskPassword = (e: DocumentAskPasswordEvent) => {
     try {
       const key = props?.sessionId;
       const realPassword = decrypt(
@@ -192,6 +193,9 @@ const Article = (props) => {
 
   return (
     <div>
+      <header className="sticky top-0 z-50">
+        <Header signined={false} isAdmin={true} />
+      </header>
       <Row className="justify-center mt-10">
         <Col md={18}>
           <div key={get(article, "id", 0)}>
@@ -280,7 +284,7 @@ const Article = (props) => {
                   <div
                     style={{
                       height: "720px",
-                      marginBottom: "100px"
+                      marginBottom: "100px",
                     }}
                   >
                     <Viewer

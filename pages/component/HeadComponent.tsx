@@ -21,7 +21,7 @@ import axios from "axios";
 import { signOut } from "next-auth/react";
 
 const { Title, Text } = Typography;
-const Header = (props) => {
+const Header = ({ signined, isAdmin }) => {
   const router = useRouter();
 
   const gotoLogin = () => {
@@ -31,6 +31,10 @@ const Header = (props) => {
   const gotoRegister = () => {
     router.push("/auth/register");
   };
+
+  const gotoHome = () => {
+    router.push("/")
+  }
 
   const handleLogout = useCallback((): void => {
     Modal.confirm({
@@ -44,23 +48,35 @@ const Header = (props) => {
 
   return (
     <div className="flex flex-row justify-between bg-[#001524] items-center py-2">
-      <div className="flex justify-center gap-10 items-center">
-        <Title level={2} style={{ color: "#fff" }}>AM</Title>
+      <div className="flex justify-center gap-10 items-center bg-[#fff]" onClick={gotoHome}>
+        <Title level={2} style={{ color: "#000" }}>
+          AM
+        </Title>
       </div>
       <div className="flex flex-row justify-between gap-10 items-center">
+        {signined && !isAdmin ? (
+          <div>
+            <ShoppingCartOutlined className="text-white" />
+          </div>
+        ) : null}
+
         <div>
-          <ShoppingCartOutlined className="text-white" />
-        </div>
-        <div className="flex flex-row justify-between gap-2 mr-5">
-          <Button type="default" onClick={gotoRegister}>
-            Register
-          </Button>
-          <Button type="default" onClick={gotoLogin}>
-            Sign in
-          </Button>
-          <Button type="default" onClick={handleLogout}>
-            Logout
-          </Button>
+          {!signined ? (
+            <div className="flex flex-row justify-between gap-2 mr-5">
+              <Button type="default" onClick={gotoRegister}>
+                Register
+              </Button>
+              <Button type="default" onClick={gotoLogin}>
+                Sign in
+              </Button>
+            </div>
+          ) : (
+            <div className="flex flex-row justify-between gap-2 mr-5">
+              <Button type="default" onClick={handleLogout}>
+                Logout
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -4,9 +4,9 @@ import Header from "./component/HeadComponent";
 const Layout = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col ">
-      <header className="sticky top-0 z-50">
+      {/* <header className="sticky top-0 z-50">
         <Header />
-      </header>
+      </header> */}
 
       <main className="relative">{children}</main>
 

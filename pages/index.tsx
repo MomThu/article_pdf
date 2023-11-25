@@ -6,14 +6,21 @@ import { authOptions } from "./api/auth/[...nextauth]";
 import HomeComponent from "./component/HomeComponent";
 import AdminComponent from "./component/AdminComponent";
 import { get } from "lodash";
+import Header from "./component/HeadComponent";
 
 export default function Home(props) {
-  
   return (
     <div>
-      {get(props, "user.role", 0) === 1 ? <AdminComponent /> : <HomeComponent />}
+      <header className="sticky top-0 z-50">
+        <Header signined={get(props, "sessionId", "") ? true : false} isAdmin={get(props, "user.role", 0) === 1 ? true : false} />
+      </header>
+      {get(props, "user.role", 0) === 1 ? (
+        <AdminComponent />
+      ) : (
+        <HomeComponent />
+      )}
     </div>
-    )
+  );
 }
 
 export async function getServerSideProps(context) {
@@ -22,7 +29,7 @@ export async function getServerSideProps(context) {
     return {
       props: {
         sessionId: session.id,
-        user: session.user
+        user: session.user,
       },
     };
   return {
