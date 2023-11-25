@@ -23,27 +23,6 @@ const HomeComponent = () => {
     fetchData();
   }, []);
 
-  const fake = [
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-    articles[0],
-  ];
   return (
     <div>
       <SearchComponent setArticle={(data) => setArticles(data)} isAdmin={false} />

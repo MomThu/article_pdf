@@ -3,15 +3,24 @@ import { Button, Card, Col, Row, Typography } from "antd";
 import { size } from "lodash";
 import moment from "moment";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 const { Text, Title, Paragraph } = Typography;
 const { Meta } = Card;
 
-const ArticleComponent = ({ item }) => {
+const CartComponent = ({ item }) => {
+  const router = useRouter();
+
+  const gotoPayment = () => {
+    router.push(`/payment/${item?.id}`)
+  }
   return (
     <div>
       <Card>
+        <div>
+          <Text>{moment(item?.date).format("DD/MM/YYYY")}</Text>
+        </div>
         <Meta
           title={
             <Link href={{ pathname: "/article", query: { article: item?.id } }}>
@@ -28,33 +37,18 @@ const ArticleComponent = ({ item }) => {
                   {item?.abstract}
                 </Paragraph>
               </div>
-              <div className="flex flex-row gap-2">
-                {size(item?.author) &&
-                  item?.author.map((author) => (
-                    <div className="mr-1" key={author?.id}>
-                      <UserOutlined />
-                      <Link
-                        href={{
-                          pathname: `/author/${author.id}`,
-                        }}
-                      >
-                        {author?.fullname}
-                      </Link>
-                    </div>
-                  ))}
-              </div>
               <div>
                 <Text>{item?.journal_name}</Text>
-              </div>
-              <div>
-                <Text>{moment(item?.publish_date).format("DD/MM/YYYY")}</Text>
               </div>
             </div>
           }
         />
+        <div className="flex flex-col items-end">
+          <Button type="primary" onClick={gotoPayment}>Thanh toán</Button>
+        </div>
       </Card>
     </div>
   );
 };
 
-export default ArticleComponent;
+export default CartComponent;

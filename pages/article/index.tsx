@@ -193,9 +193,10 @@ const Article = (props) => {
 
   return (
     <div>
-      <header className="sticky top-0 z-50">
-        <Header signined={false} isAdmin={true} />
-      </header>
+        <Header
+          isAdmin={get(props, "user.role", 0) === 1 ? true : false}
+          signined={get(props, "sessionId", "") ? true : false}
+        />
       <Row className="justify-center mt-10">
         <Col md={18}>
           <div key={get(article, "id", 0)}>
@@ -330,6 +331,7 @@ export async function getServerSideProps(context) {
     return {
       props: {
         sessionId: session.id,
+        user: session.user
       },
     };
   return {

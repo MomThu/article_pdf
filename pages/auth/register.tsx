@@ -35,10 +35,7 @@ const Register = () => {
   return (
     <div>
       <header className="sticky top-0 z-50">
-        <Header
-          signined={false}
-          isAdmin={true}
-        />
+        <Header signined={false} isAdmin={true} />
       </header>
       <div className="h-[100vh] flex flex-col justify-center bg-[#001524]">
         <Row className="flex justify-center">
@@ -128,14 +125,16 @@ const Register = () => {
                   <Input />
                 </Form.Item>
 
-                <Form.Item>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    className="items-center"
-                  >
-                    Register
-                  </Button>
+                <Form.Item className="w-full">
+                  <div className="flex flex-col items-center w-full">
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      className="items-center"
+                    >
+                      Register
+                    </Button>
+                  </div>
                 </Form.Item>
               </Form>
               <div>

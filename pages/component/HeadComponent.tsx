@@ -33,8 +33,12 @@ const Header = ({ signined, isAdmin }) => {
   };
 
   const gotoHome = () => {
-    router.push("/")
-  }
+    router.push("/");
+  };
+
+  const gotoCart = () => {
+    router.push("/cart");
+  };
 
   const handleLogout = useCallback((): void => {
     Modal.confirm({
@@ -48,15 +52,18 @@ const Header = ({ signined, isAdmin }) => {
 
   return (
     <div className="flex flex-row justify-between bg-[#001524] items-center py-2">
-      <div className="flex justify-center gap-10 items-center bg-[#fff]" onClick={gotoHome}>
+      <div
+        className="flex justify-center gap-10 items-center bg-[#fff]"
+        onClick={gotoHome}
+      >
         <Title level={2} style={{ color: "#000" }}>
           AM
         </Title>
       </div>
       <div className="flex flex-row justify-between gap-10 items-center">
         {signined && !isAdmin ? (
-          <div>
-            <ShoppingCartOutlined className="text-white" />
+          <div onClick={gotoCart}>
+            <ShoppingCartOutlined className="text-white hover:text-sky-700" />
           </div>
         ) : null}
 
