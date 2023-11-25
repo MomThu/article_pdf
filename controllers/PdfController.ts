@@ -39,4 +39,16 @@ const getPdfByArticle = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export { getPdfByArticle };
+const getPdfContentByName = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const name = req.query.name;
+    console.log(name);
+    const result = await axios.get(`http://localhost:8000/api/pdf?key=${name}`);
+    res.json(result.data);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+export { getPdfByArticle, getPdfContentByName };
