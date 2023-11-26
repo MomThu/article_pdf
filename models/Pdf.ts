@@ -18,9 +18,6 @@ export class Pdf extends BaseModel {
     file_name: string;
 
     @Column({type: DataType.STRING})
-    url: string;
-
-    @Column({type: DataType.STRING})
     password: string;
 
 }

@@ -52,6 +52,8 @@ export class AuthorRepository extends Author {
   };
 
   public static addAuthor = async (author: any) => {
+    console.log(author, "author here");
+    
     const checkExist = await Author.findOne({
       where: {
         email: author?.email,
@@ -64,11 +66,11 @@ export class AuthorRepository extends Author {
       };
     } else {
       try {
-        const authorCreated = Author.create({
+        const authorCreated = await Author.create({
           ...author,
-        });
+        });        
         return {
-          error: true,
+          error: false,
           data: authorCreated,
         }
       } catch (err) {

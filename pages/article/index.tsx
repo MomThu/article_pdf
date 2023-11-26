@@ -240,7 +240,7 @@ const Article = (props) => {
                   Pay to read, print and download
                 </Button>
               ) : get(pdf, "permission") === 3 ? (
-                <b>Password: {get(pdf, "realPassword", "")}</b>
+                <b>Password:</b>
               ) : (
                 <div>
                   <Text>

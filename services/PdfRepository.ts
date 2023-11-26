@@ -27,7 +27,8 @@ export class PdfRepository extends Pdf {
       where: {
         article_id: toNumber(articleId),
       },
-    });
+    });    
+    
     if (pdf && !isEmpty(pdf)) {
       const realPassword = pdf.password || "";
       const encryptedPassword = encrypt(realPassword, privateKey, iv_value);
@@ -35,14 +36,12 @@ export class PdfRepository extends Pdf {
       if (permission === 0) {
         return {
           permission: realPassword ? permission : 3,
-          url: pdf?.url,
           file_name: pdf?.file_name
         };
       }
       return {
         encryptedPassword: encryptedPassword,
         permission: realPassword ? permission : 3,
-        url: pdf?.url,
         file_name: pdf?.file_name
       };
     } else {

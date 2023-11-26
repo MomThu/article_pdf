@@ -4,6 +4,7 @@ import {
   ArticleAuthor,
   ArticlePermission,
   Author,
+  Pdf,
 } from "../connectDB";
 import { size } from "lodash";
 
@@ -71,7 +72,7 @@ export class ArticleRepository extends Article {
     const articles = await this.sequelize.query(
       `SELECT * FROM article_author JOIN articles JOIN authors ON article_author.article_id = articles.id WHERE article_author.author_id = ${authorId}`,
       { type: QueryTypes.SELECT }
-    );    
+    );
     return articles;
   };
 
@@ -137,11 +138,12 @@ export class ArticleRepository extends Article {
   };
 
   public static addArticle = async (article: any) => {
-    const checkExist = Article.findOne({
+    const checkExist = await Article.findOne({
       where: {
         title: article?.title,
       },
     });
+
     if (!checkExist) {
       const t = await this.sequelize.transaction();
       try {
@@ -154,16 +156,41 @@ export class ArticleRepository extends Article {
           },
           { transaction: t }
         );
-        console.log(articleCreated, "article created");
-        for (let i = 0; i < article?.authors.length; i++) {
-          const articleAuthor = await ArticleAuthor.create(
-            {
-              article_id: articleCreated?.id,
-              author_id: 1,
-            },
-            { transaction: t }
-          );
-        }
+
+        const pdfCreated = await Pdf.create(
+          {
+            article_id: articleCreated?.id,
+            file_name: article?.file_name,
+            password: article?.password,
+          },
+          { transaction: t }
+        );
+
+        // for (let i = 0; i < article?.author.length; i++) {
+        //   const articleAuthor = await ArticleAuthor.create(
+        //     {
+        //       article_id: articleCreated?.id,
+        //       author_id: article?.author[i],
+        //     },
+        //     { transaction: t }
+        //   );
+        // }
+          console.log(article, "article");
+          
+        await Promise.all(article?.author.map(async (id) => {
+          try {
+            const articleAuthor = await ArticleAuthor.create(
+              {
+                article_id: articleCreated?.id,
+                author_id: id,
+              },
+              { transaction: t }
+            );
+          } catch (err) {
+            console.log(err, "err here");
+          }
+          
+        }))
 
         await t.commit();
         return {
@@ -171,6 +198,8 @@ export class ArticleRepository extends Article {
           message: "Created Successful!",
         };
       } catch (error) {
+        console.log(error, "vao day");
+        
         await t.rollback();
         return {
           error: true,

@@ -141,7 +141,7 @@ const updateArticlePermission = async (
 
 const addArticle = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    let { article } = req.body;
+    let article = req.body;    
     const session = await getServerSession(req, res, authOptions);
     const cusId = session?.user.id;
     const role = session?.user.role;

@@ -59,7 +59,7 @@ const searchAuthor = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const addAuthor = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const { author } = req.body;
+    const author = req.body;
     let data = await AuthorRepository.addAuthor(author);
     if (data?.error) {
       res.status(401).json({
