@@ -28,7 +28,7 @@ const AdminComponent = () => {
 
   const gotoAdd = () => {
     router.push("/article/add");
-  }
+  };
 
   return (
     <div>
@@ -36,7 +36,19 @@ const AdminComponent = () => {
         setArticle={(data) => setArticles(data)}
         isAdmin={true}
       />
-      <Button type="primary" icon={<PlusCircleOutlined />} className="ml-10 rounded-md" onClick={gotoAdd}>Thêm mới</Button>
+
+      <Row style={{ padding: "10px" }} className="justify-center">
+        <Col md={18}>
+          <Button
+            type="primary"
+            icon={<PlusCircleOutlined />}
+            className="ml-10 rounded-md"
+            onClick={gotoAdd}
+          >
+            Thêm mới
+          </Button>
+        </Col>
+      </Row>
       <div>
         {size(articles) &&
           articles.map((item, index) => (

@@ -20,6 +20,9 @@ export class Article extends BaseModel {
     @Column({type: DataType.TEXT})
     journal_name: string;
 
+    @Column({type: DataType.INTEGER})
+    price: number;
+
     @BelongsToMany(() => Author, {
         through: () => ArticleAuthor
     })

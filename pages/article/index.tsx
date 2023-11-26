@@ -119,7 +119,7 @@ const Article = (props) => {
       setArticle(get(data, "data.article", {}));
       setPdf(get(data, "data", {}));
       if (data.data?.permission == 1 || data.data?.permission == 2 || data.data?.permission == 3) {
-        const content = await axios.get(`/api/pdf/content/?name=${data.data?.file_name}`);
+        const content = await axios.get(`/api/pdf/content/?name=${data.data?.file_name}`);        
         setPdfUrl(content.data)
       }
     } catch (err) {

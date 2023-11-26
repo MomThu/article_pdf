@@ -165,17 +165,6 @@ export class ArticleRepository extends Article {
           },
           { transaction: t }
         );
-
-        // for (let i = 0; i < article?.author.length; i++) {
-        //   const articleAuthor = await ArticleAuthor.create(
-        //     {
-        //       article_id: articleCreated?.id,
-        //       author_id: article?.author[i],
-        //     },
-        //     { transaction: t }
-        //   );
-        // }
-          console.log(article, "article");
           
         await Promise.all(article?.author.map(async (id) => {
           try {
