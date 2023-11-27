@@ -1,7 +1,7 @@
 import React from "react";
 import { NextApiRequest, NextApiResponse } from "next";
 import { CustomerRepository } from "../services";
-import { toNumber } from "lodash";
+import { get, toNumber } from "lodash";
 
 const getAllCustomers = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -18,7 +18,7 @@ const getAllCustomers = async (req: NextApiRequest, res: NextApiResponse) => {
 const getCustomerById = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const cusId = req.query.id;
-    let data = await CustomerRepository.findByPk(toNumber(cusId));    
+    let data = await CustomerRepository.findByPk(toNumber(cusId));
     res.status(200).json({
       error: false,
       data: data,
@@ -52,7 +52,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const login = async (req: NextApiRequest, res: NextApiResponse) => {  
+const login = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const data = req.body;
     const customer = await CustomerRepository.login({
@@ -77,10 +77,8 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
 const updateInfo = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const data = req.body;
-    const customer = await CustomerRepository.addCustomer({
-      email: data?.email,
-      full_name: data?.full_name,
-      phone: data?.phone,
+    const customer = await CustomerRepository.updateInfo({
+      ...data
     });
     if (customer?.error) {
       res.status(404).json({
@@ -97,4 +95,65 @@ const updateInfo = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export { getAllCustomers, getCustomerById, register, updateInfo, login };
+const forgetpassword = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const email = req.body;
+    const customer = await CustomerRepository.findOne({
+      where: {
+        email: email
+      }
+    });
+    res.status(200).json({
+      error: false,
+      data: customer,
+    });
+  } catch (err) {
+    res.status(404).json({
+      error: true,
+      message: err ? get(err, "message", 'Error!') : 'Error',
+    });
+  }
+}
+
+const changePassword = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const data = req.body;
+    const customer = await CustomerRepository.changePassword({
+      ...data
+    });
+    if (customer?.error) {
+      res.status(404).json({
+        error: true,
+        message: customer?.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      data: customer,
+    });
+  } catch (err) {
+    throw err;
+  }
+}
+
+const resetPassword = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const data = req.body;
+    const customer = await CustomerRepository.changePassword({
+      ...data
+    });
+    if (customer?.error) {
+      res.status(404).json({
+        error: true,
+        message: customer?.message,
+      });
+    }
+    res.status(200).json({
+      error: false,
+      data: customer,
+    });
+  } catch (err) {
+    throw err;
+  }
+}
+export { getAllCustomers, getCustomerById, register, updateInfo, login, forgetpassword, changePassword };
