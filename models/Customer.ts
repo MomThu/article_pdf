@@ -20,6 +20,9 @@ class Customer extends Model {
 
     @Column({type: DataType.INTEGER})
     role: number;
+
+    @Column({type: DataType.STRING})
+    reset: string;
 }
 
 export default Customer

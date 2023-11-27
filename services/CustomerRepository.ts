@@ -1,3 +1,4 @@
+import { toNumber } from "lodash";
 import { FindOptions } from "sequelize";
 import { Customer } from "../connectDB";
 import * as bcrypt from "bcrypt";
@@ -34,9 +35,9 @@ export class CustomerRepository extends Customer {
     });
     if (customer) {
       await customer.update({
-        ...data
-      })
-      await customer.save()
+        ...data,
+      });
+      await customer.save();
       return {
         error: false,
         message: "Update successful!",
@@ -49,16 +50,32 @@ export class CustomerRepository extends Customer {
     }
   };
 
-  public static changePassword: any = async (data: any) => {
+  public static resetPassword = async (
+    cusId: string,
+    password: string,
+    resetString: string
+  ) => {
     const customer = await Customer.findOne({
-      where: { email: data?.email },
+      where: {
+        id: toNumber(cusId),
+        reset: resetString,
+      },
     });
-    if (customer && data) {
-      const password = await bcrypt.hash(data?.password, 10)
-      await customer.update({
-        password: password,
-      })
-      await customer.save()
+    if (customer) {
+      try {
+        const passwordHash = await bcrypt.hash(password, 10);
+        await customer.update({
+          password: passwordHash,
+        });
+        await customer.save();
+        return {
+          error: false,
+          message: "Update password failed!",
+        };
+      } catch (err) {
+        console.log(err, "errrrr");
+      }
+    } else {
       return {
         error: false,
         message: "Account does not exist!",
@@ -67,66 +84,67 @@ export class CustomerRepository extends Customer {
   };
 
   private static generateResetString = (length: number) => {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = "";
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     const charactersLength = characters.length;
     let counter = 0;
     while (counter < length) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
       counter += 1;
     }
-    return result; 
-  }
+    return result;
+  };
 
-  public static sendEmailToResetPassword = async (user: any, redirectUri: string) => {
-    // try {
-    //   const adminEmail = "thumomm10@gmail.com";
-    //   const refreshTokenGmail = this.configService.get(
-    //     ConfigKey.REFRESH_TOKEN_GMAIL,
-    //   );
-    //   const clientSecret = this.configService.get(
-    //     ConfigKey.GOOGLE_CLIENT_SECRET,
-    //   );
-    //   const clientId = this.configService.get(ConfigKey.GOOGLE_CLIENT_ID);
+  public static sendEmailToResetPassword = async (
+    data: string,
+    redirectUri: string
+  ) => {
+    const customer = await Customer.findOne({
+      where: { email: data },
+    });
+    try {
+      const adminEmail = "articlethu@gmail.com";
+      const password = "vanl rlye nepn smfd";
+      const transport = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+          user: adminEmail,
+          pass: password,
+        },
+      });
 
-    //   const googleClient = new OAuth2Client({ clientSecret, clientId });
-    //   googleClient.setCredentials({ refresh_token: refreshTokenGmail });
+      // calculate data to include in email content
+      const userId = customer.id;
+      const resetString = this.generateResetString(10);
+      await customer.update({
+        reset: resetString,
+      });
+      await customer.save();
+      const urlReset = `${redirectUri}?userId=${userId}&resetString=${resetString}`;
 
-    //   const myAccessTokenObj = await googleClient.getAccessToken();
-    //   const myAccessToken = myAccessTokenObj?.token;
-
-    //   const transport = nodemailer.createTransport({
-    //     service: 'gmail',
-    //     auth: {
-    //       type: 'OAuth2',
-    //       user: adminEmail,
-    //       clientId,
-    //       clientSecret,
-    //       refreshToken: refreshTokenGmail,
-    //       accessToken: myAccessToken,
-    //     },
-    //   });
-
-    //   // calculate data to include in email content
-    //   const userId = user.account_id;
-    //   const resetString = this.generateResetString(user);
-    //   const urlReset = `${redirectUri}?userId=${userId}&resetString=${resetString.resetString}`;
-
-    //   await transport.sendMail(
-    //     {
-    //       to: user.email,
-    //       subject: 'RETSET PASSWORD PROTEAM',
-    //       text: 'Plaintext version of the message',
-    //       html: `<p>Visit the following link to reset your password <a target="_blank" href="${urlReset}">Rest password Proteam</a></p>`,
-    //     },
-    //     (error, info) => {
-    //       console.log(error);
-    //     },
-    //   );
-    // } catch (error) {
-    //   throw new InternalServerErrorException(error);
-    // }
-  }
+      await transport.sendMail(
+        {
+          to: customer.email,
+          subject: "RETSET PASSWORD",
+          text: "Plaintext version of the message",
+          html: `<p>Visit the following link to reset your password <a target="_blank" href="${urlReset}">Rest password Proteam</a></p>`,
+        },
+        (error, info) => {
+          console.log(error);
+        }
+      );
+      return {
+        error: false,
+        message: "Please check your email to get new password!",
+      };
+    } catch (error) {
+      return {
+        error: true,
+        message: "Can not send email",
+      };
+    }
+  };
 
   public static login: any = async (data: any) => {
     const customer = await Customer.findOne({
