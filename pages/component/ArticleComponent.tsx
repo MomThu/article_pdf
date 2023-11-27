@@ -1,6 +1,7 @@
 import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Row, Typography } from "antd";
-import { size } from "lodash";
+import { Button, Card, Col, Row, Typography, notification } from "antd";
+import axios from "axios";
+import { get, size } from "lodash";
 import moment from "moment";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -9,6 +10,22 @@ const { Text, Title, Paragraph } = Typography;
 const { Meta } = Card;
 
 const ArticleComponent = ({ item }) => {
+  const handleAddToCard = async () => {
+    try {
+      const apiURL = `/api/cart/add`;
+      const { data } = await axios.post(`${apiURL}`, {
+        article: item?.id
+      });
+      notification.success({ message: "Add to cart successful!" });
+    } catch (err) {
+      notification.error({
+        message: err
+          ? get(err, "response.data.message", "Loi day")
+          : "Error!",
+      });
+    }
+  }
+
   return (
     <div>
       <Card>
@@ -48,6 +65,9 @@ const ArticleComponent = ({ item }) => {
               </div>
               <div>
                 <Text>{moment(item?.publish_date).format("DD/MM/YYYY")}</Text>
+              </div>
+              <div className="flex justify-end ">
+                <Button onClick={() => handleAddToCard()}>Thêm vào giỏ hàng</Button>
               </div>
             </div>
           }

@@ -20,6 +20,7 @@ const getCustomerById = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const cusId = req.query.id;
     let data = await CustomerRepository.findByPk(toNumber(cusId));
+    data.password = "";
     res.status(200).json({
       error: false,
       data: data,

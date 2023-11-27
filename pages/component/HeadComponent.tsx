@@ -19,6 +19,7 @@ import { authOptions } from "../api/auth/[...nextauth]";
 import { useCallback } from "react";
 import axios from "axios";
 import { signOut } from "next-auth/react";
+import InfoComponent from "./InfoComponent";
 
 const { Title, Text } = Typography;
 const Header = ({ signined, isAdmin }) => {
@@ -77,12 +78,14 @@ const Header = ({ signined, isAdmin }) => {
                 Sign in
               </Button>
             </div>
-          ) : (
+          ) : !isAdmin ? (
             <div className="flex flex-row justify-between gap-2 mr-5">
-              <Button type="default" onClick={handleLogout}>
-                Logout
-              </Button>
+              <InfoComponent />
             </div>
+          ) : (
+            <Button type="default" onClick={handleLogout}>
+              Logout
+            </Button>
           )}
         </div>
       </div>
@@ -91,16 +94,3 @@ const Header = ({ signined, isAdmin }) => {
 };
 
 export default Header;
-
-export async function getServerSideProps(context) {
-  const session = await getServerSession(context.req, context.res, authOptions);
-  if (session)
-    return {
-      props: {
-        sessionId: session.id,
-      },
-    };
-  return {
-    props: {},
-  };
-}

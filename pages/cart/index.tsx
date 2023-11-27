@@ -51,7 +51,7 @@ const Cart = (props) => {
       <div className="mt-10">
         {size(articles) ? (
           articles.map((item, index) => (
-            <Row className="justify-center" key={item?.id}>
+            <Row className="justify-center mb-5" key={item?.id}>
               <Col md={18}>
                 <CartComponent item={item} />
               </Col>

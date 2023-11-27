@@ -9,4 +9,35 @@ export class CartRepository extends Cart {
     );
     return carts;
   };
+
+  public static addToCart = async (cusId: number, articleId: number) => {
+    try {
+      const checkExist = await Cart.findOne({
+        where: {
+          customer_id: cusId,
+          article_id: articleId,
+        },
+      });
+      if (checkExist) {
+        return {
+          error: true,
+          message: "This article already in cart!",
+        };
+      }
+      const customer = await Cart.create({
+        customer_id: cusId,
+        article_id: articleId,
+        date: new Date()
+      });
+      return {
+        error: false,
+        message: "Add to cart scuccess!",
+      };
+    } catch (err) {
+      return {
+        error: true,
+        message: "Add to card failed!",
+      };
+    }
+  };
 }

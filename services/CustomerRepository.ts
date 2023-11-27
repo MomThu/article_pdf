@@ -10,7 +10,7 @@ export class CustomerRepository extends Customer {
     return datas;
   };
 
-  public static addCustomer: any = async (data: any) => {
+  public static addCustomer = async (data: any) => {
     const checkCusExist = await Customer.findOne({
       where: { email: data?.email },
     });
@@ -25,8 +25,18 @@ export class CustomerRepository extends Customer {
       password: await bcrypt.hash(data?.password, 10),
       role: 2,
     };
-    const customer = await Customer.create(encryptData);
-    return customer;
+    try {
+      const customer = await Customer.create(encryptData);
+      return {
+        error: false,
+        message: "Create account scuccess!",
+      }
+    } catch(err) {
+      return {
+        error: true,
+        message: "Create account failed!",
+      }
+    }
   };
 
   public static updateInfo: any = async (data: any) => {
