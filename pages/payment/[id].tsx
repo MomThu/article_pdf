@@ -105,7 +105,7 @@ const Payment = (props) => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen">
       <header className="sticky top-0 z-50">
         <Header
           isAdmin={get(props, "user.role", 0) === 1 ? true : false}
@@ -162,15 +162,19 @@ const Payment = (props) => {
       <Row className="mt-10 justify-center">
         <Col md={18}>
           <div>
-            <Text>Thanh toán cho các quyền: </Text>
+            <Title level={4}>Thanh toán cho các quyền: </Title>
           </div>
-          <Checkbox.Group options={options} onChange={onChange}>
+          <Checkbox.Group
+            options={options}
+            onChange={onChange}
+            className="my-5 gap-20"
+          >
             <div>
               <Checkbox
                 value={1}
                 disabled={get(article, "permission", 0) ? true : false}
               >
-                <Title level={4}>Đọc</Title>
+                Đọc
               </Checkbox>
             </div>
             <div>
@@ -190,17 +194,25 @@ const Payment = (props) => {
               </Checkbox>
             </div>
           </Checkbox.Group>
-          <div>
-            <DollarOutlined />
-            <Text>
-              {permissionCheck === 1
-                ? get(article, "article.price", 0) * 0.5 - paid
-                : permissionCheck === 2
-                ? get(article, "article.price", 0) * 0.75 - paid
-                : permissionCheck === 3
-                ? get(article, "article.price", 0) - paid
-                : 0}
-            </Text>
+          <div className="flex flex-row gap-2">
+            <div>
+              <Title level={5}>
+                Tổng tiền: {" "}
+              </Title>
+            </div>
+            <div>
+              <Title level={5}>
+                {permissionCheck === 1
+                  ? get(article, "article.price", 0) * 0.5 - paid
+                  : permissionCheck === 2
+                  ? get(article, "article.price", 0) * 0.75 - paid
+                  : permissionCheck === 3
+                  ? get(article, "article.price", 0) - paid
+                  : 0}{" "}
+                VND
+              </Title>
+            </div>
+            {/* <DollarOutlined /> */}
           </div>
           <div>
             <Button
