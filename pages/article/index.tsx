@@ -50,6 +50,7 @@ const Article = (props) => {
   const [pdfUrl, setPdfUrl] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [type, setType] = useState(0);
+  const [password, setPassword] = useState('');
 
   const transform1: TransformToolbarSlot = (slot: ToolbarSlot) => ({
     ...slot,
@@ -79,10 +80,10 @@ const Article = (props) => {
         get(pdf, "permission") === 1
           ? transform1
           : get(pdf, "permission") === 2
-          ? transform2
-          : get(pdf, "permission") === 3
-          ? transform3
-          : null
+            ? transform2
+            : get(pdf, "permission") === 3
+              ? transform3
+              : null
       )}
     </Toolbar>
   );
@@ -119,7 +120,7 @@ const Article = (props) => {
       setArticle(get(data, "data.article", {}));
       setPdf(get(data, "data", {}));
       if (data.data?.permission == 1 || data.data?.permission == 2 || data.data?.permission == 3) {
-        const content = await axios.get(`/api/pdf/content/?name=${data.data?.file_name}`);        
+        const content = await axios.get(`/api/pdf/content/?name=${data.data?.file_name}`);
         setPdfUrl(content.data)
       }
     } catch (err) {
@@ -152,54 +153,49 @@ const Article = (props) => {
       );
       if (realPassword) {
         e.verifyPassword(realPassword);
+        setPassword(realPassword)
       }
-    } catch (err) {}
+    } catch (err) { }
   };
 
-  const handleBuyArticle = (type: number) => {
-    setType(type);
-    setOpenModal(true);
-  };
-
-  const handleOk = async () => {
-    try {
-      const id = router?.query.article;
-      const apiURL = `/api/article/payment`;
+  const handleAddToCard = async () => {    
+    if (!get(props, 'sessionId', '')) {
+      notification.error({ message: "Bạn cần đăng nhập để thực hiện chức năng này!" })
+    } else {
       try {
-        const { data } = await axios.patch(`${apiURL}`, {
-          article: Number(id),
-          permission: type,
+        const apiURL = `/api/cart/add`;
+        const { data } = await axios.post(`${apiURL}`, {
+          article: get(article, 'id', 0)
         });
-        if (!data?.error) {
-          await fetchPdf();
-          setOpenModal(false);
-          notification.success({ message: data?.message });
-        }
+        notification.success({ message: "Add to cart successful!" });
       } catch (err) {
-        setOpenModal(false);
         notification.error({
-          message: err ? get(err, "response.data.message", "") : "Error!",
+          message: err
+            ? get(err, "response.data.message", "Loi day")
+            : "Error!",
         });
       }
-    } catch (err) {
-      setOpenModal(false);
-      notification.error({ message: err ? err.toString() : "Error!" });
     }
-  };
 
-  const handleCancel = () => {
-    setOpenModal(false);
-  };
+  }
+
+  const gotoPayment = () => {
+    if (!get(props, 'sessionId', '')) {
+      notification.error({ message: "Bạn cần đăng nhập để thực hiện chức năng này!" })
+    } else {
+      router.push(`/payment/${get(article, 'id', 0)}`)
+    }
+  }
 
   return (
     <div>
-        <Header
-          isAdmin={get(props, "user.role", 0) === 1 ? true : false}
-          signined={get(props, "sessionId", "") ? true : false}
-        />
+      <Header
+        isAdmin={get(props, "user.role", 0) === 1 ? true : false}
+        signined={get(props, "sessionId", "") ? true : false}
+      />
       <Row className="justify-center mt-10">
         <Col md={18}>
-          <div key={get(article, "id", 0)}>
+          <div>
             <div>
               <Title className="text-center" level={3}>
                 {get(article, "title", "")}
@@ -214,70 +210,14 @@ const Article = (props) => {
             <Button onClick={handleAccess}>Read PDF</Button>
           ) : !isEmpty(pdf) ? (
             <div>
-              {get(pdf, "permission") === 1 ? (
-                <div>
-                  <Button
-                    type="primary"
-                    icon={<ShoppingCartOutlined />}
-                    onClick={() => handleBuyArticle(2)}
-                  >
-                    Pay to read and print
-                  </Button>
-                  <Button
-                    type="primary"
-                    icon={<ShoppingCartOutlined />}
-                    onClick={() => handleBuyArticle(3)}
-                  >
-                    Pay to read, print and download
-                  </Button>
-                </div>
-              ) : get(pdf, "permission") === 2 ? (
-                <Button
-                  type="primary"
-                  icon={<ShoppingCartOutlined />}
-                  onClick={() => handleBuyArticle(3)}
-                >
-                  Pay to read, print and download
-                </Button>
-              ) : get(pdf, "permission") === 3 ? (
-                <b>Password:</b>
+              {get(pdf, "permission") === 3 ? (
+                <b>Password: {password}</b>
               ) : (
-                <div>
-                  <Text>
-                    You do not have permission to read this article. Please pay
-                    to read it!
-                  </Text>
-                  <div className="flex flex-row gap-10">
-                    <Button
-                      type="primary"
-                      icon={<ShoppingCartOutlined />}
-                      onClick={() => handleBuyArticle(1)}
-                    >
-                      Pay to read
-                    </Button>
-                    <Button
-                      type="primary"
-                      icon={<ShoppingCartOutlined />}
-                      onClick={() => handleBuyArticle(2)}
-                    >
-                      Pay to read and print
-                    </Button>
-                    <Button
-                      type="primary"
-                      icon={<ShoppingCartOutlined />}
-                      onClick={() => handleBuyArticle(3)}
-                    >
-                      Pay to read, print and download
-                    </Button>
-                  </div>
-
-                  {/* <Button
-                  type="primary"
-                  icon={<ShoppingCartOutlined />}
-                  onClick={() => onAddToCart()}
-                >
-                  <b>ADD TO CART</b>
-                </Button> */}
+                <div className="flex flex-row justify-end gap-10 my-5">
+                  <Button onClick={gotoPayment}>
+                    Cập nhật quyền với bài báo
+                  </Button>
+                  <Button onClick={handleAddToCard} icon={<ShoppingCartOutlined />}>Thêm vào giỏ hàng</Button>
                 </div>
               )}
               {get(pdf, "permission", 0) ? (
@@ -311,14 +251,6 @@ const Article = (props) => {
           )}
         </Col>
       </Row>
-      <Modal
-        title="Payment"
-        open={openModal}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        {}
-      </Modal>
     </div>
   );
 };

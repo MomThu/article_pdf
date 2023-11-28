@@ -3,27 +3,37 @@ import { Button, Card, Col, Row, Typography, notification } from "antd";
 import axios from "axios";
 import { get, size } from "lodash";
 import moment from "moment";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 const { Text, Title, Paragraph } = Typography;
 const { Meta } = Card;
 
-const ArticleComponent = ({ item }) => {
+const ArticleComponent = (props) => {
+  const item = props?.item
   const handleAddToCard = async () => {
-    try {
-      const apiURL = `/api/cart/add`;
-      const { data } = await axios.post(`${apiURL}`, {
-        article: item?.id
-      });
-      notification.success({ message: "Add to cart successful!" });
-    } catch (err) {
-      notification.error({
-        message: err
-          ? get(err, "response.data.message", "Loi day")
-          : "Error!",
-      });
+    console.log(props, 'vao day');
+
+    if (!props.sessionId) {
+      notification.error({ message: "Bạn cần đăng nhập để thực hiện chức năng này!" })
+    } else {
+      try {
+        const apiURL = `/api/cart/add`;
+        const { data } = await axios.post(`${apiURL}`, {
+          article: item?.id
+        });
+        notification.success({ message: "Add to cart successful!" });
+      } catch (err) {
+        notification.error({
+          message: err
+            ? get(err, "response.data.message", "Loi day")
+            : "Error!",
+        });
+      }
     }
+    
   }
 
   return (
@@ -78,3 +88,16 @@ const ArticleComponent = ({ item }) => {
 };
 
 export default ArticleComponent;
+
+export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (session)
+    return {
+      props: {
+        sessionId: session.id,
+      },
+    };
+  return {
+    props: {},
+  };
+}

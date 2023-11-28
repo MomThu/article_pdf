@@ -15,9 +15,10 @@ const getPdfByArticle = async (req: NextApiRequest, res: NextApiResponse) => {
     const articleId = req.query.article;
     const cusId = session?.user.id;
     if (!cusId) {
+      let result = await ArticleRepository.findByPk(toNumber(articleId))
       res.status(200).json({
         error: false,
-        data: { permission: 0 },
+        data: { permission: 0, article: result },
       });
     } else {
       let result = await PdfRepository.getPdfByArticle(

@@ -62,6 +62,7 @@ const Payment = (props) => {
         });
         if (!data?.error) {
           notification.success({ message: data?.message });
+          router.push(`/article?article=${router?.query.id}`)
         }
       } catch (err) {
         notification.error({
@@ -125,39 +126,6 @@ const Payment = (props) => {
           </Col>
         </Row>
       </div>
-
-      {/* <Row className="mt-10 justify-center">
-        <Col md={18}>
-          {!get(article, "permission", 0) ? (
-            <div>
-              <Button type="primary" onClick={() => handlePayment(1)}>
-                Thanh toán cho quyền đọc
-              </Button>
-              <Button type="primary" onClick={() => handlePayment(2)}>
-                Thanh toán cho quyền đọc và in
-              </Button>
-              <Button type="primary" onClick={() => handlePayment(3)}>
-                Thanh toán cho quyền đọc, in và tải về
-              </Button>
-            </div>
-          ) : get(article, "permission") === 1 ? (
-            <div>
-              <Button type="primary" onClick={() => handlePayment(2)}>
-                Thanh toán cho quyền đọc và in
-              </Button>
-              <Button type="primary" onClick={() => handlePayment(3)}>
-                Thanh toán cho quyền đọc, in và tải về
-              </Button>
-            </div>
-          ) : get(article, "permission") === 2 ? (
-            <div>
-              <Button type="primary" onClick={() => handlePayment(3)}>
-                Thanh toán cho quyền đọc, in và tải về
-              </Button>
-            </div>
-          ) : null}
-        </Col>
-      </Row> */}
 
       <Row className="mt-10 justify-center">
         <Col md={18}>

@@ -54,10 +54,10 @@ const Header = ({ signined, isAdmin }) => {
   return (
     <div className="flex flex-row justify-between bg-[#001524] items-center py-2">
       <div
-        className="flex justify-center gap-10 items-center bg-[#fff]"
+        className="flex justify-center gap-10 items-center"
         onClick={gotoHome}
       >
-        <Title level={2} style={{ color: "#000" }}>
+        <Title level={2} style={{ color: "#fff" }}>
           AM
         </Title>
       </div>
