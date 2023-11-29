@@ -17,7 +17,7 @@ export default function Home(props) {
       {get(props, "user.role", 0) === 1 ? (
         <AdminComponent />
       ) : (
-        <HomeComponent />
+        <HomeComponent signined={get(props, "sessionId", "") ? true : false} />
       )}
     </div>
   );

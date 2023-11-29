@@ -58,7 +58,7 @@ const AdminComponent = () => {
               key={item?.id}
             >
               <Col md={18}>
-                <ArticleComponent item={item} />
+                <ArticleComponent item={item} role={1} />
               </Col>
             </Row>
           ))}

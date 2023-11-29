@@ -5,7 +5,7 @@ import { get, size } from "lodash";
 import { Col, Empty, Row, notification } from "antd";
 import ArticleComponent from "./ArticleComponent";
 
-const HomeComponent = () => {
+const HomeComponent = ({signined}) => {
   const [articles, setArticles] = useState([]);
 
   const apiURL = `/api/article`;
@@ -31,7 +31,7 @@ const HomeComponent = () => {
           articles.map((item, index) => (
             <Row style={{ padding: "10px" }} className="justify-center" key={item?.id}>
               <Col md={18}>
-                <ArticleComponent item={item} />
+                <ArticleComponent item={item} role={signined ? 2 : 0} />
               </Col>
             </Row>
           )) : <div className="justify-center m-10">

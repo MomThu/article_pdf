@@ -12,17 +12,17 @@ const { Text, Title, Paragraph } = Typography;
 const { Meta } = Card;
 
 const ArticleComponent = (props) => {
-  const item = props?.item
+  const item = props?.item;
   const handleAddToCard = async () => {
-    console.log(props, 'vao day');
-
-    if (!props.sessionId) {
-      notification.error({ message: "Bạn cần đăng nhập để thực hiện chức năng này!" })
+    if (!props.role) {
+      notification.error({
+        message: "Bạn cần đăng nhập để thực hiện chức năng này!",
+      });
     } else {
       try {
         const apiURL = `/api/cart/add`;
         const { data } = await axios.post(`${apiURL}`, {
-          article: item?.id
+          article: item?.id,
         });
         notification.success({ message: "Add to cart successful!" });
       } catch (err) {
@@ -33,8 +33,7 @@ const ArticleComponent = (props) => {
         });
       }
     }
-    
-  }
+  };
 
   return (
     <div>
@@ -76,9 +75,13 @@ const ArticleComponent = (props) => {
               <div>
                 <Text>{moment(item?.publish_date).format("DD/MM/YYYY")}</Text>
               </div>
-              <div className="flex justify-end ">
-                <Button onClick={() => handleAddToCard()}>Thêm vào giỏ hàng</Button>
-              </div>
+              {props?.role === 2 || props?.role === 0 ? (
+                <div className="flex justify-end ">
+                  <Button onClick={() => handleAddToCard()}>
+                    Thêm vào giỏ hàng
+                  </Button>
+                </div>
+              ) : null}
             </div>
           }
         />
@@ -88,16 +91,3 @@ const ArticleComponent = (props) => {
 };
 
 export default ArticleComponent;
-
-export async function getServerSideProps(context) {
-  const session = await getServerSession(context.req, context.res, authOptions);
-  if (session)
-    return {
-      props: {
-        sessionId: session.id,
-      },
-    };
-  return {
-    props: {},
-  };
-}

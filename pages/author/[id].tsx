@@ -76,7 +76,7 @@ const Author = (props) => {
               key={item?.id}
             >
               <Col md={18}>
-                <ArticleComponent item={item} />
+                <ArticleComponent item={item} role={get(props, "user.role", 0)} />
               </Col>
             </Row>
           ))}
