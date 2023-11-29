@@ -6,7 +6,7 @@ import {
   Author,
   Pdf,
 } from "../connectDB";
-import { size } from "lodash";
+import { size, uniq } from "lodash";
 
 export class ArticleRepository extends Article {
   public static getAllArticle = async (options?: FindOptions) => {
@@ -40,16 +40,34 @@ export class ArticleRepository extends Article {
       return datas;
     }
     const dataByTitle = await Article.findAll({
+      include: [
+        {
+          model: Author,
+          through: { attributes: [] },
+        },
+      ],
       where: {
         title: { [Op.like]: `%${keyword}%` },
       },
     });
     const dataByAbstract = await Article.findAll({
+      include: [
+        {
+          model: Author,
+          through: { attributes: [] },
+        },
+      ],
       where: {
         abstract: { [Op.like]: `%${keyword}%` },
       },
     });
     const dataByJournal = await Article.findAll({
+      include: [
+        {
+          model: Author,
+          through: { attributes: [] },
+        },
+      ],
       where: {
         journal_name: { [Op.like]: `%${keyword}%` },
       },
@@ -61,11 +79,19 @@ export class ArticleRepository extends Article {
       WHERE authors.fullname LIKE '%${keyword}%'`,
       { type: QueryTypes.SELECT }
     );
-    const result = dataByTitle
+    const dataSearch = dataByTitle
       .concat(dataByAbstract)
       .concat(dataByJournal)
       .concat(dataByAuthor);
-    return result;
+
+    const uniqueArray = [];
+
+    dataSearch.forEach((item) => {
+      if (!uniqueArray.some((uniqueItem) => uniqueItem.id === item.id)) {
+        uniqueArray.push(item);
+      }
+    });
+    return uniqueArray;
   };
 
   public static getArticleByAuthor = async (authorId: string | string[]) => {
@@ -165,21 +191,22 @@ export class ArticleRepository extends Article {
           },
           { transaction: t }
         );
-          
-        await Promise.all(article?.author.map(async (id) => {
-          try {
-            const articleAuthor = await ArticleAuthor.create(
-              {
-                article_id: articleCreated?.id,
-                author_id: id,
-              },
-              { transaction: t }
-            );
-          } catch (err) {
-            console.log(err, "err here");
-          }
-          
-        }))
+
+        await Promise.all(
+          article?.author.map(async (id) => {
+            try {
+              const articleAuthor = await ArticleAuthor.create(
+                {
+                  article_id: articleCreated?.id,
+                  author_id: id,
+                },
+                { transaction: t }
+              );
+            } catch (err) {
+              console.log(err, "err here");
+            }
+          })
+        );
 
         await t.commit();
         return {
@@ -188,7 +215,7 @@ export class ArticleRepository extends Article {
         };
       } catch (error) {
         console.log(error, "vao day");
-        
+
         await t.rollback();
         return {
           error: true,

@@ -8,6 +8,7 @@ import {
   DatePicker,
   Form,
   Input,
+  InputNumber,
   Modal,
   Row,
   Select,
@@ -30,6 +31,7 @@ const AddArticle = ({ user, sessionId }) => {
   const [fileName, setFileName] = useState("");
   const [authors, setAuthors] = useState<SelectProps["options"]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [reload, setReload] = useState(false);
 
   const fetchAuthor = async () => {
     try {
@@ -66,8 +68,10 @@ const AddArticle = ({ user, sessionId }) => {
           ...formValue,
           file_name: fileName,
         });
-        notification.success({ message: "Upload successful!" });
+        notification.success({ message: "Create successful!" });
         form.resetFields();
+        setRandomPass("");
+        setReload(true);
       } catch (err) {
         notification.error({
           message: err
@@ -212,6 +216,19 @@ const AddArticle = ({ user, sessionId }) => {
                     </div>
                   </Form.Item>
 
+                  <Form.Item
+                    label="Đơn giá (VND)"
+                    name="price"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter the price!",
+                      },
+                    ]}
+                  >
+                    <InputNumber min={0} />
+                  </Form.Item>
+
                   {!randomPass ? (
                     <div className="mb-5">
                       <Button onClick={() => generateCode(32)} type="primary">
@@ -275,7 +292,7 @@ const AddArticle = ({ user, sessionId }) => {
                   </Form.Item>
 
                   <div className="m-10 ml-0">
-                    <FileUpload setFileName={(item) => setFileName(item)} />
+                    <FileUpload setFileName={(item) => setFileName(item)} reload={reload} />
                   </div>
 
                   <Form.Item

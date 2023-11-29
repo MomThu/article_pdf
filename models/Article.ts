@@ -8,6 +8,7 @@ import { ArticleAuthor } from "./ArticleAuthor";
     tableName: "articles",
 })
 export class Article extends BaseModel {
+    [x: string]: any;
     @Column({type: DataType.TEXT})
     title: string;
 

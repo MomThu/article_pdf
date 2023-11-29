@@ -3,7 +3,7 @@ import axios from "axios";
 import { get } from "lodash";
 import { useState } from "react";
 
-const FileUpload = ({ setFileName }) => {
+const FileUpload = ({ setFileName, reload }) => {
   const [file, setFile] = useState(null);
 
   const uploadToClient = (event) => {
@@ -16,6 +16,7 @@ const FileUpload = ({ setFileName }) => {
   };
 
   const uploadToServer = async (event) => {
+    event.preventDefault();
     const body = new FormData();
     body.append("file", file);
 

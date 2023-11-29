@@ -23,6 +23,8 @@ const HomeComponent = ({signined}) => {
     fetchData();
   }, []);
 
+  console.log(articles, "articlesss");
+  
   return (
     <div>
       <SearchComponent setArticle={(data) => setArticles(data)} isAdmin={false} />
