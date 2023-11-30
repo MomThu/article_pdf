@@ -188,7 +188,7 @@ const Article = (props) => {
   }
 
   return (
-    <div>
+    <div className="min-h-screen">
       <Header
         isAdmin={get(props, "user.role", 0) === 1 ? true : false}
         signined={get(props, "sessionId", "") ? true : false}

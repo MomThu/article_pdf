@@ -66,7 +66,7 @@ const InfoSystem = () => {
         'dropdown-change-password',
         <Text className="font-medium hover:text-primary" onClick={gotoChangePassword}>
           <FaUserEdit className="mr-2" />
-          Sửa mật khẩu
+          Đổi mật khẩu
         </Text>
       ),
       getItem(

@@ -41,12 +41,15 @@ const User = (props) => {
       notification.error({ message: err ? err : "Error!" });
     }
   };
+  console.log(user);
+  
 
   const onFinish = async (value) => {
     try {
       const apiURL = `/api/authentication/updateInfo`;
       const { data } = await axios.patch(`${apiURL}`, {
         ...value,
+        id: props.user.id
       });
       // setUser(get(data, "data", {}));
     } catch (err) {
@@ -87,20 +90,6 @@ const User = (props) => {
             initialValues={{ remember: true }}
           >
             <Form.Item label="Full Name" name="full_name" initialValue={user?.full_name}>
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Email"
-              name="email"
-              initialValue={user?.email}
-              rules={[
-                {
-                  type: "email",
-                  message: "Please enter a valid email address!",
-                },
-              ]}
-            >
               <Input />
             </Form.Item>
 

@@ -30,19 +30,17 @@ export class CustomerRepository extends Customer {
       return {
         error: false,
         message: "Create account scuccess!",
-      }
-    } catch(err) {
+      };
+    } catch (err) {
       return {
         error: true,
         message: "Create account failed!",
-      }
+      };
     }
   };
 
   public static updateInfo: any = async (data: any) => {
-    const customer = await Customer.findOne({
-      where: { email: data?.email },
-    });
+    const customer = await Customer.findByPk(data?.id);
     if (customer) {
       await customer.update({
         ...data,
@@ -89,6 +87,38 @@ export class CustomerRepository extends Customer {
       return {
         error: false,
         message: "Account does not exist!",
+      };
+    }
+  };
+
+  public static changePassword = async (cusId: string, oldPassword: string, newPassword: string) => {
+    const customer = await Customer.findOne({
+      where: {
+        id: toNumber(cusId),
+        password: bcrypt.hash(oldPassword, 10)
+      },
+    });
+    if (customer) {
+      try {
+        const passwordHash = await bcrypt.hash(newPassword, 10);
+        await customer.update({
+          password: passwordHash,
+        });
+        await customer.save();
+        return {
+          error: false,
+          message: "Update password success!",
+        };
+      } catch (err) {
+        return {
+          error: true,
+          message: "Update password failed!",
+        };
+      }
+    } else {
+      return {
+        error: false,
+        message: "Mật khẩu không chính xác. Vui lòng thử lại!",
       };
     }
   };

@@ -162,6 +162,30 @@ const forgetpassword = async (req: NextApiRequest, res: NextApiResponse) => {
     throw err;
   }
 };
+
+const changePassword = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const { cusId, oldPassword, newPassword } = req.body;
+    const customer = await CustomerRepository.changePassword(
+      cusId,
+      oldPassword,
+      newPassword
+    );
+    if (customer?.error) {
+      res.status(404).json({
+        error: true,
+        message: customer?.message,
+      });
+    } else {
+      res.status(200).json({
+        error: false,
+        message: "Reset successful!",
+      });
+    }
+  } catch (err) {
+    throw err;
+  }
+};
 export {
   getAllCustomers,
   getCustomerById,
@@ -170,4 +194,5 @@ export {
   login,
   forgetpassword,
   resetPassword,
+  changePassword
 };
