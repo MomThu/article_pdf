@@ -21,7 +21,7 @@ const uploadFile = async (req: NextApiRequest, res: NextApiResponse) => {
     })
     const form = new FormData();
     var fs = require("fs");
-    form.append('file', fs.createReadStream(data.files.file[0].filepath))
+    form.append('file', fs.createReadStream(data['files'].file[0].filepath))
     const session = await getServerSession(req, res, authOptions);
     const {id, role} = session?.user;
     if (id && role === 1) {
@@ -31,7 +31,7 @@ const uploadFile = async (req: NextApiRequest, res: NextApiResponse) => {
         });
 
         //Data ở đây bây giờ là Key, nó chính là file_name của PDF nhớ, ko dùng trường Location hay url nữa đâu.
-        if (result?.error) {
+        if (result && result['error']) {
           res.status(401).json({ 
             error: true,
             message: get(result, "message", ""),

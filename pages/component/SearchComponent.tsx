@@ -4,25 +4,11 @@ import axios from "axios";
 import { get, size } from "lodash";
 import React, { useEffect, useState } from "react";
 
-const SearchComponent = ({ setArticle, isAdmin }) => {
+const SearchComponent = ({ setKeyword, isAdmin }) => {
   const apiURL = `/api/article`;
 
-  const fetchData = async (keyword) => {
-    try {
-      if (size(keyword)) {
-        const { data } = await axios.get(`${apiURL}/search?keyword=${keyword}`);
-        setArticle(get(data, "data", []));
-      } else {
-        const { data } = await axios.get(`${apiURL}`);
-        setArticle(get(data, "data", []));
-      }
-    } catch (err) {
-      notification.error({ message: err ? err : "Error!" });
-    }
-  };
-
   const handleSearch = (value) => {
-    fetchData(value);
+    setKeyword(value);
   };
 
   return (

@@ -9,7 +9,7 @@ import {
 import { size, uniq } from "lodash";
 
 export class ArticleRepository extends Article {
-  public static getAllArticle = async (options?: FindOptions) => {
+  public static getAllArticle = async (currentPage?: number, pageSize?: number) => {
     const datas = await Article.findAll({
       include: [
         {
@@ -19,7 +19,16 @@ export class ArticleRepository extends Article {
         },
       ],
     });
-    return datas;
+    const totalArticles = datas.length;
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const resultArray = [];
+    for (let i = 0; i < totalArticles; i++) {
+      if (i >= startIndex && i < endIndex) {
+        resultArray.push(datas[i]);
+      }
+    }
+    return {data: resultArray, totalArticles: totalArticles};;
   };
 
   public static findById = async (id: number) => {
@@ -34,11 +43,11 @@ export class ArticleRepository extends Article {
     };
   };
 
-  public static searchArticle = async (keyword?: string | string[]) => {
-    if (!keyword || !size(keyword)) {
-      const datas = await Article.findAll();
-      return datas;
-    }
+  public static searchArticle = async (keyword?: string | string[], currentPage?: number, pageSize?: number) => {
+    // if (!keyword || !size(keyword)) {
+    //   const datas = await Article.findAll();
+    //   return datas;
+    // }
     const dataByTitle = await Article.findAll({
       include: [
         {
@@ -91,7 +100,18 @@ export class ArticleRepository extends Article {
         uniqueArray.push(item);
       }
     });
-    return uniqueArray;
+
+    const totalArticles = uniqueArray.length;
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const resultArray = [];
+    for (let i = 0; i < totalArticles; i++) {
+      if (i >= startIndex && i < endIndex) {
+        resultArray.push(uniqueArray[i]);
+      }
+    }
+
+    return {data: resultArray, totalArticles: totalArticles};
   };
 
   public static getArticleByAuthor = async (authorId: string | string[]) => {

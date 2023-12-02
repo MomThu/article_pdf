@@ -6,10 +6,13 @@ import { authOptions } from "../pages/api/auth/[...nextauth]";
 
 const getAllArticles = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    let result = await ArticleRepository.getAllArticle();
+    const pageSize = Number(req.query.pageSize);
+    const currentPage = Number(req.query.currentPage);
+    let {data, totalArticles} = await ArticleRepository.getAllArticle(currentPage, pageSize);
     res.status(200).json({
       error: false,
-      data: result,
+      data: data,
+      total: totalArticles
     });
   } catch (err) {
     throw err;
@@ -32,10 +35,14 @@ const getArticleById = async (req: NextApiRequest, res: NextApiResponse) => {
 const searchArticle = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const keyword = req.query.keyword;
-    let data = await ArticleRepository.searchArticle(keyword);
+    const pageSize = Number(req.query.pageSize);
+    const currentPage = Number(req.query.currentPage);
+    let {data, totalArticles} = await ArticleRepository.searchArticle(keyword, currentPage, pageSize);
+    console.log(totalArticles);
     res.status(200).json({
       error: false,
       data: data,
+      total: totalArticles
     });
   } catch (err) {
     throw err;

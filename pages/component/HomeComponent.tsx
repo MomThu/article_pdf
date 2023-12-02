@@ -2,32 +2,66 @@ import React, { useEffect, useState } from "react";
 import SearchComponent from "./SearchComponent";
 import axios from "axios";
 import { get, size } from "lodash";
-import { Col, Empty, Row, notification } from "antd";
+import { Col, Empty, Pagination, Row, notification } from "antd";
 import ArticleComponent from "./ArticleComponent";
 
-const HomeComponent = ({signined}) => {
+const HomeComponent = ({ signined }) => {
   const [articles, setArticles] = useState([]);
+  const [keyword, setKeyword] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalArticles, setTotalArticles] = useState(0);
+
 
   const apiURL = `/api/article`;
 
-  const fetchData = async () => {
+  const fetchNewData = async (keyword, currentPage, pageSize) => {
     try {
-      const { data } = await axios.get(`${apiURL}`);
-      setArticles(get(data, "data", []));
+      if (size(keyword)) {
+        const { data } = await axios.get(`${apiURL}/search`, {
+          params: {
+            keyword: keyword,
+            currentPage: currentPage,
+            pageSize: pageSize,
+          }
+        });
+        setArticles(get(data, "data", []));
+        setTotalArticles(get(data, "total", 0));
+      } else {
+        const { data } = await axios.get(`${apiURL}`, {
+          params: {
+            currentPage: currentPage,
+            pageSize: pageSize
+          }
+        });
+        setArticles(get(data, "data", []));
+        setTotalArticles(get(data, "total", 0));
+      }
     } catch (err) {
       notification.error({ message: err ? err : "Error!" });
     }
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    setCurrentPage(1);
+    setPageSize(10);
+    fetchNewData(keyword, 1, 10);
+  }, [keyword]);
 
-  console.log(articles, "articlesss");
-  
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    fetchNewData(keyword, page, pageSize);
+  };
+  const handleShowSizeChange = (current, size) => {
+    setPageSize(size);
+    fetchNewData(keyword, currentPage, size);
+  };
+
+
   return (
     <div>
-      <SearchComponent setArticle={(data) => setArticles(data)} isAdmin={false} />
+      <SearchComponent setKeyword={(data) => setKeyword(data)} isAdmin={false} />
       <div>
         {size(articles) ?
           articles.map((item, index) => (
@@ -40,6 +74,17 @@ const HomeComponent = ({signined}) => {
             <Empty />
           </div>}
       </div>
+      <div className="justify-center m-10">
+        <Pagination 
+          showSizeChanger
+          current={currentPage}
+          pageSize={pageSize}
+          total={totalArticles}
+          onChange={handlePageChange}
+          onShowSizeChange={handleShowSizeChange} 
+          />
+      </div>
+
     </div>
   );
 };
