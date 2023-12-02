@@ -51,13 +51,9 @@ const AdminComponent = () => {
   }, [keyword]);
 
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (page, size) => {
     setCurrentPage(page);
-    fetchNewData(keyword, page, pageSize);
-  };
-  const handleShowSizeChange = (current, size) => {
-    setPageSize(size);
-    fetchNewData(keyword, currentPage, size);
+    fetchNewData(keyword, page, size);
   };
 
   const gotoAdd = () => {
@@ -104,7 +100,6 @@ const AdminComponent = () => {
           pageSize={pageSize}
           total={totalArticles}
           onChange={handlePageChange}
-          onShowSizeChange={handleShowSizeChange} 
           />
       </div>
     </div>

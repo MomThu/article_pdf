@@ -25,6 +25,7 @@ const HomeComponent = ({ signined }) => {
             pageSize: pageSize,
           }
         });
+        console.log(data.data, "dataa");
         setArticles(get(data, "data", []));
         setTotalArticles(get(data, "total", 0));
       } else {
@@ -34,6 +35,7 @@ const HomeComponent = ({ signined }) => {
             pageSize: pageSize
           }
         });
+        console.log(data.data, "dataa");
         setArticles(get(data, "data", []));
         setTotalArticles(get(data, "total", 0));
       }
@@ -49,13 +51,9 @@ const HomeComponent = ({ signined }) => {
   }, [keyword]);
 
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (page, size) => {
     setCurrentPage(page);
-    fetchNewData(keyword, page, pageSize);
-  };
-  const handleShowSizeChange = (current, size) => {
-    setPageSize(size);
-    fetchNewData(keyword, currentPage, size);
+    fetchNewData(keyword, page, size);
   };
 
 
@@ -81,7 +79,6 @@ const HomeComponent = ({ signined }) => {
           pageSize={pageSize}
           total={totalArticles}
           onChange={handlePageChange}
-          onShowSizeChange={handleShowSizeChange} 
           />
       </div>
 
