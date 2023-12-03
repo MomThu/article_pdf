@@ -3,6 +3,8 @@ import React from "react";
 import { NextApiRequest, NextApiResponse } from "next";
 import { CustomerRepository } from "../services";
 import { get, toNumber } from "lodash";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../pages/api/auth/[...nextauth]";
 
 const getAllCustomers = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -165,7 +167,9 @@ const forgetpassword = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const changePassword = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const { cusId, oldPassword, newPassword } = req.body;
+    const session = await getServerSession(req, res, authOptions);
+    const cusId = session?.user.id;
+    const { oldPassword, newPassword } = req.body;    
     const customer = await CustomerRepository.changePassword(
       cusId,
       oldPassword,

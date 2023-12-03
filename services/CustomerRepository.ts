@@ -91,34 +91,44 @@ export class CustomerRepository extends Customer {
     }
   };
 
-  public static changePassword = async (cusId: string, oldPassword: string, newPassword: string) => {
-    const customer = await Customer.findOne({
-      where: {
-        id: toNumber(cusId),
-        password: bcrypt.hash(oldPassword, 10)
-      },
-    });
-    if (customer) {
-      try {
-        const passwordHash = await bcrypt.hash(newPassword, 10);
-        await customer.update({
-          password: passwordHash,
-        });
-        await customer.save();
-        return {
-          error: false,
-          message: "Update password success!",
-        };
-      } catch (err) {
+  public static changePassword = async (
+    cusId: number,
+    oldPassword: string,
+    newPassword: string
+  ) => {
+    try {
+      const customer = await Customer.findOne({
+        where: {
+          id: cusId,
+        },
+      });
+      if (customer && (await bcrypt.compare(oldPassword, customer?.password))) {
+        try {
+          const newPasswordHash = await bcrypt.hash(newPassword, 10);
+          await customer.update({
+            password: newPasswordHash,
+          });
+          await customer.save();
+          return {
+            error: false,
+            message: "Update password success!",
+          };
+        } catch (err) {
+          return {
+            error: true,
+            message: "Update password failed!",
+          };
+        }
+      } else {
         return {
           error: true,
-          message: "Update password failed!",
+          message: "Mật khẩu không chính xác. Vui lòng thử lại!",
         };
       }
-    } else {
+    } catch (err) {
       return {
-        error: false,
-        message: "Mật khẩu không chính xác. Vui lòng thử lại!",
+        error: true,
+        message: "Update password failed!",
       };
     }
   };

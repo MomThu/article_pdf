@@ -14,6 +14,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Header from "../component/HeadComponent";
+import { get } from "lodash";
 
 const { Title } = Typography;
 
@@ -31,7 +32,6 @@ const ResetPasswordPage: React.FC = () => {
   const [isResetSuccess, setIsResetSuccess] = useState(false);
 
   const [form] = Form.useForm<FormResetPassword>();
-  const { userId, resetString } = router.query;
 
   const handleSubmit = async () => {
     try {
@@ -47,19 +47,26 @@ const ResetPasswordPage: React.FC = () => {
     try {
       const apiURL = `/api/authentication/changepassword`;
       const response = await axios.post(apiURL, {
-        cusId: userId,
         oldPassword: data?.oldPassword,
         newPassword: data?.newPassword,
       });
       if (!response.data?.error) {
         setSpending(false);
         setIsResetSuccess(true);
+        notification.success({
+          message: get(response, "message", "") || "Password reset successful",
+        });
+        router.push("/auth/signin")
       } else {
-        notification.error({ message: "Password reset failed" });
+        notification.error({
+          message: get(response, "message", "") || "Password reset failed",
+        });
         setSpending(false);
       }
-    } catch (error) {
-      notification.error({ message: "Password reset failed" });
+    } catch (error) {      
+      notification.error({
+        message: get(error, "response.data.message", "") || "Password reset failed",
+      });
       setSpending(false);
     }
   };
