@@ -8,11 +8,14 @@ const getAllArticles = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const pageSize = Number(req.query.pageSize);
     const currentPage = Number(req.query.currentPage);
-    let {data, totalArticles} = await ArticleRepository.getAllArticle(currentPage, pageSize);
+    let { data, totalArticles } = await ArticleRepository.getAllArticle(
+      currentPage,
+      pageSize
+    );
     res.status(200).json({
       error: false,
       data: data,
-      total: totalArticles
+      total: totalArticles,
     });
   } catch (err) {
     throw err;
@@ -37,12 +40,61 @@ const searchArticle = async (req: NextApiRequest, res: NextApiResponse) => {
     const keyword = req.query.keyword;
     const pageSize = Number(req.query.pageSize);
     const currentPage = Number(req.query.currentPage);
-    let {data, totalArticles} = await ArticleRepository.searchArticle(keyword, currentPage, pageSize);
+    let { data, totalArticles } = await ArticleRepository.searchArticle(
+      keyword,
+      currentPage,
+      pageSize
+    );
     console.log(totalArticles);
     res.status(200).json({
       error: false,
       data: data,
-      total: totalArticles
+      total: totalArticles,
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+const searchBoughtArticle = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  try {
+    const keyword = req.query.keyword;
+    const pageSize = Number(req.query.pageSize);
+    const currentPage = Number(req.query.currentPage);
+    let { data, totalArticles } = await ArticleRepository.searchArticle(
+      keyword,
+      currentPage,
+      pageSize
+    );
+    console.log(totalArticles);
+    res.status(200).json({
+      error: false,
+      data: data,
+      total: totalArticles,
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+const getBoughtArticle = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const session = await getServerSession(req, res, authOptions);
+    const cusId = session?.user.id;
+    const pageSize = Number(req.query.pageSize);
+    const currentPage = Number(req.query.currentPage);    
+    let { data, totalArticles } = await ArticleRepository.getArticleBought(
+      cusId,
+      currentPage,
+      pageSize
+    );
+    res.status(200).json({
+      error: false,
+      data: data,
+      total: totalArticles,
     });
   } catch (err) {
     throw err;
@@ -104,20 +156,6 @@ const getArticleByPermission = async (
   }
 };
 
-const getArticleBought = async (req: NextApiRequest, res: NextApiResponse) => {
-  try {
-    const session = await getServerSession(req, res, authOptions);
-    const cusId = session?.user.id;
-    let data = await ArticleRepository.getArticleBought(cusId);
-    res.status(200).json({
-      error: false,
-      data: data,
-    });
-  } catch (err) {
-    throw err;
-  }
-};
-
 const updateArticlePermission = async (
   req: NextApiRequest,
   res: NextApiResponse
@@ -148,7 +186,7 @@ const updateArticlePermission = async (
 
 const addArticle = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    let article = req.body;    
+    let article = req.body;
     const session = await getServerSession(req, res, authOptions);
     const cusId = session?.user.id;
     const role = session?.user.role;
@@ -170,7 +208,6 @@ const addArticle = async (req: NextApiRequest, res: NextApiResponse) => {
           message: "Upload Successful!",
         });
       }
-      
     }
   } catch (err) {
     throw err;
@@ -185,6 +222,7 @@ export {
   getPermissionArticle,
   searchArticle,
   updateArticlePermission,
-  getArticleBought,
   addArticle,
+  searchBoughtArticle,
+  getBoughtArticle,
 };

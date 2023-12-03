@@ -4,12 +4,16 @@ import {
   ArticleAuthor,
   ArticlePermission,
   Author,
+  Customer,
   Pdf,
 } from "../connectDB";
-import { size, uniq } from "lodash";
+import { get, size, uniq } from "lodash";
 
 export class ArticleRepository extends Article {
-  public static getAllArticle = async (currentPage?: number, pageSize?: number) => {
+  public static getAllArticle = async (
+    currentPage?: number,
+    pageSize?: number
+  ) => {
     const datas = await Article.findAll({
       include: [
         {
@@ -28,7 +32,7 @@ export class ArticleRepository extends Article {
         resultArray.push(datas[i]);
       }
     }
-    return {data: resultArray, totalArticles: totalArticles};;
+    return { data: resultArray, totalArticles: totalArticles };
   };
 
   public static findById = async (id: number) => {
@@ -43,7 +47,11 @@ export class ArticleRepository extends Article {
     };
   };
 
-  public static searchArticle = async (keyword?: string | string[], currentPage?: number, pageSize?: number) => {
+  public static searchArticle = async (
+    keyword?: string | string[],
+    currentPage?: number,
+    pageSize?: number
+  ) => {
     // if (!keyword || !size(keyword)) {
     //   const datas = await Article.findAll();
     //   return datas;
@@ -111,7 +119,7 @@ export class ArticleRepository extends Article {
       }
     }
 
-    return {data: resultArray, totalArticles: totalArticles};
+    return { data: resultArray, totalArticles: totalArticles };
   };
 
   public static getArticleByAuthor = async (authorId: string | string[]) => {
@@ -144,12 +152,43 @@ export class ArticleRepository extends Article {
     return permissions;
   };
 
-  public static getArticleBought = async (cusId: number) => {
-    const permissions = await this.sequelize.query(
+  public static getArticleBought = async (
+    cusId: number,
+    currentPage?: number,
+    pageSize?: number
+  ) => {
+    const datas = await this.sequelize.query(
       `SELECT * FROM article_permission JOIN articles ON article_permission.article_id = articles.id WHERE article_permission.type_of_permission > 0 AND article_permission.customer_id = ${cusId}`,
       { type: QueryTypes.SELECT }
     );
-    return permissions;
+    const allArticles = await Article.findAll({
+      include: [
+        {
+          model: Author,
+          through: { attributes: [] },
+        },
+      ],
+    });
+    const result = datas.map((item) => {
+      for (let i = 0; i < allArticles.length; i++) {
+        if (get(item, "article_id", 0) == allArticles[i]?.id) {
+          return {
+            ...item,
+            author: allArticles[i]?.author,
+          };
+        }
+      }
+    });
+    const totalArticles = result.length;
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const resultArray = [];
+    for (let i = 0; i < totalArticles; i++) {
+      if (i >= startIndex && i < endIndex) {
+        resultArray.push(result[i]);
+      }
+    }
+    return { data: resultArray, totalArticles: totalArticles };
   };
 
   public static updateArticlePermission = async (
