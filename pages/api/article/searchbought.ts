@@ -1,12 +1,12 @@
-import { createRouter } from "next-connect";
-import onError from "../../../middleware/errors";
-import {
-  searchArticle,
-} from "../../../controllers/ArticleController";
 import { NextApiRequest, NextApiResponse } from "next";
+import { createRouter } from "next-connect";
+import {
+  searchBoughtArticle
+} from "../../../controllers/ArticleController";
+import onError from "../../../middleware/errors";
 
 const router = createRouter<NextApiRequest, NextApiResponse>();
-router.get(searchArticle);
+router.get(searchBoughtArticle);
 
 const handler = router.handler({
   onError: onError,

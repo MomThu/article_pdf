@@ -52,10 +52,6 @@ export class ArticleRepository extends Article {
     currentPage?: number,
     pageSize?: number
   ) => {
-    // if (!keyword || !size(keyword)) {
-    //   const datas = await Article.findAll();
-    //   return datas;
-    // }
     const dataByTitle = await Article.findAll({
       include: [
         {
@@ -188,6 +184,97 @@ export class ArticleRepository extends Article {
         resultArray.push(result[i]);
       }
     }
+    return { data: resultArray, totalArticles: totalArticles };
+  };
+
+  public static searchBoughtArticle = async (
+    cusId: number,
+    keyword?: string | string[],
+    currentPage?: number,
+    pageSize?: number
+  ) => {
+    const datas = await this.sequelize.query(
+      `SELECT * FROM article_permission JOIN articles ON article_permission.article_id = articles.id WHERE article_permission.type_of_permission > 0 AND article_permission.customer_id = ${cusId}`,
+      { type: QueryTypes.SELECT }
+    );
+    console.log(datas, "datas here");
+
+    const dataByTitle = await Article.findAll({
+      include: [
+        {
+          model: Author,
+          through: { attributes: [] },
+        },
+      ],
+      where: {
+        title: { [Op.like]: `%${keyword}%` },
+      },
+    });
+    const dataByAbstract = await Article.findAll({
+      include: [
+        {
+          model: Author,
+          through: { attributes: [] },
+        },
+      ],
+      where: {
+        abstract: { [Op.like]: `%${keyword}%` },
+      },
+    });
+    const dataByJournal = await Article.findAll({
+      include: [
+        {
+          model: Author,
+          through: { attributes: [] },
+        },
+      ],
+      where: {
+        journal_name: { [Op.like]: `%${keyword}%` },
+      },
+    });
+    const dataByAuthor: any = await this.sequelize.query(
+      `SELECT articles.* FROM authors 
+      JOIN article_author ON authors.id = article_author.author_id 
+      JOIN articles ON articles.id = article_author.article_id 
+      WHERE authors.fullname LIKE '%${keyword}%'`,
+      { type: QueryTypes.SELECT }
+    );
+    const dataSearch = dataByTitle
+      .concat(dataByAbstract)
+      .concat(dataByJournal)
+      .concat(dataByAuthor);
+
+    const uniqueArray = [];
+
+    dataSearch.forEach((item) => {
+      if (!uniqueArray.some((uniqueItem) => uniqueItem.id === item.id)) {
+        uniqueArray.push(item);
+      }
+    });
+
+    const dataMap = datas.map((item) => {
+      for (let i = 0; i < uniqueArray.length; i++) {
+        if (get(item, "article_id", 0) == uniqueArray[i]?.id) {
+          return {
+            ...item,
+            author: uniqueArray[i]?.author,
+          };
+        }
+      }
+    });
+
+    const result = dataMap.filter((item) => item);
+
+    const totalArticles = result.length;
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const resultArray = [];
+    for (let i = 0; i < totalArticles; i++) {
+      if (i >= startIndex && i < endIndex) {
+        resultArray.push(result[i]);
+      }
+    }
+
     return { data: resultArray, totalArticles: totalArticles };
   };
 

@@ -18,14 +18,13 @@ const Bought = () => {
   const fetchNewData = async (keyword, currentPage, pageSize) => {
     try {
       if (size(keyword)) {
-        const { data } = await axios.get(`${apiURL}`, {
+        const { data } = await axios.get(`/api/article/searchbought`, {
           params: {
             keyword: keyword,
             currentPage: currentPage,
             pageSize: pageSize,
           },
         });
-        console.log(data.data, "dataa");
         setArticles(get(data, "data", []));
         setTotalArticles(get(data, "total", 0));
       } else {
@@ -35,7 +34,6 @@ const Bought = () => {
             pageSize: pageSize,
           },
         });
-        console.log(data.data, "dataa");
         setArticles(get(data, "data", []));
         setTotalArticles(get(data, "total", 0));
       }

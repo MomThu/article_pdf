@@ -45,7 +45,6 @@ const searchArticle = async (req: NextApiRequest, res: NextApiResponse) => {
       currentPage,
       pageSize
     );
-    console.log(totalArticles);
     res.status(200).json({
       error: false,
       data: data,
@@ -61,15 +60,17 @@ const searchBoughtArticle = async (
   res: NextApiResponse
 ) => {
   try {
+    const session = await getServerSession(req, res, authOptions);
+    const cusId = session?.user.id;
     const keyword = req.query.keyword;
     const pageSize = Number(req.query.pageSize);
     const currentPage = Number(req.query.currentPage);
-    let { data, totalArticles } = await ArticleRepository.searchArticle(
+    let { data, totalArticles } = await ArticleRepository.searchBoughtArticle(
+      cusId,
       keyword,
       currentPage,
       pageSize
     );
-    console.log(totalArticles);
     res.status(200).json({
       error: false,
       data: data,
