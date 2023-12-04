@@ -58,7 +58,7 @@ export default function SignIn({
         <div className="flex justify-center">
           <div className="bg-white flex flex-col py-8 px-20 rounded-xl shadow-xl max-w-[528px]">
             <Title className="text-center text-[40px] leading-[48px] font-bold mb-8">
-              Login
+              Đăng nhập
             </Title>
             <form onSubmit={handleSubmit}>
               <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
@@ -89,7 +89,7 @@ export default function SignIn({
                   htmlFor="password"
                   style={{ display: "block", marginBottom: "3%" }}
                 >
-                  Password
+                  Mật khẩu
                 </label>
                 <input
                   id="password"
@@ -111,17 +111,17 @@ export default function SignIn({
                   href={{ pathname: "/auth/forgetpassword" }} // Replace with your actual forgot password page
                   style={{ color: "#1890ff", textDecoration: "underline" }}
                 >
-                  Forgot Password?
+                  Bạn đã quên mật khẩu?
                 </Link>
               </div>
 
               <div style={{ marginBottom: "5%", textAlign: "right" }}>
-                Do you not have an account?{" "}
+                Bạn đã có tài khoản?{" "}
                 <Link
                   href={{ pathname: "/auth/register" }} // Replace with your actual forgot password page
                   style={{ color: "#1890ff", textDecoration: "underline" }}
                 >
-                  Register
+                  Đăng ký
                 </Link>
               </div>
 
@@ -139,7 +139,7 @@ export default function SignIn({
                     paddingRight: "10px",
                   }}
                 >
-                  Sign in
+                  Đăng nhập
                 </button>
               </div>
             </form>

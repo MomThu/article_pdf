@@ -48,8 +48,6 @@ const Article = (props) => {
   const [showPdf, setShowPdf] = useState(false);
   const [pdf, setPdf] = useState({});
   const [pdfUrl, setPdfUrl] = useState('');
-  const [openModal, setOpenModal] = useState(false);
-  const [type, setType] = useState(0);
   const [password, setPassword] = useState('');
 
   const transform1: TransformToolbarSlot = (slot: ToolbarSlot) => ({
@@ -202,16 +200,16 @@ const Article = (props) => {
               </Title>
             </div>
             <div>
-              <Title level={5}>Abstract</Title>
+              <Title level={5}>Tóm tắt</Title>
               <Text>{get(article, "abstract", "")}</Text>
             </div>
           </div>
           {!showPdf && !isEmpty(pdf) ? (
-            <Button onClick={handleAccess}>Read PDF</Button>
+            <Button onClick={handleAccess}>Xem PDF</Button>
           ) : !isEmpty(pdf) ? (
             <div>
               {get(pdf, "permission") === 3 ? (
-                <b>Password: {password}</b>
+                <b>Mật khẩu: {password}</b>
               ) : (
                 <div className="flex flex-row justify-end gap-10 my-5">
                   <Button onClick={gotoPayment}>

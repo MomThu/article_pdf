@@ -89,11 +89,11 @@ const User = (props) => {
             labelAlign="left"
             initialValues={{ remember: true }}
           >
-            <Form.Item label="Full Name" name="full_name" initialValue={user?.full_name}>
+            <Form.Item label="Tên người dùng" name="full_name" initialValue={get(user, "full_name", "")}>
               <Input />
             </Form.Item>
 
-            <Form.Item label="Phone" name="phone" initialValue={user?.phone}>
+            <Form.Item label="Số điện thoại" name="phone" initialValue={get(user, "phone", "")}>
               <Input />
             </Form.Item>
 

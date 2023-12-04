@@ -85,7 +85,7 @@ const ResetPasswordPage: React.FC = () => {
           <Row className="flex justify-center">
             <Col className="bg-white flex flex-col py-8 px-20 rounded-xl shadow-xl max-w-[528px]">
               <Title className="text-center text-[40px] leading-[48px] font-bold mb-8">
-                Change Password
+                Đổi mật khẩu
               </Title>
 
               <Form form={form}>

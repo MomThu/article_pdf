@@ -73,7 +73,7 @@ const InfoSystem = () => {
         'dropdown-logout',
         <Text className="font-medium hover:text-primary" onClick={handleLogout}>
           <LogoutOutlined className="mr-2" />
-          Logout
+          Đăng xuất
         </Text>
       ),
     ],

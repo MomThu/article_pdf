@@ -41,7 +41,7 @@ const Register = () => {
         <Row className="flex justify-center">
           <Col md={12} className="bg-white py-8 px-20 rounded-xl shadow-xl">
             <Title className="text-center text-[40px] leading-[48px] font-bold mb-8">
-              Register
+              Đăng ký
             </Title>
             <div className="justify-center">
               <Form
@@ -54,7 +54,7 @@ const Register = () => {
                 labelAlign="left"
               >
                 <Form.Item
-                  label="Full Name"
+                  label="Tên người dùng"
                   name="full_name"
                   rules={[
                     { required: true, message: "Please enter your full name!" },
@@ -78,7 +78,7 @@ const Register = () => {
                 </Form.Item>
 
                 <Form.Item
-                  label="Password"
+                  label="Mật khẩu"
                   name="password"
                   rules={[
                     { required: true, message: "Please enter your password!" },
@@ -92,7 +92,7 @@ const Register = () => {
                 </Form.Item>
 
                 <Form.Item
-                  label="Confirm Password"
+                  label="Nhập lại mật khẩu"
                   name="confirmPassword"
                   dependencies={["password"]}
                   rules={[
@@ -116,7 +116,7 @@ const Register = () => {
                 </Form.Item>
 
                 <Form.Item
-                  label="Phone"
+                  label="Điện thoại"
                   name="phone"
                   rules={[
                     { required: true, message: "Please enter your phone!" },
@@ -125,26 +125,26 @@ const Register = () => {
                   <Input />
                 </Form.Item>
 
-                <Form.Item className="w-full">
-                  <div className="flex flex-col items-center w-full">
+                <Form.Item>
+                  <div className="flex flex-col items-end">
                     <Button
                       type="primary"
                       htmlType="submit"
-                      className="items-center"
+                      // className="items-center"
                     >
-                      Register
+                      Submit
                     </Button>
                   </div>
                 </Form.Item>
               </Form>
               <div>
                 <Text>
-                  Did you have an account?{" "}
+                  Bạn đã có tài khoản?{" "}
                   <Link
                     href={{ pathname: "/auth/signin" }} // Replace with your actual forgot password page
                     style={{ color: "#1890ff", textDecoration: "underline" }}
                   >
-                    Signin
+                    Đăng nhập
                   </Link>
                 </Text>
               </div>

@@ -36,7 +36,7 @@ const FileUpload = ({ setFileName, reload }) => {
   return (
     <div>
       <div>
-        <h4>Select PDF File</h4>
+        <h4>Chọn file PDF</h4>
         <div className="flex flex-row gap-5">
           <input type="file" onChange={uploadToClient} />
 

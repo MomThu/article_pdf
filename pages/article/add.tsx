@@ -232,19 +232,19 @@ const AddArticle = ({ user, sessionId }) => {
                   {!randomPass ? (
                     <div className="mb-5">
                       <Button onClick={() => generateCode(32)} type="primary">
-                        Auto Generate Password
+                        Tạo mật khẩu tự động
                       </Button>
                     </div>
                   ) : (
                     <div className="mb-5">
                       <Text>
-                        <b>Generated Password: </b>
+                        <b>Mật khẩu file: </b>
                         {randomPass}
                       </Text>
                     </div>
                   )}
                   <Form.Item
-                    label="Password"
+                    label="Mật khẩu"
                     name="password"
                     rules={[
                       {
@@ -265,7 +265,7 @@ const AddArticle = ({ user, sessionId }) => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Confirm Password"
+                    label="Nhập lại mật khẩu"
                     name="confirmPassword"
                     dependencies={["password"]}
                     rules={[

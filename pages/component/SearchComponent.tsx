@@ -25,7 +25,7 @@ const SearchComponent = ({ setKeyword, isAdmin }) => {
         <Row justify="center" className="mt-5 flex">
           <Col md={12} xs={20}>
             <Input.Search
-              placeholder="Search articles by title, abstract..."
+              placeholder="Tìm kiếm bài báo qua tiêu đề, tóm tắt, tác giả, nhà xuất bản"
               size="large"
               onSearch={handleSearch}
               allowClear

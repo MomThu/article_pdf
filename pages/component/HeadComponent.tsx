@@ -11,7 +11,7 @@ import {
   Row,
   Space,
   Typography,
-  notification,
+  Image
 } from "antd";
 import { getServerSession } from "next-auth";
 import { useRouter } from "next/router";
@@ -54,13 +54,18 @@ const Header = ({ signined, isAdmin }) => {
   return (
     <div className="flex flex-row justify-between bg-[#001524] items-center py-2">
       <div
-        className="flex justify-center gap-10 items-center"
+        className="flex justify-center gap-10 items-center mx-5"
         onClick={gotoHome}
       >
-        <Title level={2} style={{ color: "#fff" }}>
-          AM
-        </Title>
+        <Image
+          src={"/logo.png"}
+          alt="logo"
+          preview={false}
+          height={50}
+          rootClassName="mr-3"
+        />
       </div>
+
       <div className="flex flex-row justify-between gap-10 items-center">
         {signined && !isAdmin ? (
           <div onClick={gotoCart}>
@@ -72,10 +77,10 @@ const Header = ({ signined, isAdmin }) => {
           {!signined ? (
             <div className="flex flex-row justify-between gap-2 mr-5">
               <Button type="default" onClick={gotoRegister}>
-                Register
+                Đăng ký
               </Button>
               <Button type="default" onClick={gotoLogin}>
-                Sign in
+                Đăng nhập
               </Button>
             </div>
           ) : !isAdmin ? (
@@ -83,8 +88,8 @@ const Header = ({ signined, isAdmin }) => {
               <InfoComponent />
             </div>
           ) : (
-            <Button type="default" onClick={handleLogout}>
-              Logout
+            <Button type="default" onClick={handleLogout} className="mr-5">
+              Đăng xuất
             </Button>
           )}
         </div>

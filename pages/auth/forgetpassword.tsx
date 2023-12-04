@@ -77,7 +77,7 @@ const ForgottenPasswordPage: React.FC = () => {
           <Row className="flex justify-center">
             <Col md={12} className="bg-white flex flex-col py-8 px-20 rounded-xl shadow-xl max-w-[528px]">
               <Title className="text-center text-[40px] leading-[48px] font-bold mb-8">
-                Forgotten Password
+                Quên mật khẩu
               </Title>
 
               <Form form={form} className="mt-5">
@@ -107,12 +107,12 @@ const ForgottenPasswordPage: React.FC = () => {
         ) : (
           <div className="w-full flex justify-center">
             <div className="w-full max-w-[500px] text-center bg-gray-700 text-white p-8 rounded-md">
-              <h2 className="md:text-[32px] leading-10 mb-6">Password Reset</h2>
+              <h2 className="md:text-[32px] leading-10 mb-6">Đặt lại mật khẩu</h2>
               <p className="mb-4">
-                {`An email with a password reset link has been sent to your email: `}
+                {`Đường dẫn tạo lại mật khẩu đã được gửi đến email của bạn: `}
                 <span className="font-bold">{form.getFieldValue("email")}</span>
               </p>
-              <p>{`Check your email and click to the link to proceed!`}</p>
+              <p>{`Vui lòng kiểm tra email và click vào đường dẫn để tạo mật khẩu mới!`}</p>
             </div>
           </div>
         )}

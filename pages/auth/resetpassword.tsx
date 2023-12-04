@@ -82,7 +82,7 @@ const ResetPasswordPage: React.FC = () => {
           <Row className="flex justify-center">
             <Col className="bg-white flex flex-col py-8 px-20 rounded-xl shadow-xl max-w-[528px]">
               <Title className="text-center text-[40px] leading-[48px] font-bold mb-8">
-                Reset Password
+                Đặt lại mật khẩu
               </Title>
 
               <Form form={form}>
@@ -137,11 +137,11 @@ const ResetPasswordPage: React.FC = () => {
         ) : (
           <div className="w-full flex justify-center">
             <div className="w-full max-w-[500px] text-center bg-gray-700 text-white p-8 rounded-md">
-              <h2 className="md:text-[32px] leading-10 mb-6">Password Reset</h2>
+              <h2 className="md:text-[32px] leading-10 mb-6">Đặt lại mật khẩu</h2>
               <p className="mb-4">{`Your password has been reset successfully.`}</p>
               <p className="mb-4">{`You may now login`}</p>
               <div className="flex justify-center">
-                <Button onClick={handleClickLogin}>Login</Button>
+                <Button onClick={handleClickLogin}>Đăng nhập</Button>
               </div>
             </div>
           </div>

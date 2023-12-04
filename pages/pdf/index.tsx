@@ -62,15 +62,15 @@ const Pdf: any = ({ pdf }) => {
   }, []);
   return (
     <div>
-      <div>Abstract: {get(pdf, "article.abstract", "")}</div>
+      <div>Tóm tắt: {get(pdf, "article.abstract", "")}</div>
       {get(pdf, "permission", 0) === 1 ? (
-        <div>Read</div>
+        <div>Đọc</div>
       ) : get(pdf, "permission", 0) === 2 ? (
-        <div>Print</div>
+        <div>In</div>
       ) : get(pdf, "permission", 0) === 3 ? (
-        <div>Download</div>
+        <div>Tải về</div>
       ) : (
-        <div>None</div>
+        <div>Không có quyền</div>
       )}
       {/* <canvas ref={canvasRef}></canvas> */}
       {/* <div>
