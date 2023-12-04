@@ -26,7 +26,8 @@ const uploadFile = async (req: NextApiRequest, res: NextApiResponse) => {
     const {id, role} = session?.user;
     if (id && role === 1) {
       try {
-        const result = await axios.post("http://localhost:8000/api/pdf", form, {
+        const pdfServerUrl = process.env.PDF_SERVER
+        const result = await axios.post(pdfServerUrl, form, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 

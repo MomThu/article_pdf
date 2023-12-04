@@ -5,6 +5,16 @@ export default withAuth({
 export const config = {
   // matcher: ["/api/:path*"],
   matcher: [
-    "/api/nonono"
+    "/api/article/add",
+    "/api/article/bought",
+    "/api/article/payment",
+    "/api/article/searchbought",
+    "/api/authentication/changepassword",
+    "/api/authentication/updateInfo",
+    "/api/author/add",
+    "/api/cart",
+    "/api/customer",
+    "/api/pdf/content",
+    "/api/upload",
   ]
 };

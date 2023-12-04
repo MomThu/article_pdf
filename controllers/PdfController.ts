@@ -44,7 +44,8 @@ const getPdfByArticle = async (req: NextApiRequest, res: NextApiResponse) => {
 const getPdfContentByName = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const name = req.query.name;
-    const result = await axios.get(`http://localhost:8000/api/pdf?key=${name}`);
+    const pdfServerUrl = process.env.PDF_SERVER
+    const result = await axios.get(`${pdfServerUrl}?key=${name}`);
     res.json(result.data);
   } catch (err) {
     console.log(err);

@@ -1,12 +1,9 @@
-import { CaretDownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Dropdown, MenuProps, Modal, Typography } from 'antd';
-import { isEmpty } from 'lodash';
-import { getServerSession } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { FaUser, FaUserEdit } from 'react-icons/fa';
-import { authOptions } from '../api/auth/[...nextauth]';
 
 const { Text } = Typography;
 type MenuItem = Required<MenuProps>['items'][number];

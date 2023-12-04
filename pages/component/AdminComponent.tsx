@@ -53,6 +53,7 @@ const AdminComponent = () => {
 
   const handlePageChange = (page, size) => {
     setCurrentPage(page);
+    setPageSize(size);
     fetchNewData(keyword, page, size);
   };
 
