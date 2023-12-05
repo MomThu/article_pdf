@@ -21,7 +21,7 @@ export class CartRepository extends Cart {
       if (checkExist) {
         return {
           error: true,
-          message: "This article already in cart!",
+          message: "Bài báo này đã có trong giỏ hàng!",
         };
       }
       const customer = await Cart.create({
@@ -31,12 +31,12 @@ export class CartRepository extends Cart {
       });
       return {
         error: false,
-        message: "Add to cart scuccess!",
+        message: "Thêm vào giỏ hàng thành công!",
       };
     } catch (err) {
       return {
         error: true,
-        message: "Add to card failed!",
+        message: "Thêm vào giỏ hàng thất bại!",
       };
     }
   };

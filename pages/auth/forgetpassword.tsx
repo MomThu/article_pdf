@@ -14,6 +14,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Header from "../component/HeadComponent";
+import { get } from "lodash";
 
 const { Title } = Typography;
 
@@ -46,19 +47,15 @@ const ForgottenPasswordPage: React.FC = () => {
         ...value,
         redirectUri: `${window.location.origin}/auth/resetpassword`,
       });
-      // router.push({
-      //   pathname: "/auth/resetpassword",
-      //   query: { ...value },
-      // })
       if (!data?.error) {
         setSendingEmail(false);
         setEmailedToReset(true);
       } else {
-        notification.error({ message: "Email does not exist" });
+        notification.error({ message: get(data, "message", "Email không tồn tại!") });
         setSendingEmail(false);
       }
     } catch (error) {
-      notification.error({ message: "Email does not exist" });
+      notification.error({ message: get(error, "response.data.message", "Email không tồn tại!") });
       setSendingEmail(false);
     }
   };

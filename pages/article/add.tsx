@@ -49,7 +49,9 @@ const AddArticle = ({ user, sessionId }) => {
       }
     } catch (err) {
       notification.error({
-        message: err ? get(err, "response.data.message", "Error!") : "Error!",
+        message: err
+          ? get(err, "response.data.message", "Đã xảy ra lỗi!")
+          : "Đã xảy ra lỗi!",
       });
     }
   };
@@ -75,8 +77,8 @@ const AddArticle = ({ user, sessionId }) => {
       } catch (err) {
         notification.error({
           message: err
-            ? get(err, "response.data.message", "Loi day")
-            : "Error!",
+            ? get(err, "response.data.message", "Đã xảy ra lỗi!")
+            : "Đã xảy ra lỗi!",
         });
       }
     }
@@ -119,7 +121,9 @@ const AddArticle = ({ user, sessionId }) => {
       }
     } catch (err) {
       notification.error({
-        message: err ? err.response.data?.message : "Add author failed!",
+        message: err
+          ? get(err, "response.data.message", "Đã xảy ra lỗi!")
+          : "Thêm tác giả thất bại!",
       });
     }
   };
@@ -271,7 +275,7 @@ const AddArticle = ({ user, sessionId }) => {
                     rules={[
                       {
                         required: true,
-                        message: "Please confirm the password!",
+                        message: "Vui lòng xác nhận mật khẩu!",
                       },
                       ({ getFieldValue }) => ({
                         validator(_, value) {
@@ -279,7 +283,7 @@ const AddArticle = ({ user, sessionId }) => {
                             return Promise.resolve();
                           }
                           return Promise.reject(
-                            new Error("The two passwords do not match!")
+                            new Error("Mật khẩu không trùng khớp!")
                           );
                         },
                       }),
@@ -292,7 +296,10 @@ const AddArticle = ({ user, sessionId }) => {
                   </Form.Item>
 
                   <div className="m-10 ml-0">
-                    <FileUpload setFileName={(item) => setFileName(item)} reload={reload} />
+                    <FileUpload
+                      setFileName={(item) => setFileName(item)}
+                      reload={reload}
+                    />
                   </div>
 
                   <Form.Item

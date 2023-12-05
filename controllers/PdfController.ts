@@ -36,7 +36,6 @@ const getPdfByArticle = async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
   } catch (err) {
-    console.log(err);
     throw err;
   }
 };
@@ -48,7 +47,6 @@ const getPdfContentByName = async (req: NextApiRequest, res: NextApiResponse) =>
     const result = await axios.get(`${pdfServerUrl}?key=${name}`);
     res.json(result.data);
   } catch (err) {
-    console.log(err);
     throw err;
   }
 };

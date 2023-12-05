@@ -40,7 +40,7 @@ const AdminComponent = () => {
         setTotalArticles(get(data, "total", 0));
       }
     } catch (err) {
-      notification.error({ message: err ? err : "Error!" });
+      notification.error({ message: err ? get(err, "response.data.message", "Đã xảy ra lỗi!") : "Error!" });
     }
   };
 

@@ -54,18 +54,18 @@ const ResetPasswordPage: React.FC = () => {
         setSpending(false);
         setIsResetSuccess(true);
         notification.success({
-          message: get(response, "message", "") || "Password reset successful",
+          message: get(response, "message", "Cập nhật mật khẩu thành công!") || "Cập nhật mật khẩu thành công!",
         });
         router.push("/auth/signin")
       } else {
         notification.error({
-          message: get(response, "message", "") || "Password reset failed",
+          message: get(response, "message", "Cập nhật mật khẩu thất bại!") || "Cập nhật mật khẩu thất bại!",
         });
         setSpending(false);
       }
     } catch (error) {      
       notification.error({
-        message: get(error, "response.data.message", "") || "Password reset failed",
+        message: get(error, "response.data.message", "Cập nhật mật khẩu thất bại!") || "Cập nhật mật khẩu thất bại!",
       });
       setSpending(false);
     }
@@ -119,7 +119,7 @@ const ResetPasswordPage: React.FC = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please confirm your new password!",
+                      message: "Vui lòng xác nhận mật khẩu mới!",
                     },
                     ({ getFieldValue }) => ({
                       validator(_, value) {
@@ -127,7 +127,7 @@ const ResetPasswordPage: React.FC = () => {
                           return Promise.resolve();
                         }
                         return Promise.reject(
-                          new Error("The passwords does not match!")
+                          new Error("Mật khẩu không trùng khớp!")
                         );
                       },
                     }),

@@ -37,12 +37,12 @@ const Author = (props) => {
         },
       };
     } catch (err) {
-      notification.error({ message: err ? err : "Error!" });
+      notification.error({ message: err ? get(err, "response.data.message", "Đã xảy ra lỗi!") : "Error!" });
     }
   };
 
   return (
-    <div>
+    <div className="min-h-screen">
       <header className="sticky top-0 z-50">
         <Header
           isAdmin={get(props, "user.role", 0) === 1 ? true : false}

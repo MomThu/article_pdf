@@ -17,7 +17,7 @@ export class CustomerRepository extends Customer {
     if (checkCusExist) {
       return {
         error: true,
-        message: "Email already exist!",
+        message: "Email đã tồn tại!",
       };
     }
     const encryptData = {
@@ -29,32 +29,39 @@ export class CustomerRepository extends Customer {
       const customer = await Customer.create(encryptData);
       return {
         error: false,
-        message: "Create account scuccess!",
+        message: "Tạo tài khoản thành công!",
       };
     } catch (err) {
       return {
         error: true,
-        message: "Create account failed!",
+        message: "Tạo tài khoản thất bại!",
       };
     }
   };
 
-  public static updateInfo: any = async (data: any) => {
-    const customer = await Customer.findByPk(data?.id);
-    if (customer) {
-      await customer.update({
-        ...data,
-      });
-      await customer.save();
-      return {
-        error: false,
-        message: "Update successful!",
-      };
-    } else {
+  public static updateInfo = async (data: any) => {
+    if (!data?.id) {
       return {
         error: true,
-        message: "Account does not exist!",
+        message: "Bạn cần đăng nhập để thực hiện chức năng này!",
       };
+    } else {
+      const customer = await Customer.findByPk(data?.id);
+      if (customer) {
+        await customer.update({
+          ...data,
+        });
+        await customer.save();
+        return {
+          error: false,
+          message: "Cập nhật thông tin thành công!",
+        };
+      } else {
+        return {
+          error: true,
+          message: "Tài khoản không tồn tại!",
+        };
+      }
     }
   };
 
@@ -78,15 +85,18 @@ export class CustomerRepository extends Customer {
         await customer.save();
         return {
           error: false,
-          message: "Update password failed!",
+          message: "Cập nhật mật khẩu thành công!",
         };
       } catch (err) {
-        console.log(err, "errrrr");
+        return {
+          error: true,
+          message: "Cập nhật mật khẩu thất bại!",
+        };
       }
     } else {
       return {
-        error: false,
-        message: "Account does not exist!",
+        error: true,
+        message: "Tài khoản không tồn tại!",
       };
     }
   };
@@ -111,12 +121,12 @@ export class CustomerRepository extends Customer {
           await customer.save();
           return {
             error: false,
-            message: "Update password success!",
+            message: "Cập nhật mật khẩu thành công!",
           };
         } catch (err) {
           return {
             error: true,
-            message: "Update password failed!",
+            message: "Cập nhật mật khẩu thất bại!",
           };
         }
       } else {
@@ -128,7 +138,7 @@ export class CustomerRepository extends Customer {
     } catch (err) {
       return {
         error: true,
-        message: "Update password failed!",
+        message: "Cập nhật mật khẩu thất bại!",
       };
     }
   };
@@ -154,8 +164,8 @@ export class CustomerRepository extends Customer {
       where: { email: data },
     });
     try {
-      const adminEmail = "articlethu@gmail.com";
-      const password = "vanl rlye nepn smfd";
+      const adminEmail = process.env.ADMIN_EMAIL;
+      const password = process.env.PASSWORD_EMAIL;
       const transport = nodemailer.createTransport({
         service: "Gmail",
         auth: {
@@ -164,7 +174,6 @@ export class CustomerRepository extends Customer {
         },
       });
 
-      // calculate data to include in email content
       const userId = customer.id;
       const resetString = this.generateResetString(10);
       await customer.update({
@@ -178,7 +187,7 @@ export class CustomerRepository extends Customer {
           to: customer.email,
           subject: "RETSET PASSWORD",
           text: "Plaintext version of the message",
-          html: `<p>Visit the following link to reset your password <a target="_blank" href="${urlReset}">Rest password Proteam</a></p>`,
+          html: `<p>Visit the following link to reset your password <a target="_blank" href="${urlReset}">Reset your password</a></p>`,
         },
         (error, info) => {
           console.log(error);
@@ -186,12 +195,12 @@ export class CustomerRepository extends Customer {
       );
       return {
         error: false,
-        message: "Please check your email to get new password!",
+        message: "Vui lòng kiểm tra email của bạn để đặt lại mật khẩu mới!",
       };
     } catch (error) {
       return {
         error: true,
-        message: "Can not send email",
+        message: "Không thể gửi email!",
       };
     }
   };
@@ -212,12 +221,12 @@ export class CustomerRepository extends Customer {
           full_name: customer?.full_name,
           role: customer?.role,
         },
-        message: "Login successful!",
+        message: "Đăng nhập thành công!",
       };
     } else {
       return {
         error: true,
-        message: "Email or password is incorrect!",
+        message: "Email hoặc mật khẩu không chính xác!",
       };
     }
   };

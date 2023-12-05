@@ -28,7 +28,10 @@ export class AuthorRepository extends Author {
       });
       return datas
     } catch (err) {
-      console.log(err, "errrr")
+      return {
+        error: true,
+        message: "Không tìm thấy tác giả!",
+      };
     }
     
     
@@ -51,9 +54,7 @@ export class AuthorRepository extends Author {
     return authors;
   };
 
-  public static addAuthor = async (author: any) => {
-    console.log(author, "author here");
-    
+  public static addAuthor = async (author: any) => {    
     const checkExist = await Author.findOne({
       where: {
         email: author?.email,
@@ -62,7 +63,7 @@ export class AuthorRepository extends Author {
     if (checkExist) {
       return {
         error: true,
-        message: "Author is already exist!",
+        message: "Tác giả đã tồn tại!",
       };
     } else {
       try {
@@ -76,7 +77,7 @@ export class AuthorRepository extends Author {
       } catch (err) {
         return {
           error: true,
-          message: "Create Failed!",
+          message: "Thêm tác giả thất bại!",
         };
       }
     }

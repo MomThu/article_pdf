@@ -38,7 +38,7 @@ const User = (props) => {
       const { data } = await axios.get(`${apiURL}`);      
       setUser(get(data, "data", {}));
     } catch (err) {
-      notification.error({ message: err ? err : "Error!" });
+      notification.error({ message: err ? get(err, "response.data.message", "Đã xảy ra lỗi!") : "Error!" });
     }
   };
   console.log(user);
@@ -51,9 +51,8 @@ const User = (props) => {
         ...value,
         id: props.user.id
       });
-      // setUser(get(data, "data", {}));
     } catch (err) {
-      notification.error({ message: err ? err : "Error!" });
+      notification.error({ message: err ? get(err, "response.data.message", "Đã xảy ra lỗi!") : "Error!" });
     }
     router.push("/user");
   };

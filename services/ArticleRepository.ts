@@ -357,21 +357,19 @@ export class ArticleRepository extends Article {
         await t.commit();
         return {
           error: false,
-          message: "Created Successful!",
+          message: "Tạo bài báo thành công!",
         };
       } catch (error) {
-        console.log(error, "vao day");
-
         await t.rollback();
         return {
           error: true,
-          message: "Create article failed!",
+          message: "Tạo bài báo thất bại!",
         };
       }
     } else {
       return {
         error: true,
-        message: "Article already exist!",
+        message: "Bài báo này đã tồn tại!!",
       };
     }
   };

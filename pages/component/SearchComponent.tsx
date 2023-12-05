@@ -1,12 +1,6 @@
-import { AudioOutlined } from "@ant-design/icons";
-import { Col, Row, Typography, Image, Input, notification } from "antd";
-import axios from "axios";
-import { get, size } from "lodash";
-import React, { useEffect, useState } from "react";
+import { Col, Input, Row } from "antd";
 
 const SearchComponent = ({ setKeyword, isAdmin }) => {
-  const apiURL = `/api/article`;
-
   const handleSearch = (value) => {
     setKeyword(value);
   };

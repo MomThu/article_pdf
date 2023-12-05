@@ -43,7 +43,7 @@ const Payment = (props) => {
         setPaid(get(data, "data.article.price", 0));
       }
     } catch (err) {
-      notification.error({ message: err ? err : "Error!" });
+      notification.error({ message: err ? get(err, "response.data.message", "Đã xảy ra lỗi!") : "Error!" });
     }
   };
 
@@ -61,16 +61,16 @@ const Payment = (props) => {
           permission: permissionCheck,
         });
         if (!data?.error) {
-          notification.success({ message: data?.message });
+          notification.success({ message: get(data, "message", "Thanh toán thành công") });
           router.push(`/article?article=${router?.query.id}`)
         }
       } catch (err) {
         notification.error({
-          message: err ? get(err, "response.data.message", "") : "Error!",
+          message: err ? get(err, "response.data.message", "Đã xảy ra lỗi!") : "Error!",
         });
       }
     } catch (err) {
-      notification.error({ message: err ? err.toString() : "Error!" });
+      notification.error({ message: err ? get(err, "response.data.message", "Đã xảy ra lỗi!") : "Error!" });
     }
   };
 

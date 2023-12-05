@@ -14,6 +14,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Header from "../component/HeadComponent";
+import { get } from "lodash";
 
 const { Title } = Typography;
 
@@ -55,11 +56,17 @@ const ResetPasswordPage: React.FC = () => {
         setSpending(false);
         setIsResetSuccess(true);
       } else {
-        notification.error({ message: "Password reset failed" });
+        notification.error({
+          message: get(response, "data.message", "Cập nhật mật khẩu thất bại!"),
+        });
         setSpending(false);
       }
-    } catch (error) {
-      notification.error({ message: "Password reset failed" });
+    } catch (err) {
+      notification.error({
+        message: err
+          ? get(err, "response.data.message", "Cập nhật mật khẩu thất bại!")
+          : "Cập nhật mật khẩu thất bại!",
+      });
       setSpending(false);
     }
   };
@@ -103,7 +110,7 @@ const ResetPasswordPage: React.FC = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please confirm your new password!",
+                      message: "Vui lòng xác nhận mật khẩu mới!",
                     },
                     ({ getFieldValue }) => ({
                       validator(_, value) {
@@ -111,7 +118,7 @@ const ResetPasswordPage: React.FC = () => {
                           return Promise.resolve();
                         }
                         return Promise.reject(
-                          new Error("The passwords does not match!")
+                          new Error("Mật khẩu không trùng khớp!")
                         );
                       },
                     }),
@@ -137,7 +144,9 @@ const ResetPasswordPage: React.FC = () => {
         ) : (
           <div className="w-full flex justify-center">
             <div className="w-full max-w-[500px] text-center bg-gray-700 text-white p-8 rounded-md">
-              <h2 className="md:text-[32px] leading-10 mb-6">Đặt lại mật khẩu</h2>
+              <h2 className="md:text-[32px] leading-10 mb-6">
+                Đặt lại mật khẩu
+              </h2>
               <p className="mb-4">{`Your password has been reset successfully.`}</p>
               <p className="mb-4">{`You may now login`}</p>
               <div className="flex justify-center">

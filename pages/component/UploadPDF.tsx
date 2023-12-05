@@ -11,7 +11,7 @@ const FileUpload = ({ setFileName, reload }) => {
       const i = event.target.files[0];
       setFile(i);
     } else {
-      setFileName("")
+      setFileName("");
     }
   };
 
@@ -26,10 +26,16 @@ const FileUpload = ({ setFileName, reload }) => {
       });
       if (response && get(response, "data.data", "")) {
         setFileName(get(response, "data.data.data", ""));
-        notification.success({ message: "Upload successful!" });
+        notification.success({
+          message: get(response, "message", "Upload thành công!"),
+        });
       }
     } catch (err) {
-      notification.error({ message: err?.message || "Upload Failed hihi" });
+      notification.error({
+        message: err
+          ? get(err, "response.data.message", "Đã xảy ra lỗi!")
+          : "Upload thất bại!",
+      });
     }
   };
 

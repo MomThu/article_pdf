@@ -87,37 +87,17 @@ const updateInfo = async (req: NextApiRequest, res: NextApiResponse) => {
     if (customer?.error) {
       res.status(404).json({
         error: true,
-        message: customer?.message,
+        message: get(customer, "message", "Cập nhật thông tin thất bại!"),
       });
     }
     res.status(200).json({
       error: false,
-      message: "Update successful!",
+      message: get(customer, "message", "Cập nhật thông tin thành công!"),
     });
   } catch (err) {
     throw err;
   }
 };
-
-// const forgetpassword = async (req: NextApiRequest, res: NextApiResponse) => {
-//   try {
-//     const { email } = req.body;
-//     const customer = await CustomerRepository.findOne({
-//       where: {
-//         email: email,
-//       },
-//     });
-//     res.status(200).json({
-//       error: false,
-//       message: "Update successful!",
-//     });
-//   } catch (err) {
-//     res.status(404).json({
-//       error: true,
-//       message: err ? get(err, "message", "Error!") : "Error",
-//     });
-//   }
-// };
 
 const resetPassword = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -135,7 +115,7 @@ const resetPassword = async (req: NextApiRequest, res: NextApiResponse) => {
     } else {
       res.status(200).json({
         error: false,
-        message: "Reset successful!",
+        message: "Cập nhật thành công!",
       });
     }
   } catch (err) {
@@ -183,7 +163,7 @@ const changePassword = async (req: NextApiRequest, res: NextApiResponse) => {
     } else {
       res.status(200).json({
         error: false,
-        message: "Reset successful!",
+        message: "Cập nhật thành công!",
       });
     }
   } catch (err) {

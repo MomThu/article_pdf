@@ -1,7 +1,7 @@
 import React from "react";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ArticleRepository, AuthorRepository } from "../services";
-import { toNumber } from "lodash";
+import { get, toNumber } from "lodash";
 
 const getAllAuthors = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -64,13 +64,13 @@ const addAuthor = async (req: NextApiRequest, res: NextApiResponse) => {
     if (data?.error) {
       res.status(401).json({
         error: true,
-        message: data?.message,
+        message: get(data, "message", "Bạn không có quyền thực hiện chức năng này!"),
       });
     } else {
       res.status(200).json({
         error: false,
         data: data,
-        message: "Create successful!",
+        message: "Thêm tác giả thành công!",
       });
     }
   } catch (err) {

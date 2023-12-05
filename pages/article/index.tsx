@@ -1,40 +1,34 @@
 import {
-  Button,
-  Card,
-  Col,
-  Modal,
-  Row,
-  Typography,
-  message,
-  notification,
-} from "antd";
-import axios from "axios";
-import { get, isEmpty } from "lodash";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import Pdf from "../pdf";
-import { GetServerSideProps } from "next";
-import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
-import crypto from "crypto";
-import {
   DocumentAskPasswordEvent,
   PdfJs,
   RenderPageProps,
   Viewer,
   Worker,
 } from "@react-pdf-viewer/core";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
+import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import type {
   ToolbarProps,
   ToolbarSlot,
   TransformToolbarSlot,
 } from "@react-pdf-viewer/toolbar";
+import {
+  Button,
+  Col,
+  Row,
+  Typography,
+  notification
+} from "antd";
+import axios from "axios";
+import crypto from "crypto";
+import { get, isEmpty } from "lodash";
+import { getServerSession } from "next-auth";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { authOptions } from "../api/auth/[...nextauth]";
 
+import { ShoppingCartOutlined } from "@ant-design/icons";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
-import { ShoppingCartOutlined } from "@ant-design/icons";
 import Header from "../component/HeadComponent";
 const { Text, Title } = Typography;
 interface RemovePartsDefaultToolbarDefaultLayoutExampleProps {
@@ -47,8 +41,8 @@ const Article = (props) => {
   const [article, setArticle] = useState({});
   const [showPdf, setShowPdf] = useState(false);
   const [pdf, setPdf] = useState({});
-  const [pdfUrl, setPdfUrl] = useState('');
-  const [password, setPassword] = useState('');
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [password, setPassword] = useState("");
 
   const transform1: TransformToolbarSlot = (slot: ToolbarSlot) => ({
     ...slot,
@@ -78,10 +72,10 @@ const Article = (props) => {
         get(pdf, "permission") === 1
           ? transform1
           : get(pdf, "permission") === 2
-            ? transform2
-            : get(pdf, "permission") === 3
-              ? transform3
-              : null
+          ? transform2
+          : get(pdf, "permission") === 3
+          ? transform3
+          : null
       )}
     </Toolbar>
   );
@@ -117,12 +111,22 @@ const Article = (props) => {
       const { data } = await axios.get(`${apiURL}?article=${id}`);
       setArticle(get(data, "data.article", {}));
       setPdf(get(data, "data", {}));
-      if (data.data?.permission == 1 || data.data?.permission == 2 || data.data?.permission == 3) {
-        const content = await axios.get(`/api/pdf/content/?name=${data.data?.file_name}`);
-        setPdfUrl(content.data)
+      if (
+        data.data?.permission == 1 ||
+        data.data?.permission == 2 ||
+        data.data?.permission == 3
+      ) {
+        const content = await axios.get(
+          `/api/pdf/content/?name=${data.data?.file_name}`
+        );
+        setPdfUrl(content.data);
       }
     } catch (err) {
-      notification.error({ message: err ? err : "Error!" });
+      notification.error({
+        message: err
+          ? get(err, "response.data.message", "Đã xảy ra lỗi!")
+          : "Đã xảy ra lỗi!",
+      });
     }
   };
 
@@ -151,39 +155,42 @@ const Article = (props) => {
       );
       if (realPassword) {
         e.verifyPassword(realPassword);
-        setPassword(realPassword)
+        setPassword(realPassword);
       }
-    } catch (err) { }
+    } catch (err) {}
   };
 
-  const handleAddToCard = async () => {    
-    if (!get(props, 'sessionId', '')) {
-      notification.error({ message: "Bạn cần đăng nhập để thực hiện chức năng này!" })
+  const handleAddToCard = async () => {
+    if (!get(props, "sessionId", "")) {
+      notification.error({
+        message: "Bạn cần đăng nhập để thực hiện chức năng này!",
+      });
     } else {
       try {
         const apiURL = `/api/cart/add`;
         const { data } = await axios.post(`${apiURL}`, {
-          article: get(article, 'id', 0)
+          article: get(article, "id", 0),
         });
-        notification.success({ message: "Add to cart successful!" });
+        notification.success({ message: get(data, "message", "Thêm vào giỏ hàng thành công!") });
       } catch (err) {
         notification.error({
           message: err
-            ? get(err, "response.data.message", "Loi day")
-            : "Error!",
+            ? get(err, "response.data.message", "Đã xảy ra lỗi!")
+            : "Đã xảy ra lỗi!",
         });
       }
     }
-
-  }
+  };
 
   const gotoPayment = () => {
-    if (!get(props, 'sessionId', '')) {
-      notification.error({ message: "Bạn cần đăng nhập để thực hiện chức năng này!" })
+    if (!get(props, "sessionId", "")) {
+      notification.error({
+        message: "Bạn cần đăng nhập để thực hiện chức năng này!",
+      });
     } else {
-      router.push(`/payment/${get(article, 'id', 0)}`)
+      router.push(`/payment/${get(article, "id", 0)}`);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen">
@@ -215,7 +222,12 @@ const Article = (props) => {
                   <Button onClick={gotoPayment}>
                     Cập nhật quyền với bài báo
                   </Button>
-                  <Button onClick={handleAddToCard} icon={<ShoppingCartOutlined />}>Thêm vào giỏ hàng</Button>
+                  <Button
+                    onClick={handleAddToCard}
+                    icon={<ShoppingCartOutlined />}
+                  >
+                    Thêm vào giỏ hàng
+                  </Button>
                 </div>
               )}
               {get(pdf, "permission", 0) ? (
@@ -261,7 +273,7 @@ export async function getServerSideProps(context) {
     return {
       props: {
         sessionId: session.id,
-        user: session.user
+        user: session.user,
       },
     };
   return {

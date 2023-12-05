@@ -45,5 +45,5 @@ export {
 
 export const initDB = async () => {
   await sequelize.authenticate();
-  await sequelize.sync({ alter: true });
+  await sequelize.sync({ force: true });
 };

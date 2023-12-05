@@ -18,12 +18,16 @@ const Register = () => {
         ...values,
       });
       if (!data?.error) {
-        await notification.success({ message: "Register successful!" });
+        await notification.success({
+          message: get(data, "message", "Đăng ký tài khoản thành công!"),
+        });
         router.push("/auth/signin");
       }
     } catch (err) {
       notification.error({
-        message: err ? err.response.data?.message : "Register failed!",
+        message: err
+          ? get(err, "response.data.message", "Đăng ký tài khoản thất bại!")
+          : "Đăng ký tài khoản thất bại!",
       });
     }
   };
@@ -98,7 +102,7 @@ const Register = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please confirm your password!",
+                      message: "Vui lòng xác nhận mật khẩu!",
                     },
                     ({ getFieldValue }) => ({
                       validator(_, value) {
@@ -106,7 +110,7 @@ const Register = () => {
                           return Promise.resolve();
                         }
                         return Promise.reject(
-                          new Error("The two passwords do not match!")
+                          new Error("Mật khẩu không trùng khớp!")
                         );
                       },
                     }),

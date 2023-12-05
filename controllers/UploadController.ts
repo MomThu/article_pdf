@@ -31,35 +31,31 @@ const uploadFile = async (req: NextApiRequest, res: NextApiResponse) => {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
-        //Data ở đây bây giờ là Key, nó chính là file_name của PDF nhớ, ko dùng trường Location hay url nữa đâu.
         if (result && result['error']) {
           res.status(401).json({ 
             error: true,
-            message: get(result, "message", ""),
+            message: get(result, "message", "Bạn không có quyền thực hiện chức năng này!"),
           });
         } else {
           res.status(200).json({ 
             error: false,
             data: get(result, "data", ""),
-            message: get(result, "message", ""),
+            message: get(result, "message", "Upload thành công!"),
           });
         }
       } catch (err) {
         res.status(500).json({ 
           error: true,
-          message: "Upload Failed!",
+          message: "Upload thất bại!",
         });
       }
-      
-      
     } else {
       res.status(401).json({
         error: false,
-        message: "You are not authorized!",
+        message: "Bạn không có quyền thực hiện chức năng này!",
       });
     }
   } catch (err) {
-    console.log(err);
     throw err;
   }
 };

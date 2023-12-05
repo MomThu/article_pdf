@@ -1,4 +1,4 @@
-import { toNumber } from "lodash";
+import { get, toNumber } from "lodash";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ArticleRepository } from "../services";
 import { getServerSession } from "next-auth";
@@ -86,7 +86,7 @@ const getBoughtArticle = async (req: NextApiRequest, res: NextApiResponse) => {
     const session = await getServerSession(req, res, authOptions);
     const cusId = session?.user.id;
     const pageSize = Number(req.query.pageSize);
-    const currentPage = Number(req.query.currentPage);    
+    const currentPage = Number(req.query.currentPage);
     let { data, totalArticles } = await ArticleRepository.getArticleBought(
       cusId,
       currentPage,
@@ -168,18 +168,19 @@ const updateArticlePermission = async (
     if (!cusId) {
       res.status(401).json({
         error: true,
-        message: "You need to login for payment action!",
+        message: "Bạn cần đăng nhập để thực hiện chức năng này!",
+      });
+    } else {
+      let data = await ArticleRepository.updateArticlePermission(
+        cusId,
+        article,
+        permission
+      );
+      res.status(200).json({
+        error: false,
+        message: "Cập nhật quyền thành công!",
       });
     }
-    let data = await ArticleRepository.updateArticlePermission(
-      cusId,
-      article,
-      permission
-    );
-    res.status(200).json({
-      error: false,
-      message: "Buy successfully!",
-    });
   } catch (err) {
     throw err;
   }
@@ -194,19 +195,19 @@ const addArticle = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!cusId || role !== 1) {
       res.status(401).json({
         error: true,
-        message: "You are not authorized!",
+        message: "Bạn không có quyền thực hiện chức năng này!",
       });
     } else {
       let data = await ArticleRepository.addArticle(article);
       if (data?.error) {
         res.status(500).json({
           error: false,
-          message: data?.message,
+          message: get(data, "message", "Tạo bài báo thất bại!"),
         });
       } else {
         res.status(200).json({
           error: false,
-          message: "Upload Successful!",
+          message: get(data, "message", "Tạo bài báo thành công!"),
         });
       }
     }

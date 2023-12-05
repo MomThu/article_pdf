@@ -1,12 +1,9 @@
-import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Row, Typography, notification } from "antd";
+import { UserOutlined } from "@ant-design/icons";
+import { Button, Card, Typography, notification } from "antd";
 import axios from "axios";
 import { get, size } from "lodash";
 import moment from "moment";
-import { getServerSession } from "next-auth";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { authOptions } from "../api/auth/[...nextauth]";
 
 const { Text, Title, Paragraph } = Typography;
 const { Meta } = Card;
@@ -24,11 +21,13 @@ const ArticleComponent = (props) => {
         const { data } = await axios.post(`${apiURL}`, {
           article: item?.id,
         });
-        notification.success({ message: "Add to cart successful!" });
+        notification.success({
+          message: get(data, "message", "Thêm vào giỏ hàng thành công!"),
+        });
       } catch (err) {
         notification.error({
           message: err
-            ? get(err, "response.data.message", "Loi day")
+            ? get(err, "response.data.message", "Đã xảy ra lỗi!")
             : "Error!",
         });
       }

@@ -47,10 +47,8 @@ export class PdfRepository extends Pdf {
     } else {
       return {
         error: true,
-        message: "Article is not exist!",
+        message: "Bài báo không tồn tại!",
       };
     }
   };
 }
-
-// cho nay sua model chuyen tu 1-n sang 1-1

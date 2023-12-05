@@ -8,6 +8,7 @@ import { getCsrfToken, signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Header from "../component/HeadComponent";
+import { get } from "lodash";
 
 const { Title } = Typography;
 interface FormLogin {
@@ -36,17 +37,20 @@ export default function SignIn({
         redirect: false,
       });
       if (response?.error) {
-        notification.error({ message: response?.error });
+        notification.error({
+          message: get(response, "message", "Đăng nhập thất bại!"),
+        });
       } else {
+        notification.success({
+          message: "Đăng nhập thành công!",
+        });
         router.push("/");
       }
     } catch (error) {
-      notification.error({ message: "Error!" });
+      notification.error({
+        message: get(error, "response.data.message", "Đăng nhập thất bại!"),
+      });
     }
-  };
-
-  const handleClickForgetPassword = async () => {
-    router.push("/forgetPassword");
   };
 
   return (

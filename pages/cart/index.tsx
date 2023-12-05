@@ -21,7 +21,7 @@ const Cart = (props) => {
       setArticles(get(data, "data.data", []));
       setTotal(get(data, "data.total", []));
     } catch (err) {
-      notification.error({ message: err ? err : "Error!" });
+      notification.error({ message: err ? get(err, "response.data.message", "Đã xảy ra lỗi!") : "Error!" });
     }
   };
 

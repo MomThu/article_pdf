@@ -12,8 +12,8 @@ export const config = {
     "/api/authentication/changepassword",
     "/api/authentication/updateInfo",
     "/api/author/add",
-    "/api/cart",
-    "/api/customer",
+    "/api/cart/:path*",
+    "/api/customer/:path*",
     "/api/pdf/content",
     "/api/upload",
   ]
