@@ -1,12 +1,11 @@
-import { Layout, Row, Col, Typography, Divider, Image } from "antd";
 import {
   GithubOutlined,
-  LinkedinOutlined,
   InstagramOutlined,
+  LinkedinOutlined,
   MailOutlined,
   PhoneOutlined,
 } from "@ant-design/icons";
-// import logo from 'path/to/your/logo';
+import { Col, Layout, Row, Typography } from "antd";
 
 const { Footer } = Layout;
 const { Text, Paragraph } = Typography;
@@ -17,7 +16,6 @@ const AppFooter = () => {
       <Row justify="center" align="top" gutter={[16, 16]}>
         <Col md={8} lg={8}>
           <div>
-            {/* <Image src={logo} alt="Book Store App" preview={false} /> */}
             <Text strong>Article-PDF</Text>
           </div>
           <Paragraph>

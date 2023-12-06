@@ -1,4 +1,4 @@
-import { Col, Row, Typography, notification, Image } from "antd";
+import { Col, Image, Row, Typography, notification } from "antd";
 import axios from "axios";
 import { get, size } from "lodash";
 import { getServerSession } from "next-auth";
@@ -6,9 +6,9 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { authOptions } from "../api/auth/[...nextauth]";
 
+import { BankOutlined, HomeOutlined } from "@ant-design/icons";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
-import { BankOutlined, HomeOutlined, UserOutlined } from "@ant-design/icons";
 import ArticleComponent from "../component/ArticleComponent";
 import Header from "../component/HeadComponent";
 

@@ -1,27 +1,16 @@
 import {
-  ShoppingCartOutlined,
-  ShoppingFilled,
-  UserOutlined,
+  ShoppingCartOutlined
 } from "@ant-design/icons";
 import {
   Button,
-  Col,
-  Menu,
-  Modal,
-  Row,
-  Space,
-  Typography,
-  Image
+  Image,
+  Modal
 } from "antd";
-import { getServerSession } from "next-auth";
-import { useRouter } from "next/router";
-import { authOptions } from "../api/auth/[...nextauth]";
-import { useCallback } from "react";
-import axios from "axios";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useCallback } from "react";
 import InfoComponent from "./InfoComponent";
 
-const { Title, Text } = Typography;
 const Header = ({ signined, isAdmin }) => {
   const router = useRouter();
 

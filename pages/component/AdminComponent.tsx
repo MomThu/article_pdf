@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import SearchComponent from "./SearchComponent";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import { Button, Col, Pagination, Row, notification } from "antd";
 import axios from "axios";
 import { get, size } from "lodash";
-import { Button, Col, Pagination, Row, notification } from "antd";
-import ArticleComponent from "./ArticleComponent";
-import FileUpload from "./UploadPDF";
-import { PlusCircleOutlined } from "@ant-design/icons";
 import router from "next/router";
+import { useEffect, useState } from "react";
+import ArticleComponent from "./ArticleComponent";
+import SearchComponent from "./SearchComponent";
 
 const AdminComponent = () => {
   const [articles, setArticles] = useState([]);

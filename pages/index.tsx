@@ -1,12 +1,9 @@
-import { GetServerSideProps } from "next";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { get } from "lodash";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
-import HomeComponent from "./component/HomeComponent";
 import AdminComponent from "./component/AdminComponent";
-import { get } from "lodash";
 import Header from "./component/HeadComponent";
+import HomeComponent from "./component/HomeComponent";
 
 export default function Home(props) {
   return (

@@ -1,7 +1,6 @@
-import React from "react";
-import { NextApiRequest, NextApiResponse } from "next";
-import { ArticleRepository, AuthorRepository } from "../services";
 import { get, toNumber } from "lodash";
+import { NextApiRequest, NextApiResponse } from "next";
+import { AuthorRepository } from "../services";
 
 const getAllAuthors = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -79,9 +78,7 @@ const addAuthor = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export {
-  getAllAuthors,
-  getAuthorById,
-  searchAuthor,
-  getAuthorsByArticle,
-  addAuthor,
+  addAuthor, getAllAuthors,
+  getAuthorById, getAuthorsByArticle, searchAuthor
 };
+

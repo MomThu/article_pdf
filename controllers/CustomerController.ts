@@ -1,10 +1,8 @@
-import { message } from "antd";
-import React from "react";
-import { NextApiRequest, NextApiResponse } from "next";
-import { CustomerRepository } from "../services";
 import { get, toNumber } from "lodash";
+import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../pages/api/auth/[...nextauth]";
+import { CustomerRepository } from "../services";
 
 const getAllCustomers = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -171,12 +169,7 @@ const changePassword = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 export {
-  getAllCustomers,
-  getCustomerById,
-  register,
-  updateInfo,
-  login,
-  forgetpassword,
-  resetPassword,
-  changePassword
+  changePassword, forgetpassword, getAllCustomers,
+  getCustomerById, login, register, resetPassword, updateInfo
 };
+

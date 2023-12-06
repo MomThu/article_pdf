@@ -1,5 +1,5 @@
 import { QueryTypes } from "sequelize";
-import { Article, ArticleAuthor, Author } from "../connectDB";
+import { Article, Author } from "../connectDB";
 
 export class AuthorRepository extends Author {
   public static getAllAuthor = async () => {

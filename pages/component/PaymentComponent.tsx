@@ -1,10 +1,7 @@
-import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Row, Typography } from "antd";
-import { size } from "lodash";
+import { Card, Typography } from "antd";
 import moment from "moment";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
 
 const { Text, Title, Paragraph } = Typography;
 const { Meta } = Card;

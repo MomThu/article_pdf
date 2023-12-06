@@ -1,7 +1,7 @@
-import { get, isEmpty, size, toNumber } from "lodash";
+import crypto from "crypto";
+import { get, isEmpty, toNumber } from "lodash";
 import { QueryTypes } from "sequelize";
 import { Pdf } from "../connectDB";
-import crypto from "crypto";
 export class PdfRepository extends Pdf {
   public static getPdfByArticle = async (
     articleId: string | string[],

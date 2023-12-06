@@ -15,12 +15,11 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { authOptions } from "../api/auth/[...nextauth]";
 
-import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import Header from "../component/HeadComponent";
 
-const { Text, Title } = Typography;
+const { Title } = Typography;
 
 const User = (props) => {
   const router = useRouter();

@@ -46,9 +46,7 @@ export class CustomerRepository extends Customer {
         message: "Bạn cần đăng nhập để thực hiện chức năng này!",
       };
     } else {
-      const dataResult = omitBy(data, v => !v);
-      console.log(dataResult, "data result");
-      
+      const dataResult = omitBy(data, v => !v);      
       const customer = await Customer.findByPk(dataResult?.id);
       if (customer) {
         await customer.update({

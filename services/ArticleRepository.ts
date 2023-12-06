@@ -1,13 +1,12 @@
-import { FindOptions, QueryTypes, Op } from "sequelize";
+import { get, size } from "lodash";
+import { Op, QueryTypes } from "sequelize";
 import {
   Article,
   ArticleAuthor,
   ArticlePermission,
   Author,
-  Customer,
-  Pdf,
+  Pdf
 } from "../connectDB";
-import { get, size, uniq } from "lodash";
 
 export class ArticleRepository extends Article {
   public static getAllArticle = async (
@@ -36,23 +35,17 @@ export class ArticleRepository extends Article {
   };
 
   public static findById = async (id: number) => {
-    // const datas = await Article.findByPk();
     const datas = await Article.findOne({
       include: [
         {
           model: Author,
           through: { attributes: [] },
-          // attributes: [""]
         },
       ],
       where: {
         id: id
       }
     });
-    // const authors = await this.sequelize.query(
-    //   `SELECT * FROM article_author JOIN authors ON article_author.author_id = authors.id WHERE article_author.article_id = ${id}`,
-    //   { type: QueryTypes.SELECT }
-    // );
     return datas;
   };
 

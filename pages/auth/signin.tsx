@@ -1,14 +1,13 @@
-import { Button, Form, Input, Typography, message, notification } from "antd";
-import axios from "axios";
+import { Form, Typography, notification } from "antd";
+import { get } from "lodash";
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from "next";
-import { getCsrfToken, signIn, useSession } from "next-auth/react";
+import { getCsrfToken, signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Header from "../component/HeadComponent";
-import { get } from "lodash";
 
 const { Title } = Typography;
 interface FormLogin {
