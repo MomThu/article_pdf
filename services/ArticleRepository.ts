@@ -325,6 +325,7 @@ export class ArticleRepository extends Article {
             abstract: article?.abstract,
             publish_date: article?.publish_date,
             journal_name: article?.journal_name,
+            price: article?.price
           },
           { transaction: t }
         );

@@ -32,6 +32,8 @@ const AddArticle = ({ user, sessionId }) => {
   const [authors, setAuthors] = useState<SelectProps["options"]>([]);
   const [showModal, setShowModal] = useState(false);
   const [reload, setReload] = useState(false);
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchAuthor = async () => {
     try {
@@ -60,27 +62,77 @@ const AddArticle = ({ user, sessionId }) => {
     fetchAuthor();
   }, []);
 
-  const onFinish = async (formValue) => {
-    if (!fileName) {
-      notification.error({ message: "Bạn cần upload file để tạo bài báo!" });
-    } else {
-      try {
-        const apiURL = `/api/article/add`;
-        const { data } = await axios.post(`${apiURL}`, {
-          ...formValue,
-          file_name: fileName,
-        });
-        notification.success({ message: "Create successful!" });
-        form.resetFields();
-        setRandomPass("");
-        setReload(true);
-      } catch (err) {
-        notification.error({
-          message: err
-            ? get(err, "response.data.message", "Đã xảy ra lỗi!")
-            : "Đã xảy ra lỗi!",
+  const uploadToServer = async () => {
+    // event.preventDefault();
+    const body = new FormData();
+    body.append("file", file);
+
+    try {
+      const response = await axios.post("/api/upload", body, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      if (response && get(response, "data.data", "")) {
+        setFileName(get(response, "data.data.data", ""));
+        notification.success({
+          message: get(response, "message", "Upload thành công!"),
         });
       }
+    } catch (err) {
+      setLoading(false);
+      notification.error({
+        message: err
+          ? get(err, "response.data.message", "Đã xảy ra lỗi!")
+          : "Upload thất bại!",
+      });
+    }
+  };
+
+  const onFinish = async (formValue) => {
+    // if (!fileName) {
+    //   notification.error({ message: "Bạn cần upload file để tạo bài báo!" });
+    // } else {
+
+    // }
+    setLoading(true);
+    const body = new FormData();
+    body.append("file", file);
+
+    try {
+      const response = await axios.post("/api/upload", body, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      if (response && get(response, "data.data", "")) {
+        setFileName(get(response, "data.data.data", ""));
+        // notification.success({
+        //   message: get(response, "message", "Upload thành công!"),
+        // });
+        try {
+          const apiURL = `/api/article/add`;
+          const { data } = await axios.post(`${apiURL}`, {
+            ...formValue,
+            file_name: get(response, "data.data.data", ""),
+          });
+          setLoading(false);
+          notification.success({ message: "Create successful!" });
+          form.resetFields();
+          setRandomPass("");
+          setReload(true);
+        } catch (err) {
+          setLoading(false);
+          notification.error({
+            message: err
+              ? get(err, "response.data.message", "Đã xảy ra lỗi!")
+              : "Đã xảy ra lỗi!",
+          });
+        }
+      }
+    } catch (err) {
+      setLoading(false);
+      notification.error({
+        message: err
+          ? get(err, "response.data.message", "Đã xảy ra lỗi!")
+          : "Upload thất bại!",
+      });
     }
   };
 
@@ -297,7 +349,7 @@ const AddArticle = ({ user, sessionId }) => {
 
                   <div className="m-10 ml-0">
                     <FileUpload
-                      setFileName={(item) => setFileName(item)}
+                      setFilee={(item) => setFile(item)}
                       reload={reload}
                     />
                   </div>
