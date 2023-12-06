@@ -8,7 +8,7 @@ const getCartsByCus = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const session = await getServerSession(req, res, authOptions);
     const cusId = session?.user.id;
-    if (cusId) {
+    if (!cusId) {
       res.status(401).json({
         error: true,
         message: "Bạn không có quyền truy cập!",
@@ -33,7 +33,7 @@ const addToCart = async (req: NextApiRequest, res: NextApiResponse) => {
     const session = await getServerSession(req, res, authOptions);
     const cusId = session?.user.id;
     const articleId = req.body.article;
-    if (cusId) {
+    if (!cusId) {
       res.status(401).json({
         error: true,
         message: "Bạn không có quyền truy cập!",
