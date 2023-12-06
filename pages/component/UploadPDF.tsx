@@ -3,15 +3,14 @@ import axios from "axios";
 import { get } from "lodash";
 import { useState } from "react";
 
-const FileUpload = ({ setFilee, reload }) => {
-  const [file, setFile] = useState(null);
+const FileUpload = ({ setFile, reload}) => {
 
   const uploadToClient = (event) => {
     if (event.target.files && event.target.files[0]) {
       const i = event.target.files[0];
-      setFilee(i);
+      setFile(i);
     } else {
-      setFilee("");
+      setFile("");
     }
   };
 
@@ -44,7 +43,7 @@ const FileUpload = ({ setFilee, reload }) => {
       <div>
         <h4>Chọn file PDF</h4>
         <div className="flex flex-row gap-5">
-          <input type="file" onChange={uploadToClient} />
+          <input type="file" key={reload} onChange={uploadToClient} />
 
           {/* <button
             className="btn btn-primary"

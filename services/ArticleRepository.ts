@@ -85,13 +85,36 @@ export class ArticleRepository extends Article {
         journal_name: { [Op.like]: `%${keyword}%` },
       },
     });
-    const dataByAuthor: any = await this.sequelize.query(
-      `SELECT articles.* FROM authors 
-      JOIN article_author ON authors.id = article_author.author_id 
-      JOIN articles ON articles.id = article_author.article_id 
-      WHERE authors.fullname LIKE '%${keyword}%'`,
-      { type: QueryTypes.SELECT }
-    );
+    // const dataByAuthor: any = await this.sequelize.query(
+    //   `SELECT articles.* FROM authors 
+    //   JOIN article_author ON authors.id = article_author.author_id 
+    //   JOIN articles ON articles.id = article_author.article_id 
+    //   WHERE authors.fullname LIKE '%${keyword}%'`,
+    //   { type: QueryTypes.SELECT }
+    // );
+    const dataAuthor = await this.sequelize.query(
+      `SELECT article_author.article_id FROM article_author
+      JOIN authors ON article_author.author_id = authors.id
+      WHERE authors.fullname LIKE '%${keyword}%'
+      GROUP BY article_author.article_id`,
+      {type: QueryTypes.SELECT});
+    const dataIdByAuthor = [];
+    dataAuthor.forEach(item => {
+      dataIdByAuthor.push(item['article_id']);
+    })
+    const dataByAuthor = await Article.findAll({
+      include: [
+        {
+          model: Author,
+          through: { attributes: [] },
+        },
+      ],
+      where: {
+        id: {
+          [Op.in]: dataIdByAuthor
+        },
+      },
+    })
     const dataSearch = dataByTitle
       .concat(dataByAbstract)
       .concat(dataByJournal)
@@ -232,13 +255,36 @@ export class ArticleRepository extends Article {
         journal_name: { [Op.like]: `%${keyword}%` },
       },
     });
-    const dataByAuthor: any = await this.sequelize.query(
-      `SELECT articles.* FROM authors 
-      JOIN article_author ON authors.id = article_author.author_id 
-      JOIN articles ON articles.id = article_author.article_id 
-      WHERE authors.fullname LIKE '%${keyword}%'`,
-      { type: QueryTypes.SELECT }
-    );
+    // const dataByAuthor: any = await this.sequelize.query(
+      // `SELECT articles.* FROM authors 
+      // JOIN article_author ON authors.id = article_author.author_id 
+      // JOIN articles ON articles.id = article_author.article_id 
+      // WHERE authors.fullname LIKE '%${keyword}%'`,
+    //   { type: QueryTypes.SELECT }
+    // );
+    const dataAuthor = await this.sequelize.query(
+      `SELECT article_author.article_id FROM article_author
+      JOIN authors ON article_author.author_id = authors.id
+      WHERE authors.fullname LIKE '%${keyword}%'
+      GROUP BY article_author.article_id`,
+      {type: QueryTypes.SELECT});
+    const dataIdByAuthor = [];
+    dataAuthor.forEach(item => {
+      dataIdByAuthor.push(item['article_id']);
+    })
+    const dataByAuthor = await Article.findAll({
+      include: [
+        {
+          model: Author,
+          through: { attributes: [] },
+        },
+      ],
+      where: {
+        id: {
+          [Op.in]: dataIdByAuthor
+        },
+      },
+    })
     const dataSearch = dataByTitle
       .concat(dataByAbstract)
       .concat(dataByJournal)
@@ -359,6 +405,7 @@ export class ArticleRepository extends Article {
         return {
           error: false,
           message: "Tạo bài báo thành công!",
+          article_id: articleCreated?.id
         };
       } catch (error) {
         await t.rollback();

@@ -205,6 +205,7 @@ const addArticle = async (req: NextApiRequest, res: NextApiResponse) => {
           message: get(data, "message", "Tạo bài báo thất bại!"),
         });
       } else {
+        await ArticleRepository.updateArticlePermission(cusId, data.article_id, "3");
         res.status(200).json({
           error: false,
           message: get(data, "message", "Tạo bài báo thành công!"),

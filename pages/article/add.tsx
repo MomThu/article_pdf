@@ -96,7 +96,6 @@ const AddArticle = ({ user, sessionId }) => {
     setLoading(true);
     const body = new FormData();
     body.append("file", file);
-
     try {
       const response = await axios.post("/api/upload", body, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -116,7 +115,7 @@ const AddArticle = ({ user, sessionId }) => {
           notification.success({ message: "Create successful!" });
           form.resetFields();
           setRandomPass("");
-          setReload(true);
+          setReload(!reload);
         } catch (err) {
           setLoading(false);
           notification.error({
@@ -349,7 +348,7 @@ const AddArticle = ({ user, sessionId }) => {
 
                   <div className="m-10 ml-0">
                     <FileUpload
-                      setFilee={(item) => setFile(item)}
+                      setFile={(item) => setFile(item)}
                       reload={reload}
                     />
                   </div>
