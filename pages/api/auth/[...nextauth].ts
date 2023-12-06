@@ -1,16 +1,8 @@
 // pages/api/auth/[...nextauth].js
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import EmailProvider from "next-auth/providers/email";
-import CredentialsProvider from "next-auth/providers/credentials";
-import axios from "axios";
-import { createRouter } from "next-connect";
-import { NextApiRequest, NextApiResponse } from "next";
-import { login } from "../../../controllers/CustomerController";
-import { CustomerRepository } from "../../../services";
 import crypto from "crypto";
-import { notification } from "antd";
-import { get } from "lodash";
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { CustomerRepository } from "../../../services";
 
 export const authOptions = {
   secret: process.env.SECRET,

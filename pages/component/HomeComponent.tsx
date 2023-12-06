@@ -25,7 +25,6 @@ const HomeComponent = ({ signined }) => {
             pageSize: pageSize,
           }
         });
-        console.log(data.data, "dataa");
         setArticles(get(data, "data", []));
         setTotalArticles(get(data, "total", 0));
       } else {
@@ -35,7 +34,6 @@ const HomeComponent = ({ signined }) => {
             pageSize: pageSize
           }
         });
-        console.log(data.data, "dataa");
         setArticles(get(data, "data", []));
         setTotalArticles(get(data, "total", 0));
       }

@@ -8,7 +8,7 @@ export class PdfRepository extends Pdf {
     cusId: number,
     privateKey: string,
     iv_value: string
-  ) => {
+  ) => {    
     const encrypt = (text, key, iv) => {
       let cipher = crypto.createCipheriv(
         "aes-256-cbc",

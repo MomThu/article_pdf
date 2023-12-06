@@ -56,7 +56,7 @@ const ResetPasswordPage: React.FC = () => {
         notification.success({
           message: get(response, "message", "Cập nhật mật khẩu thành công!") || "Cập nhật mật khẩu thành công!",
         });
-        router.push("/auth/signin")
+        router.push("/")
       } else {
         notification.error({
           message: get(response, "message", "Cập nhật mật khẩu thất bại!") || "Cập nhật mật khẩu thất bại!",

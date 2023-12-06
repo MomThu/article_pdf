@@ -10,12 +10,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
       <ConfigProvider
       theme={{
         token: {
-          // Seed Token
-          // colorPrimary: "#31C1F3",
           borderRadius: 2,
-
-          // Alias Token
-          // colorBgContainer: "#f6ffed",
         },
       }}
     > 
@@ -27,12 +22,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
     <ConfigProvider
       theme={{
         token: {
-          // Seed Token
-          // colorPrimary: "#31C1F3",
           borderRadius: 2,
-
-          // Alias Token
-          // colorBgContainer: "#f6ffed",
         },
       }}
     > 

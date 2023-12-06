@@ -11,25 +11,21 @@ import type {
   ToolbarSlot,
   TransformToolbarSlot,
 } from "@react-pdf-viewer/toolbar";
-import {
-  Button,
-  Col,
-  Row,
-  Typography,
-  notification
-} from "antd";
+import { Button, Col, Row, Typography, notification } from "antd";
 import axios from "axios";
 import crypto from "crypto";
-import { get, isEmpty } from "lodash";
+import { get, isEmpty, size } from "lodash";
 import { getServerSession } from "next-auth";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { authOptions } from "../api/auth/[...nextauth]";
 
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import Header from "../component/HeadComponent";
+import Link from "next/link";
+import moment from "moment";
 const { Text, Title } = Typography;
 interface RemovePartsDefaultToolbarDefaultLayoutExampleProps {
   fileUrl: string;
@@ -171,7 +167,9 @@ const Article = (props) => {
         const { data } = await axios.post(`${apiURL}`, {
           article: get(article, "id", 0),
         });
-        notification.success({ message: get(data, "message", "Thêm vào giỏ hàng thành công!") });
+        notification.success({
+          message: get(data, "message", "Thêm vào giỏ hàng thành công!"),
+        });
       } catch (err) {
         notification.error({
           message: err
@@ -206,7 +204,28 @@ const Article = (props) => {
                 {get(article, "title", "")}
               </Title>
             </div>
-            <div>
+            <div className="flex flex-row gap-2 justify-center">
+              {size(get(article, "author", [])) &&
+                get(article, "author", []).map((author) => (
+                  <div className="mr-1" key={author?.id}>
+                    <UserOutlined />
+                    <Link
+                      href={{
+                        pathname: `/author/${author.id}`,
+                      }}
+                    >
+                      {author?.fullname}
+                    </Link>
+                  </div>
+                ))}
+            </div>
+            <div className="text-center">
+              <Text>
+                {get(article, "journal_name", "")} -{" "}
+                {moment(get(article, "publish_date", "")).format("DD/MM/YYYY")}
+              </Text>
+            </div>
+            <div className="mt-2">
               <Title level={5}>Tóm tắt</Title>
               <Text>{get(article, "abstract", "")}</Text>
             </div>

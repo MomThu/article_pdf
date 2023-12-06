@@ -2,22 +2,19 @@ import {
   Button,
   Checkbox,
   Col,
-  Empty,
   Row,
   Typography,
-  notification,
+  notification
 } from "antd";
-import axios from "axios";
-import { get, max, size } from "lodash";
-import { useEffect, useState } from "react";
-import Header from "../component/HeadComponent";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
-import CartComponent from "../component/CartComponent";
-import { useRouter } from "next/router";
-import PaymentComponent from "../component/PaymentComponent";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
-import { DollarOutlined } from "@ant-design/icons";
+import axios from "axios";
+import { get, max } from "lodash";
+import { getServerSession } from "next-auth";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { authOptions } from "../api/auth/[...nextauth]";
+import Header from "../component/HeadComponent";
+import PaymentComponent from "../component/PaymentComponent";
 
 const { Title, Text } = Typography;
 
@@ -43,7 +40,11 @@ const Payment = (props) => {
         setPaid(get(data, "data.article.price", 0));
       }
     } catch (err) {
-      notification.error({ message: err ? get(err, "response.data.message", "Đã xảy ra lỗi!") : "Error!" });
+      notification.error({
+        message: err
+          ? get(err, "response.data.message", "Đã xảy ra lỗi!")
+          : "Error!",
+      });
     }
   };
 
@@ -61,16 +62,24 @@ const Payment = (props) => {
           permission: permissionCheck,
         });
         if (!data?.error) {
-          notification.success({ message: get(data, "message", "Thanh toán thành công") });
-          router.push(`/article?article=${router?.query.id}`)
+          notification.success({
+            message: get(data, "message", "Thanh toán thành công"),
+          });
+          router.push(`/article?article=${router?.query.id}`);
         }
       } catch (err) {
         notification.error({
-          message: err ? get(err, "response.data.message", "Đã xảy ra lỗi!") : "Error!",
+          message: err
+            ? get(err, "response.data.message", "Đã xảy ra lỗi!")
+            : "Error!",
         });
       }
     } catch (err) {
-      notification.error({ message: err ? get(err, "response.data.message", "Đã xảy ra lỗi!") : "Error!" });
+      notification.error({
+        message: err
+          ? get(err, "response.data.message", "Đã xảy ra lỗi!")
+          : "Error!",
+      });
     }
   };
 
@@ -103,6 +112,24 @@ const Payment = (props) => {
         ? get(article, "article.price", 0)
         : 0
     );
+  };
+
+  const numberFormat = (num?: number | string): string => {
+    if (!num) return "0";
+
+    let number = 0;
+    if (typeof num === "number") {
+      number = num;
+    } else if (typeof num === "string") {
+      number = Number.parseFloat(num);
+    } else {
+      return "0";
+    }
+
+    if (Number.isNaN(number)) return "0";
+
+    const numberFormat = new Intl.NumberFormat(); //default: English, vi-VN: Vietnamese
+    return numberFormat.format(number);
   };
 
   return (
@@ -164,27 +191,24 @@ const Payment = (props) => {
           </Checkbox.Group>
           <div className="flex flex-row gap-2">
             <div>
-              <Title level={5}>
-                Tổng tiền: {" "}
-              </Title>
+              <Title level={5}>Tổng tiền: </Title>
             </div>
             <div>
               <Title level={5}>
                 {permissionCheck === 1
-                  ? get(article, "article.price", 0) * 0.5 - paid
+                  ? numberFormat(get(article, "article.price", 0) * 0.5 - paid)
                   : permissionCheck === 2
-                  ? get(article, "article.price", 0) * 0.75 - paid
+                  ? numberFormat(get(article, "article.price", 0) * 0.75 - paid)
                   : permissionCheck === 3
-                  ? get(article, "article.price", 0) - paid
+                  ? numberFormat(get(article, "article.price", 0) - paid)
                   : 0}{" "}
                 VND
               </Title>
             </div>
-            {/* <DollarOutlined /> */}
           </div>
           <div>
             <Button
-              disabled={get(article, "permission") === 3 ? true : false}
+              disabled={get(article, "permission") === 3 || !permissionCheck ? true : false}
               onClick={() => handlePayment()}
             >
               Thanh toán

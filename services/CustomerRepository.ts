@@ -1,4 +1,4 @@
-import { toNumber } from "lodash";
+import { omitBy, toNumber } from "lodash";
 import { FindOptions } from "sequelize";
 import { Customer } from "../connectDB";
 import * as bcrypt from "bcrypt";
@@ -46,10 +46,13 @@ export class CustomerRepository extends Customer {
         message: "Bạn cần đăng nhập để thực hiện chức năng này!",
       };
     } else {
-      const customer = await Customer.findByPk(data?.id);
+      const dataResult = omitBy(data, v => !v);
+      console.log(dataResult, "data result");
+      
+      const customer = await Customer.findByPk(dataResult?.id);
       if (customer) {
         await customer.update({
-          ...data,
+          ...dataResult,
         });
         await customer.save();
         return {

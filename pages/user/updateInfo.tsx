@@ -40,11 +40,9 @@ const User = (props) => {
     } catch (err) {
       notification.error({ message: err ? get(err, "response.data.message", "Đã xảy ra lỗi!") : "Error!" });
     }
-  };
-  console.log(user);
-  
+  };  
 
-  const onFinish = async (value) => {
+  const onFinish = async (value) => {    
     try {
       const apiURL = `/api/authentication/updateInfo`;
       const { data } = await axios.patch(`${apiURL}`, {

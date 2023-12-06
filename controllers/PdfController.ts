@@ -15,7 +15,7 @@ const getPdfByArticle = async (req: NextApiRequest, res: NextApiResponse) => {
     const articleId = req.query.article;
     const cusId = session?.user.id;
     if (!cusId) {
-      let result = await ArticleRepository.findByPk(toNumber(articleId))
+      let result = await ArticleRepository.findById(toNumber(articleId))      
       res.status(200).json({
         error: false,
         data: { permission: 0, article: result },
@@ -26,8 +26,8 @@ const getPdfByArticle = async (req: NextApiRequest, res: NextApiResponse) => {
         cusId,
         privateKey,
         iv_value
-      );
-      let articleInfo = await ArticleRepository.findByPk(toNumber(articleId));
+      );      
+      let articleInfo = await ArticleRepository.findById(toNumber(articleId));
       result["iv_value"] = iv_value;
       result["article"] = articleInfo;
       res.status(200).json({

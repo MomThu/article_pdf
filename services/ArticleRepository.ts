@@ -36,15 +36,24 @@ export class ArticleRepository extends Article {
   };
 
   public static findById = async (id: number) => {
-    const datas = await Article.findByPk();
-    const authors = await this.sequelize.query(
-      `SELECT * FROM article_author JOIN authors ON article_author.author_id = authors.id WHERE article_author.article_id = ${id}`,
-      { type: QueryTypes.SELECT }
-    );
-    return {
-      ...datas,
-      authors: authors,
-    };
+    // const datas = await Article.findByPk();
+    const datas = await Article.findOne({
+      include: [
+        {
+          model: Author,
+          through: { attributes: [] },
+          // attributes: [""]
+        },
+      ],
+      where: {
+        id: id
+      }
+    });
+    // const authors = await this.sequelize.query(
+    //   `SELECT * FROM article_author JOIN authors ON article_author.author_id = authors.id WHERE article_author.article_id = ${id}`,
+    //   { type: QueryTypes.SELECT }
+    // );
+    return datas;
   };
 
   public static searchArticle = async (
@@ -220,8 +229,6 @@ export class ArticleRepository extends Article {
       `SELECT * FROM article_permission JOIN articles ON article_permission.article_id = articles.id WHERE article_permission.type_of_permission > 0 AND article_permission.customer_id = ${cusId}`,
       { type: QueryTypes.SELECT }
     );
-    console.log(datas, "datas here");
-
     const dataByTitle = await Article.findAll({
       include: [
         {

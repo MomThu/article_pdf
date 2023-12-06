@@ -32,10 +32,6 @@ const Register = () => {
     }
   };
 
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
-
   return (
     <div>
       <header className="sticky top-0 z-50">
@@ -51,7 +47,6 @@ const Register = () => {
               <Form
                 name="registrationForm"
                 onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
                 labelCol={{ md: 8, xs: 24 }}
                 labelWrap
                 wrapperCol={{ md: 16, xs: 24 }}
@@ -61,7 +56,7 @@ const Register = () => {
                   label="Tên người dùng"
                   name="full_name"
                   rules={[
-                    { required: true, message: "Please enter your full name!" },
+                    { required: true, message: "Vui lòng nhập tên của bạn!" },
                   ]}
                 >
                   <Input />
@@ -74,7 +69,7 @@ const Register = () => {
                     { required: true, message: "Please enter your email!" },
                     {
                       type: "email",
-                      message: "Please enter a valid email address!",
+                      message: "Vui lòng nhập địa chỉ email!",
                     },
                   ]}
                 >
@@ -85,10 +80,10 @@ const Register = () => {
                   label="Mật khẩu"
                   name="password"
                   rules={[
-                    { required: true, message: "Please enter your password!" },
+                    { required: true, message: "Vui lòng nhập mật khẩu!" },
                     {
                       min: 6,
-                      message: "Password must be at least 6 characters long!",
+                      message: "Mật khẩu phải lớn hơn 6 ký tự!",
                     },
                   ]}
                 >
@@ -123,7 +118,7 @@ const Register = () => {
                   label="Điện thoại"
                   name="phone"
                   rules={[
-                    { required: true, message: "Please enter your phone!" },
+                    { required: true, message: "Vui lòng nhập số điện thoại của bạn!" },
                   ]}
                 >
                   <Input />

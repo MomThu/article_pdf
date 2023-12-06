@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { get, size } from "lodash";
-import { Col, Empty, Pagination, Row, notification } from "antd";
+import { Col, Empty, Pagination, Row, Typography, notification } from "antd";
 import ArticleComponent from "../component/ArticleComponent";
 import SearchComponent from "../component/SearchComponent";
 import Header from "../component/HeadComponent";
+
+const { Title } = Typography;
 
 const Bought = () => {
   const [articles, setArticles] = useState([]);
@@ -68,6 +70,16 @@ const Bought = () => {
         isAdmin={false}
       />
       <div>
+        <Row className="mt-10">
+          <Col md={18} offset={3}>
+            <Title level={3}>Bài báo đã mua</Title>
+          </Col>
+        </Row>
+        <Row>
+        <Col md={18} offset={3}>
+          <Title level={4}>Số lượng: {totalArticles}</Title>
+        </Col>
+      </Row>
         {size(articles) ? (
           articles.map((item, index) => (
             <Row

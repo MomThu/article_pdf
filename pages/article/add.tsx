@@ -14,6 +14,7 @@ import {
   Select,
   SelectProps,
   Space,
+  Spin,
   Typography,
   notification,
 } from "antd";
@@ -62,76 +63,50 @@ const AddArticle = ({ user, sessionId }) => {
     fetchAuthor();
   }, []);
 
-  const uploadToServer = async () => {
-    // event.preventDefault();
-    const body = new FormData();
-    body.append("file", file);
-
-    try {
-      const response = await axios.post("/api/upload", body, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      if (response && get(response, "data.data", "")) {
-        setFileName(get(response, "data.data.data", ""));
-        notification.success({
-          message: get(response, "message", "Upload thành công!"),
+  const onFinish = async (formValue) => {
+    if (!file) {
+      notification.error({ message: "Bạn cần upload file để tạo bài báo!" });
+    } else {
+      setLoading(true);
+      const body = new FormData();
+      body.append("file", file);
+      try {
+        const response = await axios.post("/api/upload", body, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        if (response && get(response, "data.data", "")) {
+          setFileName(get(response, "data.data.data", ""));
+          // notification.success({
+          //   message: get(response, "message", "Upload thành công!"),
+          // });
+          try {
+            const apiURL = `/api/article/add`;
+            const { data } = await axios.post(`${apiURL}`, {
+              ...formValue,
+              file_name: get(response, "data.data.data", ""),
+            });
+            setLoading(false);
+            notification.success({ message: "Create successful!" });
+            form.resetFields();
+            setRandomPass("");
+            setReload(!reload);
+          } catch (err) {
+            setLoading(false);
+            notification.error({
+              message: err
+                ? get(err, "response.data.message", "Đã xảy ra lỗi!")
+                : "Đã xảy ra lỗi!",
+            });
+          }
+        }
+      } catch (err) {
+        setLoading(false);
+        notification.error({
+          message: err
+            ? get(err, "response.data.message", "Đã xảy ra lỗi!")
+            : "Upload thất bại!",
         });
       }
-    } catch (err) {
-      setLoading(false);
-      notification.error({
-        message: err
-          ? get(err, "response.data.message", "Đã xảy ra lỗi!")
-          : "Upload thất bại!",
-      });
-    }
-  };
-
-  const onFinish = async (formValue) => {
-    // if (!fileName) {
-    //   notification.error({ message: "Bạn cần upload file để tạo bài báo!" });
-    // } else {
-
-    // }
-    setLoading(true);
-    const body = new FormData();
-    body.append("file", file);
-    try {
-      const response = await axios.post("/api/upload", body, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      if (response && get(response, "data.data", "")) {
-        setFileName(get(response, "data.data.data", ""));
-        // notification.success({
-        //   message: get(response, "message", "Upload thành công!"),
-        // });
-        try {
-          const apiURL = `/api/article/add`;
-          const { data } = await axios.post(`${apiURL}`, {
-            ...formValue,
-            file_name: get(response, "data.data.data", ""),
-          });
-          setLoading(false);
-          notification.success({ message: "Create successful!" });
-          form.resetFields();
-          setRandomPass("");
-          setReload(!reload);
-        } catch (err) {
-          setLoading(false);
-          notification.error({
-            message: err
-              ? get(err, "response.data.message", "Đã xảy ra lỗi!")
-              : "Đã xảy ra lỗi!",
-          });
-        }
-      }
-    } catch (err) {
-      setLoading(false);
-      notification.error({
-        message: err
-          ? get(err, "response.data.message", "Đã xảy ra lỗi!")
-          : "Upload thất bại!",
-      });
     }
   };
 
@@ -184,6 +159,21 @@ const AddArticle = ({ user, sessionId }) => {
     authorForm.resetFields();
   };
 
+  if (loading) {
+    return (
+      <div>
+        <header className="sticky top-0 z-50">
+          <Header
+            isAdmin={get(user, "role", 0) === 1 ? true : false}
+            signined={sessionId ? true : false}
+          />
+        </header>
+        <Space size="large" className="flex justify-center mt-10">
+          <Spin size="large" />
+        </Space>
+      </div>
+    );
+  }
   return (
     <div>
       <header className="sticky top-0 z-50">
@@ -248,16 +238,7 @@ const AddArticle = ({ user, sessionId }) => {
                     <Input />
                   </Form.Item>
 
-                  <Form.Item
-                    label="Tác giả"
-                    name="author"
-                    // rules={[
-                    //   {
-                    //     // required: true,
-                    //     // message: "Please select the authors!",
-                    //   },
-                    // ]}
-                  >
+                  <Form.Item label="Tác giả" name="author">
                     <div className="flex flex-row">
                       <Select
                         mode="multiple"
