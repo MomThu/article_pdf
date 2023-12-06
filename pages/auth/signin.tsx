@@ -119,7 +119,7 @@ export default function SignIn({
               </div>
 
               <div style={{ marginBottom: "5%", textAlign: "right" }}>
-                Bạn đã có tài khoản?{" "}
+                Bạn chưa có tài khoản?{" "}
                 <Link
                   href={{ pathname: "/auth/register" }} // Replace with your actual forgot password page
                   style={{ color: "#1890ff", textDecoration: "underline" }}
